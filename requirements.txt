@@ -2,4 +2,10 @@ hdhh
 cffi==1.17.0
 pycparser==2.22
 pygame==2.6.0
+<<<<<<< HEAD
 pymunk==6.8.1
+=======
+pymunk==6.8.1
+
+1213
+>>>>>>> e95b795d5a831723eb2b6830e1c4abfcc452b55c
