@@ -1,0 +1,4 @@
+cffi==1.17.0
+pycparser==2.22
+pygame==2.6.0
+pymunk==6.8.1
