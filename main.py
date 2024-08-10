@@ -1,7 +1,7 @@
 import pygame
 import sys
-from menu import main_menu, pause_menu, settings_menu
-from hud import HUD
+from gui.menu import main_menu, pause_menu, settings_menu
+from gui.hud import HUD
 
 # 初始化Pygame
 pygame.init()
