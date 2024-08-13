@@ -1,5 +1,7 @@
 import pygame
 
+from gui.menu import main_menu, pause_menu, settings_menu
+
 
 def default_level(screen):
     clock = pygame.time.Clock()
@@ -14,6 +16,11 @@ def default_level(screen):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False  # 按下ESC键退出关卡
+                elif event.key == pygame.K_p:
+                    game_state = 'settings_menu'
+                    # game_state = pause_menu(screen)  # 按下P键暂停
+                    if game_state == 'settings_menu':
+                        return 'settings_menu'
 
         # 示例游戏逻辑：简单的左右移动
         keys = pygame.key.get_pressed()

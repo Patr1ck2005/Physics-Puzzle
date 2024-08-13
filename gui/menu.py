@@ -67,7 +67,7 @@ def main_menu():
                         sys.exit()
 
 
-def pause_menu():
+def pause_menu(screen):
     global selected_option
     while True:
         screen.fill(BLACK)
