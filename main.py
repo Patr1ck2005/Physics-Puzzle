@@ -1,5 +1,7 @@
 import pygame
 import sys
+
+from levels.level import default_level
 from gui.menu import main_menu, pause_menu, settings_menu
 from gui.hud import HUD
 
@@ -25,7 +27,7 @@ game_state = 'main_menu'  # 可能的状态有 'main_menu', 'playing', 'paused',
 
 def start_game():
     global game_state
-    game_state = 'playing'
+    game_state = default_level(screen)
     hud.reset()  # 开始新游戏时重置HUD
 
 

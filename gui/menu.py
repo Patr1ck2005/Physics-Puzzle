@@ -97,6 +97,7 @@ def pause_menu():
                         pygame.quit()
                         sys.exit()
 
+
 def settings_menu():
     global selected_option
     while True:
@@ -123,6 +124,7 @@ def settings_menu():
                         print("Volume setting not implemented yet.")
                     if selected_option == 1:  # Back
                         return 'back'
+
 
 # 启动菜单
 if __name__ == '__main__':
