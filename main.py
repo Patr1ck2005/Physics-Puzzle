@@ -54,28 +54,6 @@ while running:
         selected_menu = settings_menu()
         if selected_menu == 'back':
             game_state = 'main_menu'
-    elif game_state == 'playing':
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pause_game()
-
-        # 游戏逻辑更新
-        hud.update_score(1)  # 示例：每帧增加1分
-
-        # 清屏
-        screen.fill((0, 0, 0))
-
-        # 渲染HUD
-        hud.render()
-
-        # 更新显示
-        pygame.display.flip()
-
-        # 控制帧率
-        clock.tick(FPS)
     elif game_state == 'paused':
         selected_menu = pause_menu()
         if selected_menu == 'resume_game':
