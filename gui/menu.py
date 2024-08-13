@@ -29,10 +29,12 @@ menu_state = 'main_menu'
 # 当前选项索引
 selected_option = 0
 
+
 def draw_text(text, font, color, surface, x, y):
     text_obj = font.render(text, True, color)
     text_rect = text_obj.get_rect(center=(x, y))
     surface.blit(text_obj, text_rect)
+
 
 def main_menu():
     global selected_option
@@ -63,6 +65,7 @@ def main_menu():
                     if selected_option == 2:  # Quit
                         pygame.quit()
                         sys.exit()
+
 
 def pause_menu():
     global selected_option

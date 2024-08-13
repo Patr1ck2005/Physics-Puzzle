@@ -10,7 +10,7 @@ pygame.init()
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('My Pygame Game with Menu and HUD')
+pygame.display.set_caption('Physics!')
 
 # 设置帧率
 clock = pygame.time.Clock()
