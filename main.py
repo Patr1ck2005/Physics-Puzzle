@@ -54,13 +54,6 @@ while running:
         selected_menu = settings_menu()
         if selected_menu == 'back':
             game_state = 'main_menu'
-    elif game_state == 'playing':
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pause_game()
 
         # 游戏逻辑更新
         hud.update_score(1)  # 示例：每帧增加1分
