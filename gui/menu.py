@@ -92,13 +92,13 @@ def pause_menu(screen):
                     if selected_option == 0:  # Resume
                         return 'resume_game'
                     if selected_option == 1:  # Settings
-                        return 'settings_menu'
+                        settings_menu(screen)
                     if selected_option == 2:  # Quit
                         pygame.quit()
                         sys.exit()
 
 
-def settings_menu():
+def settings_menu(screen):
     global selected_option
     while True:
         screen.fill(BLACK)

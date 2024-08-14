@@ -51,7 +51,7 @@ while running:
         elif selected_menu == 'settings_menu':
             game_state = 'settings_menu'
     elif game_state == 'settings_menu':
-        selected_menu = settings_menu()
+        selected_menu = settings_menu(screen)
         if selected_menu == 'back':
             game_state = 'main_menu'
 
