@@ -9,10 +9,10 @@ class Inventory(BaseUI):
     def __init__(self, screen):
         super().__init__(screen)
         self.items = {
-            'ball_1': GameObject('ball_1', 'static', 'circle'),
-            'ball_2': GameObject('ball_2', 'static', 'circle'),
-            'rect_1': GameObject('rect_1', 'static', 'box', size=(10, 10)),
-            'rect_2': GameObject('rect_2', 'static', 'box', size=(10, 10)),
+            'ball_1': GameObject('ball_1', 'static', 'circle', color=(200, 0, 200)),
+            'ball_2': GameObject('ball_2', 'static', 'circle', color=(200, 0, 200)),
+            'rect_1': GameObject('rect_1', 'static', 'box', size=(20, 60), color=(200, 200, 200)),
+            'rect_2': GameObject('rect_2', 'static', 'box', size=(60, 20), color=(200, 200, 200)),
         }
         self.selecting = None
 
@@ -39,7 +39,7 @@ class Inventory(BaseUI):
             # 绘制
             pygame.draw.rect(self.screen, color, icon_rect)
 
-    def select_inventory(self):
+    def select_inventory(self) -> (GameObject, tuple):
         self.selecting = None
         # 获取鼠标位置
         m_pos = pygame.mouse.get_pos()

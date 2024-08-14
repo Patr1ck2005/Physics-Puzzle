@@ -18,20 +18,37 @@ import pymunk
 # Space: 物理世界，管理和模拟物体、形状和约束。
 # Arbiter: 管理和处理碰撞事件。
 class GameObject:
-    def __init__(self, name, phy_type, shape="circle", size=3, color=(150, 150, 150)):
+    def __init__(self, name, phy_type, shape="circle", size=30, color=(150, 150, 150)):
         self.name = name
-        self.body = pymunk.Body(1, body_type=pymunk.Body.DYNAMIC)
+        self.type = phy_type
+        self.body = None
+        self.body_shape = None
+        self.shape = shape
+        self.size = size
+
+        self.color = color
+        self.icon_rect = None
+
+        self.body, self.body_shape = self.create_phys()
+
+    def create_phys(self):
+        mass = 1
+        moment = pymunk.moment_for_circle(mass, 0, 30)
+        body = pymunk.Body(mass, moment, body_type=pymunk.Body.DYNAMIC)
         switch = {
             "circle": pymunk.Circle,
             "box": pymunk.Poly.create_box,
             "segment": pymunk.Segment,
         }
-        self.shape = switch.get(shape, pymunk.Circle)(self.body, size)
-        self.color = (150, 150, 150)
-        self.icon_rect = None
+        body_shape = switch.get(self.shape, pymunk.Circle)(body, self.size)
+        body_shape.friction = 0.7
+        body_shape.elasticity = 0.8
+        return body, body_shape
 
-    def add_to_space(self, space):
-        space.add(self.body, self.shape)
+    def add_to_space(self, space, loc):
+        new_body, new_body_shape = self.create_phys()
+        new_body.position = loc
+        space.add(new_body, new_body_shape)
 
     def remove_from_space(self, space):
         space.remove(self.body, self.shape)

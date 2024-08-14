@@ -80,7 +80,7 @@ def default_level(screen):
                     selected_item = selecting
                 elif selected_item:
                     print(f'selected {selected_item} added at {m_pos}')
-                    engine.debug_add(selected_item, m_pos)
+                    selected_item.add_to_space(engine.space, loc=m_pos)
                     selecting = None
                     selected_item = None
 
