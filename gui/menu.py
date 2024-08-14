@@ -20,7 +20,7 @@ small_font = pygame.font.Font(None, 50)
 
 # 菜单选项
 MAIN_MENU = ["Start Game", "Settings", "Quit"]
-PAUSE_MENU = ["Resume", "Settings", "Quit"]
+PAUSE_MENU = ["Resume", "Settings", "Back", "Quit"]
 SETTINGS_MENU = ["Volume", "Back"]
 
 # 当前菜单状态
@@ -93,7 +93,9 @@ def pause_menu(screen):
                         return 'resume_game'
                     if selected_option == 1:  # Settings
                         settings_menu(screen)
-                    if selected_option == 2:  # Quit
+                    if selected_option == 2:  # Back
+                        return 'main_menu'
+                    if selected_option == 3:  # Quit
                         pygame.quit()
                         sys.exit()
 

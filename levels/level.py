@@ -18,6 +18,8 @@ def default_level(screen):
                     running = False  # 按下ESC键退出关卡
                 elif event.key == pygame.K_p:
                     game_state = pause_menu(screen)  # 按下P键暂停
+                    if game_state == 'main_menu':
+                        return 'main_menu'
 
         # 示例游戏逻辑：简单的左右移动
         keys = pygame.key.get_pressed()
