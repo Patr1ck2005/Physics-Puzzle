@@ -18,8 +18,11 @@ class HUD:
 
         # 物品栏
         self.inventory = [
-            {"name": "Box", "type": "object", "rect": pygame.Rect(10, 10, 60, 60)},
-            {"name": "Force", "type": "abstract", "rect": pygame.Rect(80, 10, 60, 60)},
+            {"name": "Box", "type": "object",
+             "rect": pygame.Rect(10, 10, 60, 60), 'color': (128, 128, 128)},
+            {"name": "Force", "type": "abstract",
+             "rect": pygame.Rect(80, 10, 60, 60),
+             'color': (0, 50, 0)},
         ]
 
     def update_score(self, points):
@@ -41,7 +44,11 @@ class HUD:
 
         # 绘制物品栏
         for item in self.inventory:
-            pygame.draw.rect(self.screen, (0, 128, 0), item["rect"])
+            if item == self.selecting:
+                color = self.mark_underselection(item["color"])
+            else:
+                color = item["color"]
+            pygame.draw.rect(self.screen, color, item["rect"])
 
         # 绘制设置按钮
         pygame.draw.rect(self.screen, (0, 0, 128), self.settings_button)
@@ -50,54 +57,20 @@ class HUD:
         self.score = 0
         self.lives = 3
 
-    def drag_interaction(self):
+    def select_inventory(self):
         self.selecting = None
         # 获取鼠标位置
-        mouse_pos = pygame.mouse.get_pos()
+        m_pos = pygame.mouse.get_pos()
         for item in self.inventory:
-            if item["rect"].collidepoint(mouse_pos):
+            if item["rect"].collidepoint(m_pos):
                 self.selecting = item
+        return self.selecting, m_pos
 
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                return self.selecting, event.pos
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if self.selecting:
-                    if self.selecting["type"] == "object":
-                        # 将实体道具拖入世界中
-                        return self.selecting, event.pos
-                    elif self.selecting["type"] == "abstract":
-                        # 拖动“力”时，设定施力点
-                        return self.selecting, event.pos
-        return None, None
+    @staticmethod
+    def mark_underselection(color):
+        scale = None
+        return [min(int(10 + c), 255) for c in color]
 
-
-# 示例用法
-if __name__ == '__main__':
-    pygame.init()
-    screen = pygame.display.set_mode((800, 600))
-    clock = pygame.time.Clock()
-    hud = HUD(screen)
-
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        # 示例：每帧增加1分
-        hud.update_score(1)
-
-        # 清屏
-        screen.fill((0, 0, 0))
-
-        # 渲染HUD
-        hud.render()
-
-        # 更新显示
-        pygame.display.flip()
-
-        # 控制帧率
-        clock.tick(60)
-
-    pygame.quit()
+    @staticmethod
+    def mark_selection(color):
+        return [int(0.8 * c) for c in color]
