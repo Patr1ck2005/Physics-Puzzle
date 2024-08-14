@@ -1,0 +1,62 @@
+[
+    {
+        "type": "ball",
+        "is_placed": true,
+        "quantity": 1,
+        "properties": {
+            "material": "rubber",
+            "size": {
+                "dimension1": 5.0,
+                "dimension2": 5.0
+            },
+            "mass": 0.5,
+            "density": 1.2,
+            "position": {
+                "x": 100,
+                "y": 150
+            },
+            "initial_velocity": {
+                "vx": 2.0,
+                "vy": 3.0
+            },
+            "acceleration": {
+                "ax": 0.1,
+                "ay": -9.8
+            },
+            "magnitude": null,
+            "direction": {
+                "angle": null
+            }
+        }
+    },
+    {
+        "type": "force",
+        "is_placed": false,
+        "quantity": 3,
+        "properties": {
+            "material": null,
+            "size": {
+                "dimension1": null,
+                "dimension2": null
+            },
+            "mass": null,
+            "density": null,
+            "position": {
+                "x": null,
+                "y": null
+            },
+            "initial_velocity": {
+                "vx": null,
+                "vy": null
+            },
+            "acceleration": {
+                "ax": null,
+                "ay": null
+            },
+            "magnitude": 10.0,
+            "direction": {
+                "angle": 45.0
+            }
+        }
+    }
+]
