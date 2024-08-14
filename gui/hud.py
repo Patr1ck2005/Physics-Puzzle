@@ -14,7 +14,7 @@ class HUD:
         self.lives_color = (255, 0, 0)
 
         # 设置按钮
-        self.settings_button = pygame.Rect(700, 10, 80, 30)
+        self.settings_button = pygame.Rect(750, 10, 30, 30)
 
         # 物品栏
         self.inventory = [
@@ -51,7 +51,7 @@ class HUD:
             pygame.draw.rect(self.screen, color, item["rect"])
 
         # 绘制设置按钮
-        pygame.draw.rect(self.screen, (0, 0, 128), self.settings_button)
+        pygame.draw.rect(self.screen, (150, 150, 150), self.settings_button)
 
     def reset(self):
         self.score = 0
@@ -68,7 +68,6 @@ class HUD:
 
     @staticmethod
     def mark_underselection(color):
-        scale = None
         return [min(int(10 + c), 255) for c in color]
 
     @staticmethod

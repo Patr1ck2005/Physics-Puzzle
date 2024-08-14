@@ -1,0 +1,32 @@
+[
+    {
+        "type": null,
+        "is_placed": null,
+        "quantity": null,
+        "properties": {
+            "material": null,
+            "size": {
+                "dimension1": null,
+                "dimension2": null
+            },
+            "mass": null,
+            "density": null,
+            "position": {
+                "x": null,
+                "y": null
+            },
+            "initial_velocity": {
+                "vx": null,
+                "vy": null
+            },
+            "acceleration": {
+                "ax": null,
+                "ay": null
+            },
+            "magnitude": null,
+            "direction": {
+                "angle": null
+            }
+        }
+    }
+]

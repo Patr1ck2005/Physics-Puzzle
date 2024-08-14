@@ -2,22 +2,25 @@ import pygame
 
 import json
 
-import  os
+import os
 
 from gui.menu import main_menu, pause_menu, settings_menu
-from core.enginee import init_world, update_world, render_world
+from core.engine import Engine
 
 from gui.hud import HUD
 
 
 def default_level(screen):
+    # 定义常量
+    selecting = None
+    selected_item = None
+    # 初始化pygame
     clock = pygame.time.Clock()
+    player_rect = pygame.Rect(200, 100, 50, 60)  # 玩家debug方块
     running = True
-
-    player_rect = pygame.Rect(50, 50, 50, 50)  # 玩家方块
-
     # 初始化物理世界: 后续计算该世界
-    space = init_world()
+    engine = Engine(screen)
+    engine.init_world()
     # 初始化HUD
     hud = HUD(screen)
 
@@ -56,7 +59,11 @@ def default_level(screen):
 
         print("---")
 
+    # 游戏主循环
     while running:
+        # 处理鼠标交互
+        selecting, m_pos = hud.select_inventory()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -67,10 +74,15 @@ def default_level(screen):
                     game_state = pause_menu(screen)  # 按下P键暂停
                     if game_state == 'main_menu':
                         return 'main_menu'
-
-        # 处理拖拽交互
-        selecting, m_pos = hud.drag_interaction()
-        print(selecting, m_pos)
+            # 处理鼠标点选物品
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if selecting and selected_item is None:
+                    selected_item = selecting
+                elif selected_item:
+                    print(f'selected {selected_item} added at {m_pos}')
+                    engine.debug_add(selected_item, m_pos)
+                    selecting = None
+                    selected_item = None
 
         # 示例游戏逻辑：简单的左右移动
         keys = pygame.key.get_pressed()
@@ -80,11 +92,11 @@ def default_level(screen):
             player_rect.x += 5
 
         # 计算更新物理世界
-        update_world(space)
+        engine.update_world()
 
         # 渲染关卡
         screen.fill((0, 0, 0))  # 重置画面
-        render_world(space, screen)  # 渲染底层物理对象
+        engine.render_world()  # 渲染底层物理对象
 
         # 渲染高级视觉对象
         pygame.draw.rect(screen, (255, 0, 0), player_rect)  # 绘制玩家
