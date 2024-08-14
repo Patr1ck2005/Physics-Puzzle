@@ -1,10 +1,34 @@
+import pygame
 import pymunk
 
 
+# # Body: 物体的物理状态。
+# Dynamic (动态): 可以受力、重力影响的普通物体。
+# Kinematic (运动学): 不受重力影响，但可以被编程移动的物体。
+# Static (静态): 不移动的物体，通常用于地面、墙壁等。
+
+# # Shape: 物体的形状，用来检测碰撞。
+# pymunk.Circle (圆形): 用于表示圆形的物体。
+# pymunk.Segment (线段): 用于表示线段，通常用于静态边界或墙壁。
+# pymunk.Poly (多边形): 用于表示多边形，可以定义任意形状的物体。
+# pymunk.Poly.create_box (盒子): 用于创建矩形的多边形，通常用作箱子或方块。
+# pymunk.Plane (平面): 用于表示一个无限大的平面边界。
+
+# Constraint: 连接两个物体的物理约束。
+# Space: 物理世界，管理和模拟物体、形状和约束。
+# Arbiter: 管理和处理碰撞事件。
 class GameObject:
-    def __init__(self, body, shape):
-        self.body = body
-        self.shape = shape
+    def __init__(self, name, phy_type, shape="circle", size=3, color=(150, 150, 150)):
+        self.name = name
+        self.body = pymunk.Body(1, body_type=pymunk.Body.DYNAMIC)
+        switch = {
+            "circle": pymunk.Circle,
+            "box": pymunk.Poly.create_box,
+            "segment": pymunk.Segment,
+        }
+        self.shape = switch.get(shape, pymunk.Circle)(self.body, size)
+        self.color = (150, 150, 150)
+        self.icon_rect = None
 
     def add_to_space(self, space):
         space.add(self.body, self.shape)
