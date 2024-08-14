@@ -1,7 +1,7 @@
 import pygame
 import sys
 
-from levels.level import default_level
+from mode.normal_mode import default_level
 from gui.menu import main_menu, pause_menu, settings_menu
 from gui.hud import HUD
 

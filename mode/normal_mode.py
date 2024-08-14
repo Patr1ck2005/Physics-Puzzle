@@ -2,6 +2,8 @@ import pygame
 
 import json
 
+import  os
+
 from gui.menu import main_menu, pause_menu, settings_menu
 from core.enginee import init_world, update_world, render_world
 
@@ -19,8 +21,16 @@ def default_level(screen):
     # 初始化HUD
     hud = HUD(screen)
 
-    # 读取 JSON 文件
-    with open('level_example_usable.json', 'r') as file:
+    # 获取上级目录中的 levels 文件夹路径
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # 当前脚本的目录
+    levels_dir = os.path.join(base_dir, '..', 'levels')  # 上级目录中的 levels 文件夹
+
+    # 指定要读取的 JSON 文件名称
+    file_name = 'level_example_usable.json'
+    file_path = os.path.join(levels_dir, file_name)
+
+    # 读取 JSON 文件，并指定编码为 UTF-8
+    with open(file_path, 'r', encoding='utf-8') as file:
         items = json.load(file)
 
     # 遍历并处理每个物品
