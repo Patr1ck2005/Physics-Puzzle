@@ -22,8 +22,7 @@ def default_level(screen):
     hud = HUD(screen)
 
     # 获取上级目录中的 levels 文件夹路径
-    base_dir = os.path.dirname(os.path.abspath(__file__))  # 当前脚本的目录
-    levels_dir = os.path.join(base_dir, '..', 'levels')  # 上级目录中的 levels 文件夹
+    levels_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'levels')
 
     # 指定要读取的 JSON 文件名称
     file_name = 'level_example_usable.json'
