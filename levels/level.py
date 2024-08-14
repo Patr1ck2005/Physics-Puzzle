@@ -1,5 +1,7 @@
 import pygame
 
+import json
+
 from gui.menu import main_menu, pause_menu, settings_menu
 from core.enginee import init_world, update_world, render_world
 
@@ -16,6 +18,34 @@ def default_level(screen):
     space = init_world()
     # 初始化HUD
     hud = HUD(screen)
+
+    # 读取 JSON 文件
+    with open('level_example_usable.json', 'r') as file:
+        items = json.load(file)
+
+    # 遍历并处理每个物品
+    for item in items:
+        print(f"Type: {item['type']}")
+        print(f"Is placed: {item['is_placed']}")
+        print(f"Quantity: {item['quantity']}")
+        properties = item['properties']
+
+        # 打印物品的属性
+        print(f"Material: {properties.get('material', 'N/A')}")
+        print(f"Size dimension1: {properties.get('size', {}).get('dimension1', 'N/A')}")
+        print(f"Size dimension2: {properties.get('size', {}).get('dimension2', 'N/A')}")
+        print(f"Mass: {properties.get('mass', 'N/A')}")
+        print(f"Density: {properties.get('density', 'N/A')}")
+        print(
+            f"Position: (x: {properties.get('position', {}).get('x', 'N/A')}, y: {properties.get('position', {}).get('y', 'N/A')})")
+        print(
+            f"Initial velocity: (vx: {properties.get('initial_velocity', {}).get('vx', 'N/A')}, vy: {properties.get('initial_velocity', {}).get('vy', 'N/A')})")
+        print(
+            f"Acceleration: (ax: {properties.get('acceleration', {}).get('ax', 'N/A')}, ay: {properties.get('acceleration', {}).get('ay', 'N/A')})")
+        print(f"Magnitude: {properties.get('magnitude', 'N/A')}")
+        print(f"Direction angle: {properties.get('direction', {}).get('angle', 'N/A')}")
+
+        print("---")
 
     while running:
         for event in pygame.event.get():
