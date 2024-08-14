@@ -61,8 +61,8 @@ def default_level(screen):
 
     # 游戏主循环
     while running:
-        # 处理鼠标交互
-        selecting, m_pos = hud.select_inventory()
+        # 处理鼠标和物品栏交互
+        selecting, m_pos = hud.inventory.select_inventory()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

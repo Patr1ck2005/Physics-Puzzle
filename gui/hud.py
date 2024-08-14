@@ -1,15 +1,17 @@
 import pygame
 import pymunk
 
+from .base_ui import BaseUI
+from .inventory import Inventory
+
 
 # HUD类定义
-class HUD:
+class HUD(BaseUI):
     def __init__(self, screen, initial_score=0, initial_lives=3):
+        super().__init__(screen)
         self.selecting = None
-        self.screen = screen
         self.score = initial_score
         self.lives = initial_lives
-        self.font = pygame.font.Font(None, 36)
         self.score_color = (255, 255, 255)
         self.lives_color = (255, 0, 0)
 
@@ -17,13 +19,7 @@ class HUD:
         self.settings_button = pygame.Rect(750, 10, 30, 30)
 
         # 物品栏
-        self.inventory = [
-            {"name": "Box", "type": "object",
-             "rect": pygame.Rect(10, 10, 60, 60), 'color': (128, 128, 128)},
-            {"name": "Force", "type": "abstract",
-             "rect": pygame.Rect(80, 10, 60, 60),
-             'color': (0, 50, 0)},
-        ]
+        self.inventory = Inventory(self.screen)
 
     def update_score(self, points):
         self.score += points
@@ -43,12 +39,7 @@ class HUD:
         self.screen.blit(lives_text, lives_rect)
 
         # 绘制物品栏
-        for item in self.inventory:
-            if item == self.selecting:
-                color = self.mark_underselection(item["color"])
-            else:
-                color = item["color"]
-            pygame.draw.rect(self.screen, color, item["rect"])
+        self.inventory.draw()
 
         # 绘制设置按钮
         pygame.draw.rect(self.screen, (150, 150, 150), self.settings_button)
@@ -56,20 +47,3 @@ class HUD:
     def reset(self):
         self.score = 0
         self.lives = 3
-
-    def select_inventory(self):
-        self.selecting = None
-        # 获取鼠标位置
-        m_pos = pygame.mouse.get_pos()
-        for item in self.inventory:
-            if item["rect"].collidepoint(m_pos):
-                self.selecting = item
-        return self.selecting, m_pos
-
-    @staticmethod
-    def mark_underselection(color):
-        return [min(int(10 + c), 255) for c in color]
-
-    @staticmethod
-    def mark_selection(color):
-        return [int(0.8 * c) for c in color]
