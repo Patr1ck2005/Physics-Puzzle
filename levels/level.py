@@ -1,6 +1,7 @@
 import pygame
 
 from gui.menu import main_menu, pause_menu, settings_menu
+from core.enginee import init_world, update_world, render_world
 
 
 def default_level(screen):
@@ -8,6 +9,9 @@ def default_level(screen):
     running = True
 
     player_rect = pygame.Rect(50, 50, 50, 50)  # 玩家方块
+
+    # 初始化物理世界: 后续计算该世界
+    space = init_world()
 
     while running:
         for event in pygame.event.get():
@@ -28,8 +32,14 @@ def default_level(screen):
         if keys[pygame.K_RIGHT]:
             player_rect.x += 5
 
+        # 计算更新物理世界
+        update_world(space)
+
         # 渲染关卡
-        screen.fill((0, 0, 0))
+        screen.fill((0, 0, 0))  # 重置画面
+        render_world(space, screen)  # 渲染底层物理对象
+
+        # 渲染高级视觉对象
         pygame.draw.rect(screen, (255, 0, 0), player_rect)  # 绘制玩家
         pygame.display.flip()
 
