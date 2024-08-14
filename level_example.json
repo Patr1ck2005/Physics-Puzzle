@@ -1,0 +1,65 @@
+[
+    {
+        "_comment": "这是一个已放置的物品，它是一个小球",
+        "type": "ball",  // 物品的种类是一个小球
+        "is_placed": true,  // 小球是已放置的
+        "quantity": 1,  // 小球的数量（对于已放置物品没有意义）
+        "properties": {
+            "material": "rubber",  // 小球的材料
+            "size": {
+                "dimension1": 5.0,  // 小球的第一个尺寸
+                "dimension2": 5.0   // 小球的第二个尺寸
+            },
+            "mass": 0.5,  // 小球的质量
+            "density": 1.2,  // 小球的密度
+            "position": {
+                "x": 100,  // 小球在关卡中的横坐标
+                "y": 150   // 小球在关卡中的纵坐标
+            },
+            "initial_velocity": {
+                "vx": 2.0,  // 小球的初始横向速度
+                "vy": 3.0   // 小球的初始纵向速度
+            },
+            "acceleration": {
+                "ax": 0.1,  // 小球的横向加速度
+                "ay": -9.8  // 小球的纵向加速度（重力影响）
+            },
+            "magnitude": null,  // 小球没有强度属性，故为null
+            "direction": {
+                "angle": null  // 小球没有方向属性，故为null
+            }
+        }
+    },
+    {
+        "_comment": "这是一个未放置的物品，它是一个力",
+        "type": "force",  // 物品的种类是一个力
+        "is_placed": false,  // 力是未放置的
+        "quantity": 3,  // 可放置的数量
+        "properties": {
+            "material": null,  // 力没有材料属性，故为null
+            "size": {
+                "dimension1": null,  // 力没有尺寸属性，故为null
+                "dimension2": null   // 力没有尺寸属性，故为null
+            },
+            "mass": null,  // 力没有质量属性，故为null
+            "density": null,  // 力没有密度属性，故为null
+            "position": {
+                "x": null,  // 力没有位置属性，故为null
+                "y": null   // 力没有位置属性，故为null
+            },
+            "initial_velocity": {
+                "vx": null,  // 力没有初速度属性，故为null
+                "vy": null   // 力没有初速度属性，故为null
+            },
+            "acceleration": {
+                "ax": null,  // 力没有加速度属性，故为null
+                "ay": null   // 力没有加速度属性，故为null
+            },
+            "magnitude": 10.0,  // 力的强度
+            "direction": {
+                "angle": 45.0  // 力的方向，以角度表示
+            }
+        }
+    }
+]
+
