@@ -8,6 +8,7 @@ from gui.menu import main_menu, pause_menu, settings_menu
 from core.engine import Engine
 
 from gui.hud import HUD
+from gui.ui_manager import UIManager
 
 
 def default_level(screen):
@@ -21,8 +22,8 @@ def default_level(screen):
     # 初始化物理世界: 后续计算该世界
     engine = Engine(screen)
     engine.init_world()
-    # 初始化HUD
-    hud = HUD(screen)
+    # 初始化UI管理器
+    ui_manager = UIManager(screen, engine.space)
 
     # 获取上级目录中的 levels 文件夹路径
     levels_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'levels')
@@ -61,8 +62,8 @@ def default_level(screen):
 
     # 游戏主循环
     while running:
-        # 处理鼠标和物品栏交互
-        selecting, m_pos = hud.inventory.select_inventory()
+        # 更新ui管理器 (刷新鼠标坐标等等)
+        ui_manager.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -76,20 +77,10 @@ def default_level(screen):
                         return 'main_menu'
             # 处理鼠标点选物品
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if selecting and selected_item is None:
-                    selected_item = selecting
-                elif selected_item:
-                    print(f'selected {selected_item} added at {m_pos}')
-                    selected_item.add_to_space(engine.space, loc=m_pos)
-                    selecting = None
-                    selected_item = None
+                ui_manager.on_click()
 
         # 示例游戏逻辑：简单的左右移动
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            player_rect.x -= 5
-        if keys[pygame.K_RIGHT]:
-            player_rect.x += 5
+        debug_player(player_rect)
 
         # 计算更新物理世界
         engine.update_world()
@@ -101,8 +92,8 @@ def default_level(screen):
         # 渲染高级视觉对象
         pygame.draw.rect(screen, (255, 0, 0), player_rect)  # 绘制玩家
 
-        # 渲染HUD
-        hud.render()
+        # 渲染UI
+        ui_manager.render_all_ui()
 
         # 所有渲染完成后,更新画面
         pygame.display.flip()
@@ -110,3 +101,15 @@ def default_level(screen):
         clock.tick(60)
 
     return 'main_menu'
+
+
+def debug_player(player_rect):
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        player_rect.x -= 5
+    if keys[pygame.K_RIGHT]:
+        player_rect.x += 5
+    if keys[pygame.K_UP]:
+        player_rect.y -= 5
+    if keys[pygame.K_DOWN]:
+        player_rect.y += 5

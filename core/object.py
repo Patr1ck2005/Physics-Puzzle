@@ -1,5 +1,6 @@
 import pymunk
 
+from gui.base_ui import BaseUI
 
 # # Body: 物体的物理状态。
 # Dynamic (动态): 可以受力、重力影响的普通物体。
@@ -16,8 +17,11 @@ import pymunk
 # Constraint: 连接两个物体的物理约束。
 # Space: 物理世界，管理和模拟物体、形状和约束。
 # Arbiter: 管理和处理碰撞事件。
-class GameObject:
-    def __init__(self, name, phy_type, shape="circle", size=30, color=(150, 150, 150)):
+
+
+class GameObject(BaseUI):
+    def __init__(self, screen, name, phy_type, shape="circle", size=30, color=(150, 150, 150)):
+        super().__init__(screen)
         self.name = name
         self.type = phy_type
         self.body = None
@@ -39,6 +43,7 @@ class GameObject:
         switch_type = {
             "dynamic": pymunk.Body.DYNAMIC,
             "static": pymunk.Body.STATIC,
+            "kinematic": pymunk.Body.KINEMATIC
         }
         mass = 1
         moment = pymunk.moment_for_circle(mass, 0, 30)
@@ -58,4 +63,4 @@ class GameObject:
 
     def draw(self, screen):
         # 这里可以定义绘制这个物体的方法
-        pass
+        super().draw(screen)
