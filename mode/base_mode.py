@@ -8,6 +8,7 @@ from gui.menu import main_menu, pause_menu, settings_menu
 from core.engine import Engine
 
 from gui.ui_manager import UIManager
+from core.objects_manager import ObjectsManager
 
 
 def default_level(screen):
@@ -20,6 +21,8 @@ def default_level(screen):
     engine.init_world()
     # 初始化UI管理器
     ui_manager = UIManager(screen, engine.space)
+    # 初始化物理对象管理器
+    object_manager = ObjectsManager(engine.space)
     # 加载并播放背景音乐
     pygame.mixer.music.load('Aerie.mp3')
     pygame.mixer.music.play(-1)  # 循环播放

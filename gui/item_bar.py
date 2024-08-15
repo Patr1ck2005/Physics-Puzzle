@@ -2,6 +2,7 @@ import pygame
 
 from .base_ui import BaseUI
 from .inventory import Inventory
+from core.objects_manager import ObjectsManager
 
 
 class ItemBar(BaseUI):
