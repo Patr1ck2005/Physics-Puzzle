@@ -1,5 +1,4 @@
 import pygame
-import pymunk
 
 from .base_ui import BaseUI
 from core.object import GameObject
