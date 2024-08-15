@@ -32,15 +32,19 @@ class GameObject:
         self.body, self.body_shape = self.create_phys()
 
     def create_phys(self):
-        mass = 1
-        moment = pymunk.moment_for_circle(mass, 0, 30)
-        body = pymunk.Body(mass, moment, body_type=pymunk.Body.DYNAMIC)
-        switch = {
+        switch_shape = {
             "circle": pymunk.Circle,
             "box": pymunk.Poly.create_box,
             "segment": pymunk.Segment,
         }
-        body_shape = switch.get(self.shape, pymunk.Circle)(body, self.size)
+        switch_type = {
+            "dynamic": pymunk.Body.DYNAMIC,
+            "static": pymunk.Body.STATIC,
+        }
+        mass = 1
+        moment = pymunk.moment_for_circle(mass, 0, 30)
+        body = pymunk.Body(mass, moment, body_type=switch_type.get(self.type, pymunk.Body.DYNAMIC))
+        body_shape = switch_shape.get(self.shape, pymunk.Circle)(body, self.size)
         body_shape.friction = 0.7
         body_shape.elasticity = 0.8
         return body, body_shape

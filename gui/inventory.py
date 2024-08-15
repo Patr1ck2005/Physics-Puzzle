@@ -10,9 +10,9 @@ class Inventory(BaseUI):
         super().__init__(screen)
         self.items = {
             'ball_1': GameObject('ball_1', 'static', 'circle', color=(200, 0, 200)),
-            'ball_2': GameObject('ball_2', 'static', 'circle', color=(200, 0, 200)),
+            'ball_2': GameObject('ball_2', 'dynamic', 'circle', color=(200, 0, 200)),
             'rect_1': GameObject('rect_1', 'static', 'box', size=(20, 60), color=(200, 200, 200)),
-            'rect_2': GameObject('rect_2', 'static', 'box', size=(60, 20), color=(200, 200, 200)),
+            'rect_2': GameObject('rect_2', 'dynamic', 'box', size=(60, 20), color=(200, 200, 200)),
         }
         self.selecting = None
 
