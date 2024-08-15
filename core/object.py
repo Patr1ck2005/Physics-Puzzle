@@ -1,3 +1,4 @@
+import pygame
 import pymunk
 
 from gui.base_ui import BaseUI
@@ -33,6 +34,7 @@ class GameObject(BaseUI):
         self.icon_rect = None
 
         self.body, self.body_shape = self.create_phys()
+        self.position = self.body.position
 
     def create_phys(self):
         switch_shape = {
@@ -64,3 +66,21 @@ class GameObject(BaseUI):
     def draw(self, screen):
         # 这里可以定义绘制这个物体的方法
         super().draw(screen)
+
+
+class CircleObject(GameObject):
+    def __init__(self, screen, name, phy_type, r=30, color=(150, 150, 150)):
+        super().__init__(screen, name, phy_type, "circle", r, color)
+
+    def draw(self, screen):
+        center_p = (self.position[0]+self.size, self.position[1]+self.size)
+        pygame.draw.circle(screen, self.color, center_p, self.size)
+        text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
+        screen.blit(text, (self.position[0] + 10, self.position[1] + 5))
+
+
+class BoxObject(GameObject):
+    def __init__(self, screen, name, phy_type, size=(30, 30), color=(150, 150, 150)):
+        super().__init__(screen, name, phy_type, "box", size, color)
+
+

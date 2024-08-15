@@ -3,7 +3,7 @@ import pygame
 
 class BaseUI:
     def __init__(self, screen,
-                 position=(100, 100), ico_color=(100, 100, 100), name='Default', size=(80, 50)):
+                 position=(100, 100), ico_color=(100, 100, 100), name='Default', size=(60, 40)):
         self.name = name
         self.screen = screen
         self.font = pygame.font.Font(None, 36)

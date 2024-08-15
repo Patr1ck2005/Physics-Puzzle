@@ -7,23 +7,23 @@ import os
 from gui.menu import main_menu, pause_menu, settings_menu
 from core.engine import Engine
 
-from gui.hud import HUD
 from gui.ui_manager import UIManager
 
 
 def default_level(screen):
-    # 定义常量
-    selecting = None
-    selected_item = None
     # 初始化pygame
     clock = pygame.time.Clock()
-    player_rect = pygame.Rect(200, 100, 50, 60)  # 玩家debug方块
+    player_rect = pygame.Rect(300, 300, 50, 60)  # 玩家debug方块
     running = True
     # 初始化物理世界: 后续计算该世界
     engine = Engine(screen)
     engine.init_world()
     # 初始化UI管理器
     ui_manager = UIManager(screen, engine.space)
+    # 加载并播放背景音乐
+    pygame.mixer.music.load('Aerie.mp3')
+    pygame.mixer.music.play(-1)  # 循环播放
+    pygame.mixer.music.set_volume(0.1)  # 设置音量为 50%
 
     # 获取上级目录中的 levels 文件夹路径
     levels_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'levels')

@@ -22,12 +22,12 @@ class HUD:
     def render(self):
         # 渲染得分
         score_text = self.font.render(f'Score: {self.score}', True, self.score_color)
-        score_rect = score_text.get_rect(topleft=(10, 10))
+        score_rect = score_text.get_rect(topleft=(300, 10))
         self.screen.blit(score_text, score_rect)
 
         # 渲染生命值
         lives_text = self.font.render(f'Lives: {self.lives}', True, self.lives_color)
-        lives_rect = lives_text.get_rect(topleft=(10, 50))
+        lives_rect = lives_text.get_rect(topleft=(300, 50))
         self.screen.blit(lives_text, lives_rect)
 
     def reset(self):

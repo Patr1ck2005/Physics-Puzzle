@@ -16,9 +16,11 @@ class ItemBar(BaseUI):
     def create_uis_for_items(self):
         for i, item in enumerate(self.inventory.items.values()):
             # 假设每个物体的图标为50x50，依次排开成三列
-            ui_position = (10+(i % 3)*90, 10+(i//3)*90)
+            ui_position = (10+(i % 3)*70, 10+(i//3)*70)
             # 设置物体对象的图标
             item_ui = BaseUI(self.screen, ui_position, item.color, item.name)
+            # 设置物体对象的坐标在物品栏
+            item.position = ui_position
             self.item_uis[item.name] = item_ui
 
     def is_mouse_over(self, m_pos):
@@ -43,4 +45,6 @@ class ItemBar(BaseUI):
     def render(self):
         for item_ui in self.item_uis.values():
             item_ui.draw(self.screen)
+        for item in self.inventory.items.values():
+            item.draw(self.screen)
 

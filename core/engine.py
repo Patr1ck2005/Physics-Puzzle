@@ -32,6 +32,11 @@ class Engine:
 
     def update_world(self):
         self.space.step(1/60)
+        for body in self.space.bodies:
+            x, y = body.position
+            if x > 8000 or x < -8000 or y > 8000 or y < -8000:
+                self.space.remove(body, *body.shapes)
+                print(f"remove {body}")
 
     def render_world(self):
         self.space.debug_draw(self.draw_options)
