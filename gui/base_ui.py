@@ -82,6 +82,7 @@ class BaseUICircle(BaseUI):
         self.click_region = Round(self.position, self.size)  # 这里的position是圆心, size是半径
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self._color, self.position, self.size)
+        center = self.position[0]+self.size, self.position[1]+self.size
+        pygame.draw.circle(screen, self._color, center, self.size)
         text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
         screen.blit(text, (self.position[0]-15, self.position[1]-10))
