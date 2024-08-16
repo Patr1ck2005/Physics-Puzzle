@@ -4,11 +4,12 @@ from scripts.utils import Round
 
 class BaseUI:
     def __init__(self, screen,
-                 name='Default', position=None, size=None, text='Default', ico_color=(100, 100, 100)):
+                 name='Default', position=None, size=None, text='Default', ico_path=None, ico_color=(100, 100, 100)):
         self.name = name
         self.screen = screen
         self.font = pygame.font.Font(None, 36)
         self.text = text
+        self.ico = None
         self.position = position
         self.size = size
         self.click_region = None
@@ -68,11 +69,16 @@ class BaseUI:
         # 默认的按住事件处理方法，可以在子类中重写
         print(f'pressing {self.name}')
 
+    def load_icon(self, icon_path):
+        self.ico = pygame.image.load(icon_path)
+
 
 class BaseUIBox(BaseUI):
     def __init__(self, screen,
-                 name='de_Box', position=None, size=(60, 40), text='Default', ico_color=(100, 100, 100), ):
-        super().__init__(screen, name, position, size, text, ico_color, )
+                 name='de_Box', position=None, size=(60, 40), text='Default', ico_path=None, ico_color=(100, 100, 100), ):
+        super().__init__(screen, name, position, size, text, ico_path, ico_color, )
+        self.ico = pygame.transform.scale(pygame.image.load(ico_path),
+                                          (int(size[0]), int(size[1]))) if ico_path is not None else None
 
     @property
     def center(self):
@@ -90,8 +96,10 @@ class BaseUIBox(BaseUI):
 class BaseUICircle(BaseUI):
     def __init__(self, screen,
                  name='de_Circle', center=None,
-                 radius=30, text='Default', ico_color=(100, 100, 100), ):
-        super().__init__(screen, name, center, radius, text, ico_color, )
+                 radius=30, text='Default', ico_path=None, ico_color=(100, 100, 100), ):
+        super().__init__(screen, name, center, radius, text, ico_path, ico_color, )
+        self.ico = pygame.transform.scale(pygame.image.load(ico_path),
+                                          (int(radius*2), int(radius*2))) if ico_path is not None else None
 
     @property
     def center(self):

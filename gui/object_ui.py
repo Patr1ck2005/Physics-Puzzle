@@ -1,3 +1,5 @@
+import math
+
 import pygame
 
 from core.object import GameObject, BoxObject, CircleObject
@@ -14,6 +16,14 @@ class ObjectUI(GameObject, BaseUI):
     def position(self, pos):
         self.rect_pos = pos
         self.set_click_region()
+
+    @property
+    def angle(self):
+        return self.body.angle
+
+    @angle.setter
+    def angle(self, angle):
+        self.body.angle = angle
 
     @property
     def center(self):
@@ -40,11 +50,20 @@ class ObjectUI(GameObject, BaseUI):
         self.set_click_region()
         self.center = self.body.position
 
+    def draw(self, screen):
+        # 目前简单对于图像覆盖处理
+        super().draw(screen)
+        if self.ico is not None:
+            angle_degrees = math.degrees(self.angle)
+            rotated_image = pygame.transform.rotate(self.ico, -angle_degrees)
+            rotated_rect = rotated_image.get_rect(center=self._center)
+            screen.blit(rotated_image, rotated_rect.topleft)
+
 
 class BoxObjectUI(ObjectUI, BoxObject, BaseUIBox):
-    def __init__(self, screen, name, phy_type, position, angle=0, size=(30, 30), color=(150, 150, 150)):
+    def __init__(self, screen, name, phy_type, position, angle=0, size=(30, 30), ico_path=None, color=(150, 150, 150)):
         BoxObject.__init__(self, name, phy_type, position, angle, size)
-        BaseUIBox.__init__(self, screen, name, position, size, ico_color=color)
+        BaseUIBox.__init__(self, screen, name, position, size, ico_path=ico_path, ico_color=color)
 
     # 将UI的位置和pymunk位置关联在一起
     def sync_ui(self):
@@ -64,9 +83,9 @@ class BoxObjectUI(ObjectUI, BoxObject, BaseUIBox):
 
 
 class CircleObjectUI(ObjectUI, CircleObject, BaseUICircle):
-    def __init__(self, screen, name, phy_type, center, angle=0, r=20, color=(150, 150, 150)):
+    def __init__(self, screen, name, phy_type, center, angle=0, r=20, ico_path=None, color=(150, 150, 150)):
         CircleObject.__init__(self, name, phy_type, center, angle, r)
-        BaseUICircle.__init__(self, screen, name, center, r, ico_color=color)
+        BaseUICircle.__init__(self, screen, name, center, r, ico_path=ico_path, ico_color=color)
 
     @property
     def rect_pos(self):

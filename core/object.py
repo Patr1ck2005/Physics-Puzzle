@@ -50,6 +50,7 @@ class GameObject:
         moment = pymunk.moment_for_circle(mass, 0, 30)
         body = pymunk.Body(mass, moment, body_type=switch_type.get(self.type, pymunk.Body.DYNAMIC))
         body.position = self._center
+        body.angle = self._angle
         body_shape = switch_shape.get(self.shape, pymunk.Circle)(body, self.size)
         body_shape.friction = 0.7
         body_shape.elasticity = 0.8
