@@ -40,6 +40,14 @@ class ItemBar:
                 self.selected_item = None
                 return copy
 
+    def on_press(self, m_pos):
+        for item_ui in self.inventory.items.values():
+            item_ui.on_press(m_pos)
+
+    def on_release(self, m_pos):
+        for item_ui in self.inventory.items.values():
+            item_ui.on_release(m_pos)
+
     def render(self):
         for item_bg_ui in self.item_bg_uis.values():
             item_bg_ui.draw(self.screen)

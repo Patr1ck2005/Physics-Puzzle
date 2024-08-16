@@ -25,6 +25,16 @@ class UIManager:
         if selected_item is not None:
             self.obj_manager.add_obj(selected_item)
 
+    # 若鼠标长按则撤回点击事件
+    def call_back_click(self):
+        pass
+
+    def on_press(self):
+        self.item_bar.on_press(self.m_pos)
+
+    def on_release(self):
+        self.item_bar.on_release(self.m_pos)
+
     # 依次渲染所有UI
     def render_all_ui(self):
         for ui in self.all_uis:

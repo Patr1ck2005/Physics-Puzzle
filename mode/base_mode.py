@@ -2,6 +2,7 @@ import pygame
 
 import json
 
+import time
 import os
 
 from gui.menu import main_menu, pause_menu, settings_menu
@@ -12,6 +13,9 @@ from core.objects_manager import ObjectsManager
 
 
 def default_level(screen):
+    # 定义常量
+    pressing_time = 0
+
     # 初始化pygame
     clock = pygame.time.Clock()
     player_rect = pygame.Rect(300, 300, 50, 60)  # 玩家debug方块
@@ -65,10 +69,11 @@ def default_level(screen):
 
     # 游戏主循环
     while running:
+        m_d_pos = pygame.mouse.get_rel()
         m_pos = pygame.mouse.get_pos()
         # 更新ui管理器和物品管理器 (获取鼠标实时坐标, 从而后续执行鼠标和UI的交互)
         ui_manager.update(m_pos)
-        object_manager.update(m_pos)
+        object_manager.update(m_pos, m_d_pos)
 
         # 总键鼠交互
         for event in pygame.event.get():
@@ -83,8 +88,22 @@ def default_level(screen):
                         return 'main_menu'
             # 当鼠标点击时, 处理鼠标点击和UI的交互
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                pressing_start_time = time.time()
                 ui_manager.on_click()
                 object_manager.on_click()
+            elif event.type == pygame.MOUSEBUTTONUP:
+                ui_manager.on_release()
+                object_manager.on_release()
+
+        # 检测鼠标是否长按
+        mouse_buttons = pygame.mouse.get_pressed()
+        if mouse_buttons[0]:  # 左键
+            if time.time() - pressing_start_time > 0.1:  # 按下超过0.1秒算长按
+                ui_manager.on_press()
+                object_manager.on_press()
+                # 触发长按的时候需要撤回点击事件 (例如, 双次点击放置和长按放置取其一即可)
+                ui_manager.call_back_click()
+                object_manager.call_back_click()
 
         # DEBUG 示例游戏逻辑：简单的左右移动
         debug_player(player_rect)

@@ -48,15 +48,24 @@ class BaseUI:
         else:
             self._color = self.ico_color
 
-    def on_release(self, m_pos):
+    def on_press(self, m_pos):
         if self.click_region.collidepoint(*m_pos):
             self._color = self.mark_selection(self.ico_color)
+            self.call_press()
+            return True
         else:
             self._color = self.ico_color
+
+    def on_release(self, m_pos):
+        print(self.name, "released")
 
     def call_click(self):
         # 默认的点击事件处理方法，可以在子类中重写
         print(f'{self.name} was clicked')
+
+    def call_press(self):
+        # 默认的按住事件处理方法，可以在子类中重写
+        print(f'pressing {self.name}')
 
 
 class BaseUIBox(BaseUI):

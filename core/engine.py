@@ -31,7 +31,9 @@ class Engine:
         self.space.add(ball_body, ball_shape)
 
     def update_world(self):
-        self.space.step(1/60)
+        self.space.step(1/180)
+        self.space.step(1/180)
+        self.space.step(1/180)
         for body in self.space.bodies:
             x, y = body.position
             if x > 8000 or x < -8000 or y > 8000 or y < -8000:
