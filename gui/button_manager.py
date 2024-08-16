@@ -7,16 +7,16 @@ class ButtonManager:
     def __init__(self, screen):
         self.screen = screen
         self.all_buttons = {
-            "setting": BaseUICircle(screen, "setting", (SCREEN_WIDTH-100, 30), 30,
+            "setting": BaseUICircle(screen, "setting", (SCREEN_WIDTH - 100, 30), 30,
                                     text='setting', ico_color=(170, 170, 170)),
-            # "time": BaseUICircle(screen, "time", (50, SCREEN_HEIGHT-50), 20,
-            #                      text='time', ico_color=(80, 80, 80)),
+            "rewind ": BaseUICircle(screen, "rewind", (50, SCREEN_HEIGHT-50), 20,
+                                 text='rewind', ico_color=(80, 80, 80)),
             "slow": BaseUICircle(screen, "slow", (200, SCREEN_HEIGHT - 50), 20,
                                  text='slow', ico_color=(80, 80, 80)),
             "pause/resume": BaseUICircle(screen, "pause/resume", (250, SCREEN_HEIGHT - 50), 20,
                                          text='pause', ico_color=(80, 80, 80)),
             "speed": BaseUICircle(screen, "speed", (300, SCREEN_HEIGHT - 50), 20,
-                                 text='speed', ico_color=(80, 80, 80)),
+                                  text='speed', ico_color=(80, 80, 80)),
         }
 
     def is_mouse_over(self, m_pos):
@@ -31,4 +31,3 @@ class ButtonManager:
     def render(self):
         for btn in self.all_buttons.values():
             btn.draw(self.screen)
-
