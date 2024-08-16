@@ -23,11 +23,11 @@ from gui.base_ui import BaseUIBox, BaseUICircle
 class GameObject:
     def __init__(self, name, phy_type, shape=None, position=None, size=None, color=None):
         self.name = name
-        self.position = position
         self.type = phy_type
         self.body = None
         self.body_shape = None
         self.shape = shape
+        self._position = position
         self.size = size
 
         self.icon_rect = None
@@ -38,8 +38,8 @@ class GameObject:
 
     def _create_phys(self):
         switch_shape = {
-            "circle": pymunk.Circle,
             "box": pymunk.Poly.create_box,
+            "circle": pymunk.Circle,
             "segment": pymunk.Segment,
         }
         switch_type = {
@@ -50,7 +50,7 @@ class GameObject:
         mass = 1
         moment = pymunk.moment_for_circle(mass, 0, 30)
         body = pymunk.Body(mass, moment, body_type=switch_type.get(self.type, pymunk.Body.DYNAMIC))
-        body.position = self.position
+        body.position = self._position
         body_shape = switch_shape.get(self.shape, pymunk.Circle)(body, self.size)
         body_shape.friction = 0.7
         body_shape.elasticity = 0.8
@@ -71,8 +71,8 @@ class BoxObject(GameObject):
 
 
 class CircleObject(GameObject):
-    def __init__(self, name, phy_type, position=(100, 100), radius=30, color=(150, 150, 150)):
-        GameObject.__init__(self, name, phy_type, "circle", position, radius, color)
+    def __init__(self, name, phy_type, center=(100, 100), radius=30, color=(150, 150, 150)):
+        GameObject.__init__(self, name, phy_type, "circle", center, radius, color)
 
 
 

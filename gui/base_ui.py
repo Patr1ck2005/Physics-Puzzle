@@ -4,7 +4,7 @@ from scripts.utils import Round
 
 class BaseUI:
     def __init__(self, screen,
-                 position=None, ico_color=(100, 100, 100), name='Default', size=None):
+                 name='Default', position=None, size=None, ico_color=(100, 100, 100)):
         self.name = name
         self.screen = screen
         self.font = pygame.font.Font(None, 36)
@@ -13,7 +13,9 @@ class BaseUI:
         self.size = size
         self.click_region = None
         self.ico_color = ico_color
-        self.color = ico_color
+        self._color = ico_color
+
+        self.set_click_region()
 
     @staticmethod
     def highlight(color):
@@ -23,47 +25,63 @@ class BaseUI:
     def mark_selection(color):
         return [int(255 - c) for c in color]
 
-    # 可在子类中重写
+    # 需在子类中重写
+    def set_click_region(self):
+        pass
+
+    # 需在子类中重写
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, (*self.position, *self.size))
-        text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
-        screen.blit(text, (self.position[0] + 10, self.position[1] + 5))
+        pass
 
     def is_mouse_over(self, m_pos):
         if self.click_region.collidepoint(*m_pos):
-            self.color = self.highlight(self.ico_color)
+            self._color = self.highlight(self.ico_color)
             return True
         else:
-            self.color = self.ico_color
+            self._color = self.ico_color
 
     def on_click(self, m_pos):
         if self.click_region.collidepoint(*m_pos):
-            self.color = self.mark_selection(self.ico_color)
+            self._color = self.mark_selection(self.ico_color)
             return True
         else:
-            self.color = self.ico_color
+            self._color = self.ico_color
 
     def on_release(self, m_pos):
         if self.click_region.collidepoint(*m_pos):
-            self.color = self.mark_selection(self.ico_color)
+            self._color = self.mark_selection(self.ico_color)
         else:
-            self.color = self.ico_color
+            self._color = self.ico_color
 
     def call_click(self):
         # 默认的点击事件处理方法，可以在子类中重写
-        pass
+        print(f'{self.name} was clicked')
 
 
 class BaseUIBox(BaseUI):
     def __init__(self, screen,
-                 position=None, ico_color=(100, 100, 100), name='de_Box', size=(60, 40)):
-        super().__init__(screen, position, ico_color, name, size)
+                 name='de_Box', position=None, size=(60, 40), ico_color=(100, 100, 100), ):
+        super().__init__(screen, name, position, size, ico_color, )
+
+    def set_click_region(self):
         self.click_region = pygame.Rect(*self.position, *self.size)
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, self._color, (*self.position, *self.size))
+        text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
+        screen.blit(text, (self.position[0] + 10, self.position[1] + 5))
 
 
 class BaseUICircle(BaseUI):
     def __init__(self, screen,
-                 center=None, position=None,
-                 ico_color=(100, 100, 100), name='de_Circle', radius=50):
-        super().__init__(screen, position, ico_color, name, radius)
-        self.click_region = Round(center, radius)
+                 name='de_Circle', center=None,
+                 radius=30, ico_color=(100, 100, 100), ):
+        super().__init__(screen, name, center, radius, ico_color, )
+
+    def set_click_region(self):
+        self.click_region = Round(self.position, self.size)  # 这里的position是圆心, size是半径
+
+    def draw(self, screen):
+        pygame.draw.circle(screen, self._color, self.position, self.size)
+        text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
+        screen.blit(text, (self.position[0]-15, self.position[1]-10))

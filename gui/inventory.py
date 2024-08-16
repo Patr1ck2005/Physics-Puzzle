@@ -1,19 +1,21 @@
-import pygame
-
-from core.object import GameObject, CircleObject, BoxObject
+from .object_ui import BoxObjectUI, CircleObjectUI
 
 
 class Inventory:
+    items: dict[str, BoxObjectUI | CircleObjectUI]
+
     def __init__(self, screen):
+        position = (0, 0)
+        center = (0, 0)
         self.items = {
-            'ball_1': CircleObject('ball_1', 'static', color=(200, 0, 200)),
-            'ball_2': CircleObject('ball_2', 'dynamic', color=(200, 0, 200)),
-            'ball_3': CircleObject('ball_3', 'kinematic', color=(200, 0, 200)),
-            'rect_1': BoxObject('rect_1', 'static', size=(20, 60), color=(200, 200, 200)),
-            'rect_2': BoxObject('rect_2', 'dynamic', size=(60, 20), color=(200, 200, 200)),
-            'rect_3': BoxObject('rect_3', 'kinematic', size=(60, 20), color=(200, 200, 200)),
+            'ball_1': CircleObjectUI(screen, 'ball_1', 'static', center, color=(200, 0, 200)),
+            'ball_2': CircleObjectUI(screen, 'ball_2', 'dynamic', center, color=(200, 0, 200)),
+            'ball_3': CircleObjectUI(screen, 'ball_3', 'kinematic', center, color=(200, 0, 200)),
+            'rect_1': BoxObjectUI(screen, 'rect_1', 'static', position, size=(20, 40), color=(200, 200, 200)),
+            'rect_2': BoxObjectUI(screen, 'rect_2', 'dynamic', position, size=(60, 20), color=(200, 200, 200)),
+            'rect_3': BoxObjectUI(screen, 'rect_3', 'kinematic', position, size=(60, 20), color=(200, 200, 200)),
         }
-        self.selecting = None
+        self.align_items()
 
     def add_item(self, item):
         self.items[item.name] = item
@@ -24,12 +26,10 @@ class Inventory:
     def get_item(self, name):
         return self.items[name]
 
-    def select_inventory(self) -> (GameObject, tuple):
-        self.selecting = None
-        # 获取鼠标位置
-        m_pos = pygame.mouse.get_pos()
-        for item in self.items.values():
-            if item.icon_rect and item.icon_rect.collidepoint(m_pos):
-                self.selecting = item
-        return self.selecting, m_pos
+    def align_items(self):
+        for i, item in enumerate(self.items.values()):
+            # 假设每个物体的图标为50x50，依次排开成三列
+            ui_position = (50 + (i % 3) * 70, 30 + (i // 3) * 70)
+            # 设置物体对象UI中心的坐标
+            item.center = ui_position
 

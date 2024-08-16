@@ -1,5 +1,5 @@
 from .hud import HUD
-from .item_bar import ItemBar
+from .inventory_manager import ItemBar
 
 import pygame
 
