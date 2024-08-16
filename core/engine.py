@@ -1,12 +1,15 @@
 import pymunk
 import pymunk.pygame_util
 
+from settings import *
 
 class Engine:
     def __init__(self, screen):
         self.screen = screen
         self.draw_options = pymunk.pygame_util.DrawOptions(screen)
         self.space = pymunk.Space()
+        self.pause = False
+        self.time_scale = 1
 
     def init_world(self):
 
@@ -14,7 +17,7 @@ class Engine:
 
         # 创建地面
         static_body = pymunk.Body(body_type=pymunk.Body.STATIC)
-        ground = pymunk.Segment(static_body, (50, 550), (750, 550), 5)
+        ground = pymunk.Segment(static_body, (SCREEN_WIDTH/10, 500), (9*SCREEN_WIDTH/10, 500), 5)
         ground.friction = 1.0
         ground.elasticity = 1
         self.space.add(static_body, ground)
@@ -31,9 +34,11 @@ class Engine:
         self.space.add(ball_body, ball_shape)
 
     def update_world(self):
-        self.space.step(1/180)
-        self.space.step(1/180)
-        self.space.step(1/180)
+        if self.pause:
+            return
+        self.space.step(1/180*self.time_scale)
+        self.space.step(1/180*self.time_scale)
+        self.space.step(1/180*self.time_scale)
         for body in self.space.bodies:
             x, y = body.position
             if x > 8000 or x < -8000 or y > 8000 or y < -8000:

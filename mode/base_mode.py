@@ -14,7 +14,7 @@ from core.objects_manager import ObjectsManager
 
 def default_level(screen):
     # 定义常量
-    pressing_time = 0
+    pressing_start_time = None
 
     # 初始化pygame
     clock = pygame.time.Clock()
@@ -25,8 +25,8 @@ def default_level(screen):
     engine.init_world()
     # 初始化物理对象管理器
     object_manager = ObjectsManager(screen, engine.space)
-    # 初始化UI管理器
-    ui_manager = UIManager(screen, object_manager)
+    # 初始化UI管理器 (UI管理器需要处理UI与渲染与物理世界的关系)
+    ui_manager = UIManager(screen, engine, object_manager)
     # 加载并播放背景音乐
     pygame.mixer.music.load('Aerie.mp3')
     pygame.mixer.music.play(-1)  # 循环播放

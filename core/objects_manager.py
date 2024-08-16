@@ -1,5 +1,6 @@
 from pymunk import Vec2d
 
+
 class ObjectsManager:
     def __init__(self, screen, space):
         self.screen = screen

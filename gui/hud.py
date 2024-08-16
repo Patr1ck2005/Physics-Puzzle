@@ -1,5 +1,7 @@
 import pygame
 
+from settings import *
+
 
 # HUD类定义
 class HUD:
@@ -10,6 +12,8 @@ class HUD:
         self.selecting = None
         self.score = initial_score
         self.lives = initial_lives
+        self.time_scale = 1
+        self.default_color = (200, 200, 200)
         self.score_color = (255, 255, 255)
         self.lives_color = (255, 0, 0)
 
@@ -18,6 +22,9 @@ class HUD:
 
     def update_lives(self, change):
         self.lives += change
+
+    def update_time_scale(self, time_scale):
+        self.time_scale = time_scale
 
     def render(self):
         # 渲染得分
@@ -29,6 +36,11 @@ class HUD:
         lives_text = self.font.render(f'Lives: {self.lives}', True, self.lives_color)
         lives_rect = lives_text.get_rect(topleft=(300, 50))
         self.screen.blit(lives_text, lives_rect)
+
+        # 渲染时间倍率
+        time_scale_text = self.font.render(f'time rate: X{self.time_scale}', True, self.default_color)
+        time_scale_rect = lives_text.get_rect(topleft=(300, 90))
+        self.screen.blit(time_scale_text, time_scale_rect)
 
     def reset(self):
         self.score = 0

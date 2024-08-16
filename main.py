@@ -5,12 +5,12 @@ from mode.base_mode import default_level
 from gui.menu import main_menu, pause_menu, settings_menu
 from gui.hud import HUD
 
+from settings import *
+
 # 初始化Pygame
 pygame.init()
 
 # 屏幕尺寸
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Physics!')
 

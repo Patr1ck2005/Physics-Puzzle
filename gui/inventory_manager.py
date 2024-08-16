@@ -1,56 +1,36 @@
-from .object_ui import *
-from .inventory import Inventory
-from core.objects_manager import ObjectsManager
+from .object_ui import BoxObjectUI, CircleObjectUI
 
 
-class ItemBar:
+class InventoryManager:
+    items: dict[str, BoxObjectUI | CircleObjectUI]
+
     def __init__(self, screen):
-        self.screen = screen
-        self.inventory = Inventory(screen)
-        self.item_bg_uis = {}
-        self.selected_item = None
-        self.create_bg_uis_for_items()
+        # 先随便设置位置, 后续会调整位置
+        center = (0, 0)
+        self.items = {
+            'ball_1': CircleObjectUI(screen, 'ball_1', 'static', center, color=(200, 0, 200)),
+            'ball_2': CircleObjectUI(screen, 'ball_2', 'dynamic', center, color=(200, 0, 200)),
+            'ball_3': CircleObjectUI(screen, 'ball_3', 'kinematic', center, color=(200, 0, 200)),
+            'rect_1': BoxObjectUI(screen, 'rect_1', 'static', center, size=(20, 40), color=(200, 200, 200)),
+            'rect_2': BoxObjectUI(screen, 'rect_2', 'dynamic', center, size=(30, 20), color=(200, 200, 200)),
+            'rect_3': BoxObjectUI(screen, 'rect_3', 'kinematic', center, size=(30, 20), color=(200, 200, 200)),
+        }
+        # 调整位置排列物品栏
+        self.align_items()
 
-    def create_bg_uis_for_items(self):
-        for i, item in enumerate(self.inventory.items.values()):
-            # 设置每个物体的背景图标位置等于物体位置 (需要转化参考系)
-            bg_ui_position = item.center[0] - 25, item.center[1] - 25
-            # 设置物体对象的图标, 颜色淡化
-            ico_color = [max(c - 100, 0) for c in item.ico_color]
-            item_bg_ui = BaseUIBox(self.screen, item.name, bg_ui_position, (50, 50), ico_color=ico_color)
-            self.item_bg_uis[item.name] = item_bg_ui
+    def add_item(self, item):
+        self.items[item.name] = item
 
-    def is_mouse_over(self, m_pos):
-        for item in self.inventory.items.values():
-            if item.is_mouse_over(m_pos):
-                return True
-        for item_ui in self.item_bg_uis.values():
-            if item_ui.is_mouse_over(m_pos):
-                return True
+    def remove_item_by_name(self, name):
+        self.items.pop(name)
 
-    def on_click(self, m_pos):
-        # 点击物体
-        for item_ui in self.inventory.items.values():
-            if item_ui.on_click(m_pos) and self.selected_item is None:
-                self.selected_item = self.inventory.items[item_ui.name]
-                return
-            elif self.selected_item:
-                copy = self.selected_item
-                self.inventory.remove_item_by_name(self.selected_item.name)
-                self.selected_item = None
-                return copy
+    def get_item_by_name(self, name):
+        return self.items[name]
 
-    def on_press(self, m_pos):
-        for item_ui in self.inventory.items.values():
-            item_ui.on_press(m_pos)
-
-    def on_release(self, m_pos):
-        for item_ui in self.inventory.items.values():
-            item_ui.on_release(m_pos)
-
-    def render(self):
-        for item_bg_ui in self.item_bg_uis.values():
-            item_bg_ui.draw(self.screen)
-        for item in self.inventory.items.values():
-            item.draw(self.screen)
+    def align_items(self):
+        for i, item in enumerate(self.items.values()):
+            # 假设每个物体的图标为50x50，依次排开成三列
+            ui_position = (50 + (i % 3) * 70, 30 + (i // 3) * 70)
+            # 设置物体对象UI中心的坐标
+            item.center = ui_position
 

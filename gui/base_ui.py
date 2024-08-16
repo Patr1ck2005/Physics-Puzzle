@@ -4,11 +4,11 @@ from scripts.utils import Round
 
 class BaseUI:
     def __init__(self, screen,
-                 name='Default', position=None, size=None, ico_color=(100, 100, 100)):
+                 name='Default', position=None, size=None, text='Default', ico_color=(100, 100, 100)):
         self.name = name
         self.screen = screen
         self.font = pygame.font.Font(None, 36)
-        self.text = name
+        self.text = text
         self.position = position
         self.size = size
         self.click_region = None
@@ -57,7 +57,8 @@ class BaseUI:
             self._color = self.ico_color
 
     def on_release(self, m_pos):
-        print(self.name, "released")
+        if self.click_region.collidepoint(*m_pos):
+            print(f'{self.name} was released')
 
     def call_click(self):
         # 默认的点击事件处理方法，可以在子类中重写
@@ -70,8 +71,8 @@ class BaseUI:
 
 class BaseUIBox(BaseUI):
     def __init__(self, screen,
-                 name='de_Box', position=None, size=(60, 40), ico_color=(100, 100, 100), ):
-        super().__init__(screen, name, position, size, ico_color, )
+                 name='de_Box', position=None, size=(60, 40), text='Default', ico_color=(100, 100, 100), ):
+        super().__init__(screen, name, position, size, text, ico_color, )
 
     @property
     def center(self):
@@ -89,8 +90,8 @@ class BaseUIBox(BaseUI):
 class BaseUICircle(BaseUI):
     def __init__(self, screen,
                  name='de_Circle', center=None,
-                 radius=30, ico_color=(100, 100, 100), ):
-        super().__init__(screen, name, center, radius, ico_color, )
+                 radius=30, text='Default', ico_color=(100, 100, 100), ):
+        super().__init__(screen, name, center, radius, text, ico_color, )
 
     @property
     def center(self):
@@ -102,4 +103,4 @@ class BaseUICircle(BaseUI):
     def draw(self, screen):
         pygame.draw.circle(screen, self._color, self.center, self.size)
         text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
-        screen.blit(text, (self.position[0]+15, self.position[1]+10))
+        screen.blit(text, (self.center[0]-self.size, self.center[1]-10))

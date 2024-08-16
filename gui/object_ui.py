@@ -32,7 +32,7 @@ class ObjectUI(GameObject, BaseUI):
 
     @rect_pos.setter
     def rect_pos(self, pos):
-        self.set_click_region()
+        pass
 
     # 将UI的位置和pymunk位置关联在一起
     def sync_ui(self):
@@ -44,7 +44,7 @@ class ObjectUI(GameObject, BaseUI):
 class BoxObjectUI(ObjectUI, BoxObject, BaseUIBox):
     def __init__(self, screen, name, phy_type, position, angle=0, size=(30, 30), color=(150, 150, 150)):
         BoxObject.__init__(self, name, phy_type, position, angle, size)
-        BaseUIBox.__init__(self, screen, name, position, size, color)
+        BaseUIBox.__init__(self, screen, name, position, size, ico_color=color)
 
     # 将UI的位置和pymunk位置关联在一起
     def sync_ui(self):
@@ -66,7 +66,7 @@ class BoxObjectUI(ObjectUI, BoxObject, BaseUIBox):
 class CircleObjectUI(ObjectUI, CircleObject, BaseUICircle):
     def __init__(self, screen, name, phy_type, center, angle=0, r=20, color=(150, 150, 150)):
         CircleObject.__init__(self, name, phy_type, center, angle, r)
-        BaseUICircle.__init__(self, screen, name, center, r, color)
+        BaseUICircle.__init__(self, screen, name, center, r, ico_color=color)
 
     @property
     def rect_pos(self):
@@ -77,5 +77,4 @@ class CircleObjectUI(ObjectUI, CircleObject, BaseUICircle):
         self._center = pos[0]+self.size, pos[1]+self.size
         if self.body is not None:
             self.body.position = pos[0]+self.size, pos[1]+self.size
-        super()
 
