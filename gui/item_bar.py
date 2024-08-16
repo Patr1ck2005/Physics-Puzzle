@@ -1,13 +1,14 @@
 import pygame
 
 from .base_ui import BaseUIBox
+from .object_ui import *
 from .inventory import Inventory
 from core.objects_manager import ObjectsManager
 
 
-class ItemBar(BaseUIBox):
+class ItemBar:
     def __init__(self, screen, space):
-        super().__init__(screen)
+        self.screen = screen
         self.inventory = Inventory(screen)
         self.space = space
         self.item_uis = {}
@@ -19,7 +20,7 @@ class ItemBar(BaseUIBox):
             # 假设每个物体的图标为50x50，依次排开成三列
             ui_position = (10+(i % 3)*70, 10+(i//3)*70)
             # 设置物体对象的图标
-            item_ui = BaseUI(self.screen, ui_position, item.color, item.name)
+            item_ui = BaseUIBox(self.screen, ui_position, item.color, item.name)
             # 设置物体对象的坐标在物品栏中
             item.position = ui_position
             self.item_uis[item.name] = item_ui
@@ -27,9 +28,6 @@ class ItemBar(BaseUIBox):
     def is_mouse_over(self, m_pos):
         for item_ui in self.item_uis.values():
             if item_ui.is_mouse_over(m_pos):
-                return True
-        for item in self.inventory.items.values():
-            if item.is_mouse_over(m_pos):
                 return True
 
     def on_click(self, m_pos):
@@ -49,6 +47,4 @@ class ItemBar(BaseUIBox):
     def render(self):
         for item_ui in self.item_uis.values():
             item_ui.draw(self.screen)
-        for item in self.inventory.items.values():
-            item.draw(self.screen)
 

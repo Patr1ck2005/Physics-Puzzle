@@ -1,19 +1,17 @@
 import pygame
 
-from .base_ui import BaseUI
 from core.object import GameObject, CircleObject, BoxObject
 
 
-class Inventory(BaseUI):
+class Inventory:
     def __init__(self, screen):
-        super().__init__(screen)
         self.items = {
-            'ball_1': CircleObject(screen, 'ball_1', 'static', color=(200, 0, 200)),
-            'ball_2': CircleObject(screen, 'ball_2', 'dynamic', color=(200, 0, 200)),
-            'ball_3': CircleObject(screen, 'ball_3', 'kinematic', color=(200, 0, 200)),
-            'rect_1': BoxObject(screen, 'rect_1', 'static', size=(20, 60), color=(200, 200, 200)),
-            'rect_2': BoxObject(screen, 'rect_2', 'dynamic', size=(60, 20), color=(200, 200, 200)),
-            'rect_3': BoxObject(screen, 'rect_3', 'kinematic', size=(60, 20), color=(200, 200, 200)),
+            'ball_1': CircleObject('ball_1', 'static', color=(200, 0, 200)),
+            'ball_2': CircleObject('ball_2', 'dynamic', color=(200, 0, 200)),
+            'ball_3': CircleObject('ball_3', 'kinematic', color=(200, 0, 200)),
+            'rect_1': BoxObject('rect_1', 'static', size=(20, 60), color=(200, 200, 200)),
+            'rect_2': BoxObject('rect_2', 'dynamic', size=(60, 20), color=(200, 200, 200)),
+            'rect_3': BoxObject('rect_3', 'kinematic', size=(60, 20), color=(200, 200, 200)),
         }
         self.selecting = None
 

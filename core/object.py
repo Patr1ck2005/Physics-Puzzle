@@ -21,7 +21,7 @@ from gui.base_ui import BaseUIBox, BaseUICircle
 
 
 class GameObject:
-    def __init__(self, name, position, phy_type, shape=None, size=None):
+    def __init__(self, name, phy_type, shape=None, position=None, size=None, color=None):
         self.name = name
         self.position = position
         self.type = phy_type
@@ -33,6 +33,8 @@ class GameObject:
         self.icon_rect = None
 
         self.body, self.body_shape = self._create_phys()
+
+        self.color = color
 
     def _create_phys(self):
         switch_shape = {
@@ -64,13 +66,13 @@ class GameObject:
 
 
 class BoxObject(GameObject):
-    def __init__(self, position, name, phy_type, size=(30, 30)):
-        GameObject.__init__(self, name, position, phy_type, "box", size)
+    def __init__(self, name, phy_type, position=(100, 100), size=(30, 30), color=(150, 150, 150)):
+        GameObject.__init__(self, name, phy_type, "box", position, size, color)
 
 
 class CircleObject(GameObject):
-    def __init__(self, position, name, phy_type, r=30):
-        GameObject.__init__(self, name, position, phy_type, "circle", r)
+    def __init__(self, name, phy_type, position=(100, 100), radius=30, color=(150, 150, 150)):
+        GameObject.__init__(self, name, phy_type, "circle", position, radius, color)
 
 
 
