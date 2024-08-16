@@ -1,7 +1,7 @@
 import pygame
 import pymunk
 
-from gui.base_ui import BaseUI
+from gui.base_ui import BaseUIBox, BaseUICircle
 
 # # Body: 物体的物理状态。
 # Dynamic (动态): 可以受力、重力影响的普通物体。
@@ -20,23 +20,21 @@ from gui.base_ui import BaseUI
 # Arbiter: 管理和处理碰撞事件。
 
 
-class GameObject(BaseUI):
-    def __init__(self, screen, name, phy_type, shape="circle", size=30, color=(150, 150, 150)):
-        super().__init__(screen)
+class GameObject:
+    def __init__(self, name, position, phy_type, shape=None, size=None):
         self.name = name
+        self.position = position
         self.type = phy_type
         self.body = None
         self.body_shape = None
         self.shape = shape
         self.size = size
 
-        self.color = color
         self.icon_rect = None
 
-        self.body, self.body_shape = self.create_phys()
-        self.position = self.body.position
+        self.body, self.body_shape = self._create_phys()
 
-    def create_phys(self):
+    def _create_phys(self):
         switch_shape = {
             "circle": pymunk.Circle,
             "box": pymunk.Poly.create_box,
@@ -50,37 +48,29 @@ class GameObject(BaseUI):
         mass = 1
         moment = pymunk.moment_for_circle(mass, 0, 30)
         body = pymunk.Body(mass, moment, body_type=switch_type.get(self.type, pymunk.Body.DYNAMIC))
+        body.position = self.position
         body_shape = switch_shape.get(self.shape, pymunk.Circle)(body, self.size)
         body_shape.friction = 0.7
         body_shape.elasticity = 0.8
         return body, body_shape
 
     def add_to_space(self, space, loc):
-        new_body, new_body_shape = self.create_phys()
+        new_body, new_body_shape = self._create_phys()
         new_body.position = loc
         space.add(new_body, new_body_shape)
 
     def remove_from_space(self, space):
         space.remove(self.body, self.shape)
 
-    def draw(self, screen):
-        # 这里可以定义绘制这个物体的方法
-        super().draw(screen)
+
+class BoxObject(GameObject):
+    def __init__(self, position, name, phy_type, size=(30, 30)):
+        GameObject.__init__(self, name, position, phy_type, "box", size)
 
 
 class CircleObject(GameObject):
-    def __init__(self, screen, name, phy_type, r=30, color=(150, 150, 150)):
-        super().__init__(screen, name, phy_type, "circle", r, color)
+    def __init__(self, position, name, phy_type, r=30):
+        GameObject.__init__(self, name, position, phy_type, "circle", r)
 
-    def draw(self, screen):
-        center_p = (self.position[0]+self.size, self.position[1]+self.size)
-        pygame.draw.circle(screen, self.color, center_p, self.size)
-        text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
-        screen.blit(text, (self.position[0] + 10, self.position[1] + 5))
-
-
-class BoxObject(GameObject):
-    def __init__(self, screen, name, phy_type, size=(30, 30), color=(150, 150, 150)):
-        super().__init__(screen, name, phy_type, "box", size, color)
 
 
