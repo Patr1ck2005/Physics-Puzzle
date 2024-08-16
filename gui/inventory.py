@@ -12,8 +12,8 @@ class Inventory:
             'ball_2': CircleObjectUI(screen, 'ball_2', 'dynamic', center, color=(200, 0, 200)),
             'ball_3': CircleObjectUI(screen, 'ball_3', 'kinematic', center, color=(200, 0, 200)),
             'rect_1': BoxObjectUI(screen, 'rect_1', 'static', position, size=(20, 40), color=(200, 200, 200)),
-            'rect_2': BoxObjectUI(screen, 'rect_2', 'dynamic', position, size=(60, 20), color=(200, 200, 200)),
-            'rect_3': BoxObjectUI(screen, 'rect_3', 'kinematic', position, size=(60, 20), color=(200, 200, 200)),
+            'rect_2': BoxObjectUI(screen, 'rect_2', 'dynamic', position, size=(30, 20), color=(200, 200, 200)),
+            'rect_3': BoxObjectUI(screen, 'rect_3', 'kinematic', position, size=(30, 20), color=(200, 200, 200)),
         }
         self.align_items()
 

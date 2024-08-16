@@ -38,10 +38,6 @@ class ObjectUI(GameObject, BaseUI):
         self.set_click_region()
         self.center = self.body.position
 
-    def add_to_space(self, space, loc):
-        self.body.position = loc
-        space.add(self.body, self.body_shape)
-
 
 class BoxObjectUI(ObjectUI, BoxObject, BaseUIBox):
     def __init__(self, screen, name, phy_type, position, angle=0, size=(30, 30), color=(150, 150, 150)):

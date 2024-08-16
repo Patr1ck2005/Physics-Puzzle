@@ -70,7 +70,7 @@ while running:
         # 控制帧率
         clock.tick(FPS)
     elif game_state == 'paused':
-        selected_menu = pause_menu()
+        selected_menu = pause_menu(screen)
         if selected_menu == 'resume_game':
             resume_game()
         elif selected_menu == 'settings_menu':

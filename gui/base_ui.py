@@ -43,6 +43,7 @@ class BaseUI:
     def on_click(self, m_pos):
         if self.click_region.collidepoint(*m_pos):
             self._color = self.mark_selection(self.ico_color)
+            self.call_click()
             return True
         else:
             self._color = self.ico_color
@@ -63,6 +64,10 @@ class BaseUIBox(BaseUI):
                  name='de_Box', position=None, size=(60, 40), ico_color=(100, 100, 100), ):
         super().__init__(screen, name, position, size, ico_color, )
 
+    @property
+    def center(self):
+        return self.position[0]+self.size[0]/2, self.position[1]+self.size[1]/2
+
     def set_click_region(self):
         self.click_region = pygame.Rect(*self.position, *self.size)
 
@@ -78,11 +83,14 @@ class BaseUICircle(BaseUI):
                  radius=30, ico_color=(100, 100, 100), ):
         super().__init__(screen, name, center, radius, ico_color, )
 
+    @property
+    def center(self):
+        return self.position[0]+self.size, self.position[1]+self.size
+
     def set_click_region(self):
-        self.click_region = Round(self.position, self.size)  # 这里的position是圆心, size是半径
+        self.click_region = Round(self.center, self.size)  # 这里的position是圆心, size是半径
 
     def draw(self, screen):
-        center = self.position[0]+self.size, self.position[1]+self.size
-        pygame.draw.circle(screen, self._color, center, self.size)
+        pygame.draw.circle(screen, self._color, self.center, self.size)
         text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
         screen.blit(text, (self.position[0]-15, self.position[1]-10))

@@ -57,13 +57,12 @@ class GameObject:
         body_shape.elasticity = 0.8
         return body, body_shape
 
-    def add_to_space(self, space, loc):
-        new_body, new_body_shape = self._create_phys()
-        new_body.position = loc
-        space.add(new_body, new_body_shape)
+    def add_to_space(self, space, center_pos):
+        self.body.position = center_pos
+        space.add(self.body, self.body_shape)
 
     def remove_from_space(self, space):
-        space.remove(self.body, self.shape)
+        space.remove(self.body, self.body_shape)
 
 
 class BoxObject(GameObject):

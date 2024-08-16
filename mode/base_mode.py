@@ -19,10 +19,10 @@ def default_level(screen):
     # 初始化物理世界: 后续计算该世界
     engine = Engine(screen)
     engine.init_world()
-    # 初始化UI管理器
-    ui_manager = UIManager(screen, engine.space)
     # 初始化物理对象管理器
     object_manager = ObjectsManager(engine.space)
+    # 初始化UI管理器
+    ui_manager = UIManager(screen, engine.space, object_manager)
     # 加载并播放背景音乐
     pygame.mixer.music.load('Aerie.mp3')
     pygame.mixer.music.play(-1)  # 循环播放
@@ -66,7 +66,8 @@ def default_level(screen):
     # 游戏主循环
     while running:
         # 更新ui管理器 (刷新鼠标坐标等等)
-        ui_manager.update()
+        m_pos = pygame.mouse.get_pos()
+        ui_manager.update(m_pos)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -97,6 +98,7 @@ def default_level(screen):
 
         # 渲染UI
         ui_manager.render_all_ui()
+        object_manager.render_running_objs()
 
         # 所有渲染完成后,更新画面
         pygame.display.flip()

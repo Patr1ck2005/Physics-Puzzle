@@ -4,10 +4,9 @@ from core.objects_manager import ObjectsManager
 
 
 class ItemBar:
-    def __init__(self, screen, space):
+    def __init__(self, screen):
         self.screen = screen
         self.inventory = Inventory(screen)
-        self.space = space
         self.item_bg_uis = {}
         self.selected_item = None
         self.create_bg_uis_for_items()
@@ -30,24 +29,11 @@ class ItemBar:
                 return True
 
     def on_click(self, m_pos):
-        # 点击实际物体
-        for item in self.inventory.items.values():
-            if item.on_click(m_pos) and self.selected_item is None:
-                self.selected_item = item
-                return
-            elif self.selected_item:
-                self.selected_item.add_to_space(self.space, m_pos)
-                self.selected_item = None
-                return
         # 点击物体背景
         for item_bg_ui in self.item_bg_uis.values():
-            if item_bg_ui.on_click(m_pos) and self.selected_item is None:
+            if item_bg_ui.on_click(m_pos):
                 self.selected_item = self.inventory.items[item_bg_ui.name]
-                return
-            elif self.selected_item:
-                self.selected_item.add_to_space(self.space, m_pos)
-                self.selected_item = None
-                return
+                return self.selected_item
 
     def render(self):
         for item_bg_ui in self.item_bg_uis.values():
