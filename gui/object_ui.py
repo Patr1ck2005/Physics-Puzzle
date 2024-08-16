@@ -13,6 +13,7 @@ class ObjectUI(GameObject, BaseUI):
     @position.setter
     def position(self, pos):
         self.rect_pos = pos
+        self.set_click_region()
 
     @property
     def center(self):
@@ -21,6 +22,7 @@ class ObjectUI(GameObject, BaseUI):
     @center.setter
     def center(self, pos):
         self._center = pos
+        self.set_click_region()
         if self.body is not None:
             self.body.position = pos
 
@@ -30,7 +32,7 @@ class ObjectUI(GameObject, BaseUI):
 
     @rect_pos.setter
     def rect_pos(self, pos):
-        pass
+        self.set_click_region()
 
     # 将UI的位置和pymunk位置关联在一起
     def sync_ui(self):
@@ -75,4 +77,5 @@ class CircleObjectUI(ObjectUI, CircleObject, BaseUICircle):
         self._center = pos[0]+self.size, pos[1]+self.size
         if self.body is not None:
             self.body.position = pos[0]+self.size, pos[1]+self.size
+        super()
 

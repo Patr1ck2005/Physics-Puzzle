@@ -29,16 +29,20 @@ class ItemBar:
                 return True
 
     def on_click(self, m_pos):
-        # 点击物体背景
-        for item_bg_ui in self.item_bg_uis.values():
-            if item_bg_ui.on_click(m_pos):
-                self.selected_item = self.inventory.items[item_bg_ui.name]
-                return self.selected_item
+        # 点击物体
+        for item_ui in self.inventory.items.values():
+            if item_ui.on_click(m_pos) and self.selected_item is None:
+                self.selected_item = self.inventory.items[item_ui.name]
+                return
+            elif self.selected_item:
+                copy = self.selected_item
+                self.inventory.remove_item_by_name(self.selected_item.name)
+                self.selected_item = None
+                return copy
 
     def render(self):
         for item_bg_ui in self.item_bg_uis.values():
             item_bg_ui.draw(self.screen)
         for item in self.inventory.items.values():
-            item.sync_ui()
             item.draw(self.screen)
 

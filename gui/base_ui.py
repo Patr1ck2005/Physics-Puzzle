@@ -93,4 +93,4 @@ class BaseUICircle(BaseUI):
     def draw(self, screen):
         pygame.draw.circle(screen, self._color, self.center, self.size)
         text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
-        screen.blit(text, (self.position[0]-15, self.position[1]-10))
+        screen.blit(text, (self.position[0]+15, self.position[1]+10))

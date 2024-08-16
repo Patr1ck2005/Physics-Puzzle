@@ -1,19 +1,21 @@
 
 
 class ObjectsManager:
-    def __init__(self, space):
+    def __init__(self, screen, space):
+        self.screen = screen
         self.space = space
         self.running_objects = {}
         self.selected_obj = None
         self.m_pos = None
 
-    def add_object(self, obj):
-        self.running_objects[obj.name] = obj
-        self.space.add(obj.body, obj.shape)
+    def add_obj(self, obj):
+        self.running_objects[obj.name] = obj  # 以字典的形式储存obj对象, 例如: {'ball_1': CircleObjectUI(),}
+        obj.add_to_space(self.space, self.m_pos)  # ObjectsManager管理的都是已添加进space中的UI元素
 
-    def is_mouse_over(self, m_pos):
+    def update(self, m_pos):
+        self.m_pos = m_pos
         for obj in self.running_objects.values():
-            obj.is_mouse_over(m_pos)
+            obj.is_mouse_over(self.m_pos)
 
     def on_click(self):
         for obj in self.running_objects.values():
@@ -28,8 +30,9 @@ class ObjectsManager:
                 self.selected_obj = None
                 return
 
-    def render(self):
+    def render_running_objs(self):
         for obj in self.running_objects.values():
-            obj.draw()
+            obj.sync_ui()
+            obj.draw(self.screen)
 
 

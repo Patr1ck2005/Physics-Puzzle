@@ -20,9 +20,9 @@ def default_level(screen):
     engine = Engine(screen)
     engine.init_world()
     # 初始化物理对象管理器
-    object_manager = ObjectsManager(engine.space)
+    object_manager = ObjectsManager(screen, engine.space)
     # 初始化UI管理器
-    ui_manager = UIManager(screen, engine.space, object_manager)
+    ui_manager = UIManager(screen, object_manager)
     # 加载并播放背景音乐
     pygame.mixer.music.load('Aerie.mp3')
     pygame.mixer.music.play(-1)  # 循环播放
@@ -65,10 +65,12 @@ def default_level(screen):
 
     # 游戏主循环
     while running:
-        # 更新ui管理器 (刷新鼠标坐标等等)
         m_pos = pygame.mouse.get_pos()
+        # 更新ui管理器和物品管理器 (获取鼠标实时坐标, 从而后续执行鼠标和UI的交互)
         ui_manager.update(m_pos)
+        object_manager.update(m_pos)
 
+        # 总键鼠交互
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -79,14 +81,15 @@ def default_level(screen):
                     game_state = pause_menu(screen)  # 按下P键暂停
                     if game_state == 'main_menu':
                         return 'main_menu'
-            # 处理鼠标点选物品
+            # 当鼠标点击时, 处理鼠标点击和UI的交互
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 ui_manager.on_click()
+                object_manager.on_click()
 
-        # 示例游戏逻辑：简单的左右移动
+        # DEBUG 示例游戏逻辑：简单的左右移动
         debug_player(player_rect)
 
-        # 计算更新物理世界
+        # 计算更新物理世界(可更新多次以增加精确度)
         engine.update_world()
 
         # 渲染关卡
@@ -103,6 +106,7 @@ def default_level(screen):
         # 所有渲染完成后,更新画面
         pygame.display.flip()
 
+        # 游戏帧数为60
         clock.tick(60)
 
     return 'main_menu'

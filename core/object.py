@@ -1,7 +1,5 @@
-import pygame
 import pymunk
 
-from gui.base_ui import BaseUIBox, BaseUICircle
 
 # # Body: 物体的物理状态。
 # Dynamic (动态): 可以受力、重力影响的普通物体。
