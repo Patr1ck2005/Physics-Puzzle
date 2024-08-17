@@ -1,24 +1,64 @@
+import time
+
+import pygame
+import pygame_gui
+
 from .hud import HUD
 from .item_bar_ui import ItemBar
-from .button_manager import ButtonManager
+from .button_manager import ButtonsManager
 from core.objects_manager import ObjectsManager
+from settings import *
 
 
 class UIManager:
-    def __init__(self, screen, engine, obj_manager: ObjectsManager):
+    def __init__(self, screen, engine):
         self.screen = screen
         self.engine = engine
-        self.hud = HUD(screen)
-        self.obj_manager = obj_manager
-        self.btn_manager = ButtonManager(screen)
-        self.item_bar = ItemBar(screen)
-        self.all_uis = [self.item_bar, self.btn_manager.all_buttons]
-        self.clicked_ui = []
+        self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))  # 外置UI管理器
+        self.hud = HUD(screen)   # HUD
+        self.obj_manager = ObjectsManager(screen, engine.space)   # 物理对象UI管理器
+        self.btn_manager = ButtonsManager(screen)   # 按钮UI
+        self.item_bar = ItemBar(screen)   # 物品栏UI
+
         self.m_pos = None
+        self.m_d_pos = None
+        self.pressing_start_time = None
 
     # 依次检测鼠标是否悬停于指定UI
-    def update(self, m_pos):
-        self.m_pos = m_pos
+    def update(self):
+        self.manager.update(pygame.time.get_ticks() / 1000.0)
+        self.obj_manager.update(self.m_pos, self.m_d_pos)
+        # 始终同步鼠标位置
+        self.m_pos = pygame.mouse.get_pos()
+        self.m_d_pos = pygame.mouse.get_rel()
+        self.is_mouse_over()
+        # 检测鼠标是否长按
+        mouse_buttons = pygame.mouse.get_pressed()
+        if mouse_buttons[0]:  # 左键
+            if time.time() - self.pressing_start_time > 0.1:  # 按下超过0.1秒算长按
+                self.on_press()
+                self.obj_manager.on_press()
+                # 触发长按的时候需要撤回点击事件 (例如, 双次点击放置和长按放置取其一即可)
+                self.call_back_click()
+                self.obj_manager.call_back_click()
+
+    def process_event(self, event):
+        self.manager.process_events(event)
+        if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            if event.ui_element.name:
+                print("Button clicked!")
+        # 当鼠标点击时, 处理鼠标点击和UI的交互
+        elif event.type == pygame.MOUSEMOTION:
+            pass
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            self.pressing_start_time = time.time()
+            self.on_click()
+            self.obj_manager.on_click()
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.on_release()
+            self.obj_manager.on_release()
+
+    def is_mouse_over(self):
         self.item_bar.is_mouse_over(self.m_pos)
         self.btn_manager.is_mouse_over(self.m_pos)
 
@@ -47,6 +87,7 @@ class UIManager:
     def render_all_ui(self):
         self.item_bar.render()
         self.btn_manager.render()
+        self.obj_manager.render_running_objs()
         self.hud.render()
 
     def match_btn_call(self, btn):

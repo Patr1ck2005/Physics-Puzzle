@@ -23,10 +23,8 @@ def default_level(screen):
     # 初始化物理世界: 后续计算该世界
     engine = Engine(screen)
     engine.init_world()
-    # 初始化物理对象管理器
-    object_manager = ObjectsManager(screen, engine.space)
     # 初始化UI管理器 (UI管理器需要处理UI与渲染与物理世界的关系)
-    ui_manager = UIManager(screen, engine, object_manager)
+    ui_manager = UIManager(screen, engine)
     # 加载并播放背景音乐
     pygame.mixer.music.load('Aerie.mp3')
     pygame.mixer.music.play(-1)  # 循环播放
@@ -69,14 +67,14 @@ def default_level(screen):
 
     # 游戏主循环
     while running:
-        m_d_pos = pygame.mouse.get_rel()
-        m_pos = pygame.mouse.get_pos()
         # 更新ui管理器和物品管理器 (获取鼠标实时坐标, 从而后续执行鼠标和UI的交互)
-        ui_manager.update(m_pos)
-        object_manager.update(m_pos, m_d_pos)
+        ui_manager.update()
 
         # 总键鼠交互
         for event in pygame.event.get():
+            # UIManager处理键鼠事件
+            ui_manager.process_event(event)
+
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
@@ -86,24 +84,6 @@ def default_level(screen):
                     game_state = pause_menu(screen)  # 按下P键暂停
                     if game_state == 'main_menu':
                         return 'main_menu'
-            # 当鼠标点击时, 处理鼠标点击和UI的交互
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                pressing_start_time = time.time()
-                ui_manager.on_click()
-                object_manager.on_click()
-            elif event.type == pygame.MOUSEBUTTONUP:
-                ui_manager.on_release()
-                object_manager.on_release()
-
-        # 检测鼠标是否长按
-        mouse_buttons = pygame.mouse.get_pressed()
-        if mouse_buttons[0]:  # 左键
-            if time.time() - pressing_start_time > 0.1:  # 按下超过0.1秒算长按
-                ui_manager.on_press()
-                object_manager.on_press()
-                # 触发长按的时候需要撤回点击事件 (例如, 双次点击放置和长按放置取其一即可)
-                ui_manager.call_back_click()
-                object_manager.call_back_click()
 
         # DEBUG 示例游戏逻辑：简单的左右移动
         debug_player(player_rect)
@@ -120,7 +100,6 @@ def default_level(screen):
 
         # 渲染UI
         ui_manager.render_all_ui()
-        object_manager.render_running_objs()
 
         # 所有渲染完成后,更新画面
         pygame.display.flip()

@@ -3,7 +3,7 @@ from .base_ui import BaseUIBox, BaseUICircle
 from settings import *
 
 
-class ButtonManager:
+class ButtonsManager:
     def __init__(self, screen):
         self.screen = screen
         self.all_buttons = {
