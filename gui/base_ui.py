@@ -1,5 +1,69 @@
-import pygame
 from scripts.utils import Round
+
+import pygame
+import pygame_gui
+from pygame_gui.core.ui_element import UIElement
+from pygame_gui.core.interfaces import IUIManagerInterface
+from pygame_gui.elements.ui_button import UIButton
+
+import pygame
+import pygame_gui
+from pygame_gui.core.ui_element import UIElement
+from pygame_gui.core.interfaces import IUIManagerInterface
+
+import pygame
+import pygame_gui
+from pygame_gui.core.ui_element import UIElement
+from pygame_gui.core.interfaces import IUIManagerInterface
+
+
+class UICircleButton(UIElement):
+    def __init__(self, relative_rect: pygame.Rect, text: str, manager: IUIManagerInterface, container=None,
+                 starting_height: int = 1, layer_thickness: int = 1):
+        super().__init__(relative_rect, manager, container, starting_height=starting_height,
+                         layer_thickness=layer_thickness)
+
+        self.text = text
+        self.image = pygame.Surface(relative_rect.size, pygame.SRCALPHA)
+        self.rect = relative_rect
+        self.manager = manager
+        self.pressed = False
+
+        # 确保 object_ids 被初始化
+        self.object_ids = self.object_ids if self.object_ids else ['default_button']
+
+        self._create_image()
+
+    def _create_image(self):
+        # 绘制圆形按钮
+        pygame.draw.circle(self.image, (0, 0, 255), (self.rect.width // 2, self.rect.height // 2), self.rect.width // 2)
+
+        # 使用 Pygame 的字体渲染
+        font = pygame.font.Font(None, 24)  # 使用默认字体，可以替换成需要的字体文件
+        text_surface = font.render(self.text, True, pygame.Color('#FFFFFF'))
+        text_rect = text_surface.get_rect(center=(self.rect.width // 2, self.rect.height // 2))
+        self.image.blit(text_surface, text_rect.topleft)
+
+    def process_event(self, event: pygame.event.Event) -> bool:
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.pressed = True
+                return True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if self.pressed and self.rect.collidepoint(event.pos):
+                self.pressed = False
+                self.on_click()
+                return True
+        return False
+
+    def update(self, time_delta: float):
+        super().update(time_delta)
+
+    def on_click(self):
+        print(f"{self.text} Button Clicked")
+
+    def draw(self, surface: pygame.Surface):
+        surface.blit(self.image, self.rect.topleft)
 
 
 class BaseUI:

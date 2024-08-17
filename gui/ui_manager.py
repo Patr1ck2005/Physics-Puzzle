@@ -5,8 +5,8 @@ import pygame_gui
 
 from .hud import HUD
 from .item_bar_ui import ItemBar
-from .button_manager import ButtonsManager
-from core.objects_manager import ObjectsManager
+from .button_manager import ButtonManager
+from core.objects_manager import ObjectManager
 from settings import *
 
 
@@ -14,10 +14,9 @@ class UIManager:
     def __init__(self, screen, engine):
         self.screen = screen
         self.engine = engine
-        self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))  # 外置UI管理器
         self.hud = HUD(screen)   # HUD
-        self.obj_manager = ObjectsManager(screen, engine.space)   # 物理对象UI管理器
-        self.btn_manager = ButtonsManager(screen)   # 按钮UI
+        self.obj_manager = ObjectManager(screen, engine.space)   # 物理对象UI管理器
+        self.btn_manager = ButtonManager(screen, engine, self.hud)   # 按钮UI
         self.item_bar = ItemBar(screen)   # 物品栏UI
 
         self.m_pos = None
@@ -26,8 +25,8 @@ class UIManager:
 
     # 依次检测鼠标是否悬停于指定UI
     def update(self):
-        self.manager.update(pygame.time.get_ticks() / 1000.0)
         self.obj_manager.update(self.m_pos, self.m_d_pos)
+        self.btn_manager.update()
         # 始终同步鼠标位置
         self.m_pos = pygame.mouse.get_pos()
         self.m_d_pos = pygame.mouse.get_rel()
@@ -43,12 +42,10 @@ class UIManager:
                 self.obj_manager.call_back_click()
 
     def process_event(self, event):
-        self.manager.process_events(event)
-        if event.type == pygame_gui.UI_BUTTON_PRESSED:
-            if event.ui_element.name:
-                print("Button clicked!")
+        self.btn_manager.process_event(event)
+        self.obj_manager.process_event(event)
         # 当鼠标点击时, 处理鼠标点击和UI的交互
-        elif event.type == pygame.MOUSEMOTION:
+        if event.type == pygame.MOUSEMOTION:
             pass
         elif event.type == pygame.MOUSEBUTTONDOWN:
             self.pressing_start_time = time.time()
@@ -60,7 +57,7 @@ class UIManager:
 
     def is_mouse_over(self):
         self.item_bar.is_mouse_over(self.m_pos)
-        self.btn_manager.is_mouse_over(self.m_pos)
+        # self.btn_manager.is_mouse_over(self.m_pos)
 
     # 检测UI是否被点击
     def on_click(self):
@@ -70,8 +67,8 @@ class UIManager:
         self.hud.current_selection = self.item_bar.get_selected_item()
         if placed_item is not None:
             self.obj_manager.add_obj(placed_item)
-        call_btn = self.btn_manager.on_click(self.m_pos)
-        self.match_btn_call(call_btn)
+        # call_btn = self.btn_manager.on_click(self.m_pos)
+        # self.match_btn_call(call_btn)
 
     # 若鼠标长按则撤回点击事件
     def call_back_click(self):
@@ -89,20 +86,5 @@ class UIManager:
         self.btn_manager.render()
         self.obj_manager.render_running_objs()
         self.hud.render()
-
-    def match_btn_call(self, btn):
-        if btn is None:
-            return
-        elif btn.name == 'pause/resume':
-            self.engine.pause = not self.engine.pause
-            btn.text = 'resume' if self.engine.pause else 'pause'
-        elif btn.name == 'restart':
-            self.engine.init_world()
-        elif btn.name == 'speed':
-            self.engine.time_scale *= 2.0
-            self.hud.update_time_scale(self.engine.time_scale)
-        elif btn.name == 'slow':
-            self.engine.time_scale *= 0.5
-            self.hud.update_time_scale(self.engine.time_scale)
 
 

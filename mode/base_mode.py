@@ -9,7 +9,7 @@ from gui.menu import main_menu, pause_menu, settings_menu
 from core.engine import Engine
 
 from gui.ui_manager import UIManager
-from core.objects_manager import ObjectsManager
+from core.objects_manager import ObjectManager
 
 
 def default_level(screen):

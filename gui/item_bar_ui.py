@@ -1,6 +1,6 @@
 from .object_ui import *
 from .inventory_manager import InventoryManager
-from core.objects_manager import ObjectsManager
+from core.objects_manager import ObjectManager
 
 
 class ItemBar:

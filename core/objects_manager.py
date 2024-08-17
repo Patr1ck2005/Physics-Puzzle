@@ -1,7 +1,9 @@
 from pymunk import Vec2d
 
+import pygame
 
-class ObjectsManager:
+
+class ObjectManager:
     def __init__(self, screen, space):
         self.screen = screen
         self.space = space
@@ -20,6 +22,9 @@ class ObjectsManager:
         self.m_d_pos = m_d_pos
         for obj in self.running_objects.values():
             obj.is_mouse_over(self.m_pos)
+
+    def process_event(self, event):
+        pass
 
     def on_click(self):
         for obj in self.running_objects.values():
