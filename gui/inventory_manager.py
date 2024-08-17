@@ -8,11 +8,11 @@ class InventoryManager:
         # 先随便设置位置, 后续会调整位置
         center = (0, 0)
         self.items = {
-            'ball_1': CircleObjectUI(screen, 'ball_1', 'static', center, color=(200, 0, 200), ico_path='assets/images/gg.png'),
-            'ball_2': CircleObjectUI(screen, 'ball_2', 'dynamic', center, color=(200, 0, 200), ico_path='assets/images/gg.png'),
+            'ball_1': CircleObjectUI(screen, 'ball_1', 'static', center, color=(200, 0, 200), ico_path='assets/images/g2.png'),
+            'ball_2': CircleObjectUI(screen, 'ball_2', 'dynamic', center, color=(200, 0, 200), ico_path='assets/images/g2.png'),
             'ball_3': CircleObjectUI(screen, 'ball_3', 'kinematic', center, color=(200, 0, 200), ico_path='assets/images/py.png'),
             'rect_1': BoxObjectUI(screen, 'rect_1', 'static', center, size=(20, 40), color=(200, 200, 200)),
-            'rect_2': BoxObjectUI(screen, 'rect_2', 'dynamic', center, size=(30, 20), color=(200, 200, 200), ico_path='assets/images/navi.png'),
+            'rect_2': BoxObjectUI(screen, 'rect_2', 'dynamic', center, size=(30, 20), color=(200, 200, 200), ico_path='assets/images/天生输家.png'),
             'rect_3': BoxObjectUI(screen, 'rect_3', 'kinematic', center, size=(30, 20), color=(200, 200, 200)),
         }
         # 调整位置排列物品栏

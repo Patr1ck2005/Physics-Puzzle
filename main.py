@@ -42,6 +42,7 @@ def resume_game():
 
 
 # 主游戏循环
+
 running = True
 while running:
     if game_state == 'main_menu':
