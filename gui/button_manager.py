@@ -31,17 +31,17 @@ class ButtonManager:
         self.manager.process_events(event)
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             btn = event.ui_element
-            if btn == self.all_buttons["setting"]:
+            if btn == self.all_buttons.get('setting', None):
                 print("settings clicked!")
-            elif btn == self.all_buttons['pause/resume']:
+            elif btn == self.all_buttons.get('pause/resume', None):
                 self.engine.pause = not self.engine.pause
                 btn.set_text('resume' if self.engine.pause else 'pause')
-            elif btn == self.all_buttons['restart']:
+            elif btn == self.all_buttons.get('restart', None):
                 self.engine.init_world()
-            elif btn == self.all_buttons['speed']:
+            elif btn == self.all_buttons.get('speed', None):
                 self.engine.time_scale *= 2.0
                 self.hud.update_time_scale(self.engine.time_scale)
-            elif btn == self.all_buttons['slow']:
+            elif btn == self.all_buttons.get('slow', None):
                 self.engine.time_scale *= 0.5
                 self.hud.update_time_scale(self.engine.time_scale)
 
