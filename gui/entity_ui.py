@@ -50,9 +50,13 @@ class EntityUI(Entity, BaseUI):
         self.set_click_region()
         self.center = self.body.position
 
+    def update(self, m_pos):
+        super().update(m_pos)
+
     def draw(self, screen):
         # 目前简单对于图像覆盖处理
-        super().draw(screen)
+        self.sync_ui()
+        self.draw_draft(screen)
         if self.ico is not None:
             angle_degrees = math.degrees(self.angle)
             rotated_image = pygame.transform.rotate(self.ico, -angle_degrees)

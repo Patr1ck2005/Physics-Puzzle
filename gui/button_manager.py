@@ -2,7 +2,6 @@ import pygame
 from pygame import Rect, Surface, Color, Vector2, Vector3
 import pygame_gui
 from pygame_gui.elements import UIButton, UILabel, UIPanel, UIImage, UIProgressBar
-from .base_ui import UICircleButton
 
 from settings import *
 
@@ -16,14 +15,23 @@ class ButtonManager:
         self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))  # 外置UI管理器
         self.default_size = (50, 30)
         self.all_buttons = {
-            # "setting": UICircleButton(pygame.Rect(SCREEN_WIDTH-50, SCREEN_HEIGHT-50, 30, 30), text='Setting', manager=self.manager),
-            "setting": UIButton(pygame.Rect(SCREEN_WIDTH-80, SCREEN_HEIGHT-50, *self.default_size), text='Setting', manager=self.manager),
-            "rewind": UIButton(pygame.Rect(50, SCREEN_HEIGHT-50, *self.default_size), text='rewind', manager=self.manager),
-            "slow": UIButton(pygame.Rect(200, SCREEN_HEIGHT - 50, *self.default_size), text='slow', manager=self.manager),
-            "pause/resume": UIButton(pygame.Rect(250, SCREEN_HEIGHT - 50, *self.default_size), text='pause', manager=self.manager),
-            "speed": UIButton(pygame.Rect(300, SCREEN_HEIGHT - 50, *self.default_size), text='speed', manager=self.manager),
+            "setting": UIButton(pygame.Rect(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 50, *self.default_size), text='Setting',
+                                manager=self.manager),
+            "rewind": UIButton(pygame.Rect(50, SCREEN_HEIGHT - 50, *self.default_size), text='rewind',
+                               manager=self.manager),
+            "slow": UIButton(pygame.Rect(200, SCREEN_HEIGHT - 50, *self.default_size), text='slow',
+                             manager=self.manager),
+            "pause/resume": UIButton(pygame.Rect(250, SCREEN_HEIGHT - 50, *self.default_size), text='pause',
+                                     manager=self.manager),
+            "speed": UIButton(pygame.Rect(300, SCREEN_HEIGHT - 50, *self.default_size), text='speed',
+                              manager=self.manager),
         }
-        self.create_gravity_setting()
+        self.toggle_gravity_window = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect(SCREEN_WIDTH - 180, SCREEN_HEIGHT - 50, *self.default_size),
+            text='Toggle Menu',
+            manager=self.manager
+        )
+        self._create_gravity_setting()
 
     def update(self):
         self.manager.update(pygame.time.get_ticks() / 1000.0)
@@ -49,10 +57,21 @@ class ButtonManager:
             elif btn == self.toggle_gravity_window:
                 # 切换菜单窗口的显示状态
                 self.gravity_window.visible = not self.gravity_window.visible
-                if self.gravity_window.visible:
-                    self.gravity_window.show()
+                if self.gravity_window is None or not self.gravity_window.alive():
+                    # 创建一个新的窗口实例
+                    self._create_gravity_setting(True)
                 else:
-                    self.gravity_window.hide()
+                    if self.gravity_window.visible:
+                        self.gravity_window.show()
+                    else:
+                        self.gravity_window.hide()
+            elif btn == self.gravity_checkbox:
+                self.engine.if_gravity = not self.engine.if_gravity
+                btn.set_text('tune off' if self.engine.if_gravity else 'tune on')
+            elif btn == self.universal_gravity_checkbox:
+                self.engine.if_uni_gravity = not self.engine.if_uni_gravity
+                btn.set_text('tune off' if self.engine.if_uni_gravity else 'tune on')
+
         if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
             if event.ui_element == self.universal_gravity_slider:
                 self.universal_gravity_value_label.set_text(f'universal gravity:{event.value:.2f}')
@@ -61,42 +80,29 @@ class ButtonManager:
                 self.gravity_value_label.set_text(f'earth gravity:{event.value:.2f}')
                 self.engine.gravity = event.value
 
-    def is_mouse_over(self, m_pos):
-        pass
-
-    def on_click(self, m_pos):
-        pass
-
     def render(self):
         self.manager.draw_ui(self.screen)
 
-    def create_gravity_setting(self):
-        self.toggle_gravity_window = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect(SCREEN_WIDTH-180, SCREEN_HEIGHT-50, *self.default_size),
-            text='Toggle Menu',
-            manager=self.manager
-        )
-
+    def _create_gravity_setting(self, visible=False):
         # 创建一个 UI 窗口
         self.gravity_window = pygame_gui.elements.UIWindow(
             rect=pygame.Rect((350, 150), (300, 200)),  # 窗口位置和大小
             manager=self.manager,
             window_display_title='Gravity Control',
             object_id='#gravity_window',
-            visible=False,
+            visible=visible,
         )
-
-        # 创建一个标签，显示 "Gravity"
-        self.gravity_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((10, 10), (280, 30)),
-            text='Gravity',
-            manager=self.manager,
-            container=self.gravity_window
-        )
+        # # 创建一个标签，显示 "Gravity"
+        # self.gravity_label = pygame_gui.elements.UILabel(
+        #     relative_rect=pygame.Rect((120, 10), (120, 30)),
+        #     text='Gravity',
+        #     manager=self.manager,
+        #     container=self.gravity_window
+        # )
 
         # 创建一个滑块，用于调节万有引力
         self.universal_gravity_slider = pygame_gui.elements.UIHorizontalSlider(
-            relative_rect=pygame.Rect((10, 50), (280, 30)),
+            relative_rect=pygame.Rect((100, 50), (150, 30)),
             start_value=1.0,
             value_range=(0.0, 10.0),
             manager=self.manager,
@@ -105,7 +111,7 @@ class ButtonManager:
 
         # 创建一个标签，实时显示滑块值
         self.universal_gravity_value_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((10, 20), (150, 30)),
+            relative_rect=pygame.Rect((10, 20), (120, 30)),
             text=f'universal gravity:{self.universal_gravity_slider.get_current_value():.2f}',
             manager=self.manager,
             container=self.gravity_window
@@ -113,7 +119,7 @@ class ButtonManager:
 
         # 创建一个滑块，用于调节重力大小系数
         self.gravity_slider = pygame_gui.elements.UIHorizontalSlider(
-            relative_rect=pygame.Rect((10, 100), (280, 30)),
+            relative_rect=pygame.Rect((100, 120), (150, 30)),
             start_value=1.0,
             value_range=(0.0, 10.0),
             manager=self.manager,
@@ -122,8 +128,24 @@ class ButtonManager:
 
         # 创建一个标签，实时显示滑块值
         self.gravity_value_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((10, 80), (150, 30)),
+            relative_rect=pygame.Rect((10, 90), (120, 30)),
             text=f'earth gravity:{self.gravity_slider.get_current_value():.2f}',
+            manager=self.manager,
+            container=self.gravity_window
+        )
+
+        # 创建一个复选框，用于控制万有引力的开关
+        self.universal_gravity_checkbox = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((10, 50), (60, 30)),
+            text='tune on',
+            manager=self.manager,
+            container=self.gravity_window
+        )
+
+        # 创建一个复选框，用于控制地球重力的开关
+        self.gravity_checkbox = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((10, 120), (60, 30)),
+            text='tune on',
             manager=self.manager,
             container=self.gravity_window
         )

@@ -1,8 +1,10 @@
+from .base_ui import BaseUI
 from .entity_ui import BoxEntityUI, CircleEntityUI
-
+from .force_ui import ForceUI
+from pymunk import Vec2d
 
 class InventoryManager:
-    items: dict[str, BoxEntityUI | CircleEntityUI]
+    items: dict[str, BaseUI]
 
     def __init__(self, screen):
         # 先随便设置位置, 后续会调整位置
@@ -17,6 +19,10 @@ class InventoryManager:
             'rect_1': BoxEntityUI(screen, 'rect_1', 'static', center, size=(20, 40), color=(200, 200, 200)),
             'rect_2': BoxEntityUI(screen, 'rect_2', 'dynamic', center, size=(30, 20), color=(200, 200, 200), ico_path='assets/images/天生输家.png'),
             'rect_3': BoxEntityUI(screen, 'rect_3', 'kinematic', center, size=(30, 20), color=(200, 200, 200)),
+            'f_1': ForceUI(screen, 'f_1', Vec2d(0, 0)),
+            'f_2': ForceUI(screen, 'f_2', Vec2d(100, 0)),
+            'f_3': ForceUI(screen, 'f_3', Vec2d(0, 100)),
+            'f_4': ForceUI(screen, 'f_4', Vec2d(100, 100)),
         }
         # 调整位置排列物品栏
         self.align_items()

@@ -14,7 +14,9 @@ class Engine:
         self.time_scale = 1
         self.universal_gravity = True
 
-        self._gravity = 0
+        self.if_uni_gravity = False
+        self._if_gravity = False
+        self._gravity = 1e3
         self._G = 1e6
 
     @property
@@ -26,6 +28,15 @@ class Engine:
         self.space.gravity = (0.0, value*1e3)
 
     @property
+    def if_gravity(self):
+        return self._if_gravity
+
+    @if_gravity.setter
+    def if_gravity(self, value):
+        self.space.gravity = (0.0, self._gravity) if value else (0.0, 0.0)
+        self._if_gravity = value
+
+    @property
     def G(self):
         return self._G/1e6
 
@@ -34,8 +45,8 @@ class Engine:
         self._G = value*1e6
 
     def init_world(self):
-
-        self.space.gravity = (0.0, 1000.0)
+        if self.if_gravity:
+            self.space.gravity = (0.0, self._gravity)
 
         # 创建地面
         static_body = pymunk.Body(body_type=pymunk.Body.STATIC)
@@ -61,7 +72,7 @@ class Engine:
         self.space.step(1/180*self.time_scale)
         self.space.step(1/180*self.time_scale)
         self.space.step(1/180*self.time_scale)
-        if self._G != 0:
+        if self._G != 0 and self.if_uni_gravity:
             self.apply_gravitational_force()
         for body in self.space.bodies:
             x, y = body.position

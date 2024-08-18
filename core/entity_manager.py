@@ -3,7 +3,7 @@ from pymunk import Vec2d
 import pygame
 
 
-class ObjectManager:
+class EntityManager:
     def __init__(self, screen, space):
         self.screen = screen
         self.space = space
@@ -13,7 +13,7 @@ class ObjectManager:
         self.m_pos = None
         self.m_d_pos = None
 
-    def add_obj(self, obj):
+    def add_entity(self, obj):
         self.running_objects[obj.name] = obj  # 以字典的形式储存obj对象, 例如: {'ball_1': CircleObjectUI(),}
         obj.add_to_space(self.space, self.m_pos)  # ObjectsManager管理的都是已添加进space中的UI元素
 
@@ -21,7 +21,7 @@ class ObjectManager:
         self.m_pos = m_pos
         self.m_d_pos = m_d_pos
         for obj in self.running_objects.values():
-            obj.is_mouse_over(self.m_pos)
+            obj.update(self.m_pos)
 
     def process_event(self, event):
         pass
@@ -30,14 +30,13 @@ class ObjectManager:
         for obj in self.running_objects.values():
             if obj.on_click(self.m_pos) and self.selected_obj is None:
                 self.selected_obj = obj
-                return
+                return self.selected_obj
             elif self.selected_obj:
                 if self.selected_obj.type == 'static':  # 静态物体不能移动
                     print('静态物体不能被移动')
-                    self.selected_obj = None
                 else:
                     self.selected_obj.center = self.m_pos
-                    self.selected_obj = None
+                self.selected_obj = None
                 return
 
     def call_back_click(self):
@@ -65,7 +64,6 @@ class ObjectManager:
 
     def render_running_objs(self):
         for obj in self.running_objects.values():
-            obj.sync_ui()
             obj.draw(self.screen)
 
 

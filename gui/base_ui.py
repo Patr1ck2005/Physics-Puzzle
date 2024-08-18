@@ -1,78 +1,15 @@
 from scripts.utils import Round
 
 import pygame
-import pygame_gui
-from pygame_gui.core.ui_element import UIElement
-from pygame_gui.core.interfaces import IUIManagerInterface
-from pygame_gui.elements.ui_button import UIButton
-
-import pygame
-import pygame_gui
-from pygame_gui.core.ui_element import UIElement
-from pygame_gui.core.interfaces import IUIManagerInterface
-
-import pygame
-import pygame_gui
-from pygame_gui.core.ui_element import UIElement
-from pygame_gui.core.interfaces import IUIManagerInterface
-
-
-class UICircleButton(UIElement):
-    def __init__(self, relative_rect: pygame.Rect, text: str, manager: IUIManagerInterface, container=None,
-                 starting_height: int = 1, layer_thickness: int = 1):
-        super().__init__(relative_rect, manager, container, starting_height=starting_height,
-                         layer_thickness=layer_thickness)
-
-        self.text = text
-        self.image = pygame.Surface(relative_rect.size, pygame.SRCALPHA)
-        self.rect = relative_rect
-        self.manager = manager
-        self.pressed = False
-
-        # 确保 object_ids 被初始化
-        self.object_ids = self.object_ids if self.object_ids else ['default_button']
-
-        self._create_image()
-
-    def _create_image(self):
-        # 绘制圆形按钮
-        pygame.draw.circle(self.image, (0, 0, 255), (self.rect.width // 2, self.rect.height // 2), self.rect.width // 2)
-
-        # 使用 Pygame 的字体渲染
-        font = pygame.font.Font(None, 24)  # 使用默认字体，可以替换成需要的字体文件
-        text_surface = font.render(self.text, True, pygame.Color('#FFFFFF'))
-        text_rect = text_surface.get_rect(center=(self.rect.width // 2, self.rect.height // 2))
-        self.image.blit(text_surface, text_rect.topleft)
-
-    def process_event(self, event: pygame.event.Event) -> bool:
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos):
-                self.pressed = True
-                return True
-        elif event.type == pygame.MOUSEBUTTONUP:
-            if self.pressed and self.rect.collidepoint(event.pos):
-                self.pressed = False
-                self.on_click()
-                return True
-        return False
-
-    def update(self, time_delta: float):
-        super().update(time_delta)
-
-    def on_click(self):
-        print(f"{self.text} Button Clicked")
-
-    def draw(self, surface: pygame.Surface):
-        surface.blit(self.image, self.rect.topleft)
 
 
 class BaseUI:
     def __init__(self, screen,
-                 name='Default', position=None, size=None, text='Default', ico_path=None, ico_color=(100, 100, 100)):
+                 name='Default', position=None, size=None, text=None, ico_path=None, ico_color=(100, 100, 100)):
         self.name = name
         self.screen = screen
         self.font = pygame.font.Font(None, 36)
-        self.text = text
+        self.text = text if text else name
         self.ico = None
         self.position = position
         self.size = size
@@ -90,12 +27,22 @@ class BaseUI:
     def mark_selection(color):
         return [int(255 - c) for c in color]
 
+    # 获取一些基本信息, 然后更新. 在子类中续写
+    def update(self, m_pos):
+        self.is_mouse_over(m_pos)
+
     # 需在子类中重写
     def set_click_region(self):
         pass
 
-    # 需在子类中重写
+    # 在草图的基础上画出图片
     def draw(self, screen):
+        self.draw_draft(screen)
+        if self.ico is not None:
+            screen.blit(self.ico, self.position)
+
+    # 通过pygame原生图形作图, 需要在子类中重写
+    def draw_draft(self, screen):
         pass
 
     def is_mouse_over(self, m_pos):
@@ -139,7 +86,7 @@ class BaseUI:
 
 class BaseUIBox(BaseUI):
     def __init__(self, screen,
-                 name='de_Box', position=None, size=(60, 40), text='Default', ico_path=None, ico_color=(100, 100, 100), ):
+                 name='de_Box', position=None, size=(60, 40), text=None, ico_path=None, ico_color=(100, 100, 100), ):
         super().__init__(screen, name, position, size, text, ico_path, ico_color, )
         self.ico = pygame.transform.scale(pygame.image.load(ico_path),
                                           (int(size[0]), int(size[1]))) if ico_path is not None else None
@@ -148,10 +95,15 @@ class BaseUIBox(BaseUI):
     def center(self):
         return self.position[0]+self.size[0]/2, self.position[1]+self.size[1]/2
 
+    @center.setter
+    def center(self, pos):
+        self.position = pos[0]-self.size[0]/2, pos[1]-self.size[1]/2
+        self.set_click_region()
+
     def set_click_region(self):
         self.click_region = pygame.Rect(*self.position, *self.size)
 
-    def draw(self, screen):
+    def draw_draft(self, screen):
         pygame.draw.rect(screen, self._color, (*self.position, *self.size))
         text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
         screen.blit(text, (self.position[0] + 10, self.position[1] + 5))
@@ -160,7 +112,7 @@ class BaseUIBox(BaseUI):
 class BaseUICircle(BaseUI):
     def __init__(self, screen,
                  name='de_Circle', center=None,
-                 radius=30, text='Default', ico_path=None, ico_color=(100, 100, 100), ):
+                 radius=30, text=None, ico_path=None, ico_color=(100, 100, 100), ):
         super().__init__(screen, name, center, radius, text, ico_path, ico_color, )
         self.ico = pygame.transform.scale(pygame.image.load(ico_path),
                                           (int(radius*2), int(radius*2))) if ico_path is not None else None
@@ -169,10 +121,15 @@ class BaseUICircle(BaseUI):
     def center(self):
         return self.position[0]+self.size, self.position[1]+self.size
 
+    @center.setter
+    def center(self, pos):
+        self.position = pos[0]-self.size, pos[1]-self.size
+        self.set_click_region()
+
     def set_click_region(self):
         self.click_region = Round(self.center, self.size)  # 这里的position是圆心, size是半径
 
-    def draw(self, screen):
+    def draw_draft(self, screen):
         pygame.draw.circle(screen, self._color, self.center, self.size)
         text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
         screen.blit(text, (self.center[0]-self.size, self.center[1]-10))
