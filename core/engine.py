@@ -1,3 +1,5 @@
+import math
+
 import pymunk
 import pymunk.pygame_util
 
@@ -68,11 +70,11 @@ class Engine:
                 print(f"remove {body}")
 
     def apply_gravitational_force(self):
-        dynamic_bodies = [body for body in self.space.bodies if body.body_type == pymunk.Body.DYNAMIC]
-        for i in range(len(dynamic_bodies)):
-            for j in range(i + 1, len(dynamic_bodies)):
-                body1 = dynamic_bodies[i]
-                body2 = dynamic_bodies[j]
+        bodies = [body for body in self.space.bodies if body.body_type == pymunk.Body.DYNAMIC]
+        for i in range(len(bodies)):
+            for j in range(i + 1, len(bodies)):
+                body1 = bodies[i]
+                body2 = bodies[j]
 
                 # 计算两个物体之间的距离向量
                 distance_vector = body2.position - body1.position
@@ -88,12 +90,12 @@ class Engine:
                 # 计算作用力的方向
                 force_direction = distance_vector.normalized()
 
-                # 计算作用在两个物体上的力向量
+                # 计算力在世界坐标中的坐标
                 force = force_direction * force_magnitude
 
                 # 施加力到两个物体上
-                body1.apply_force_at_local_point(force, (0, 0))
-                body2.apply_force_at_local_point(-force, (0, 0))
+                body1.apply_force_at_world_point(force, body1.position)
+                body2.apply_force_at_world_point(-force, body2.position)
 
     def render_world(self):
         self.space.debug_draw(self.draw_options)
