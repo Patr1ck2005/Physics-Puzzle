@@ -61,14 +61,13 @@ class UIManager:
 
     # 检测UI是否被点击
     def on_click(self):
+        self.item_bar.on_click(self.m_pos)
         # 获取物品栏放置结果
-        placed_item = self.item_bar.on_click(self.m_pos)
-        # 更新HUD显示物品栏选择结果(由于选择机制, 必须放在后面)
-        self.hud.current_selection = self.item_bar.get_selected_item()
+        placed_item = self.item_bar.get_placed_item()
         if placed_item is not None:
             self.obj_manager.add_obj(placed_item)
-        # call_btn = self.btn_manager.on_click(self.m_pos)
-        # self.match_btn_call(call_btn)
+        # 更新HUD显示物品栏选择结果(由于选择机制, 必须放在后面)
+        self.hud.current_selection = self.item_bar.get_selected_item()
 
     # 若鼠标长按则撤回点击事件
     def call_back_click(self):

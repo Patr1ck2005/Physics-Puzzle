@@ -10,6 +10,26 @@ class Engine:
         self.space = pymunk.Space()
         self.pause = False
         self.time_scale = 1
+        self.universal_gravity = True
+
+        self._gravity = 0
+        self._G = 1e6
+
+    @property
+    def gravity(self):
+        return self._gravity/1e3
+
+    @gravity.setter
+    def gravity(self, value):
+        self.space.gravity = (0.0, value*1e3)
+
+    @property
+    def G(self):
+        return self._G/1e6
+
+    @G.setter
+    def G(self, value):
+        self._G = value*1e6
 
     def init_world(self):
 
@@ -39,11 +59,41 @@ class Engine:
         self.space.step(1/180*self.time_scale)
         self.space.step(1/180*self.time_scale)
         self.space.step(1/180*self.time_scale)
+        if self._G != 0:
+            self.apply_gravitational_force()
         for body in self.space.bodies:
             x, y = body.position
             if x > 8000 or x < -8000 or y > 8000 or y < -8000:
                 self.space.remove(body, *body.shapes)
                 print(f"remove {body}")
+
+    def apply_gravitational_force(self):
+        dynamic_bodies = [body for body in self.space.bodies if body.body_type == pymunk.Body.DYNAMIC]
+        for i in range(len(dynamic_bodies)):
+            for j in range(i + 1, len(dynamic_bodies)):
+                body1 = dynamic_bodies[i]
+                body2 = dynamic_bodies[j]
+
+                # 计算两个物体之间的距离向量
+                distance_vector = body2.position - body1.position
+                distance = distance_vector.length
+
+                # 确保距离不为零
+                if distance == 0:
+                    continue
+
+                # 计算万有引力的大小
+                force_magnitude = self._G * (body1.mass * body2.mass) / (distance ** 2)
+
+                # 计算作用力的方向
+                force_direction = distance_vector.normalized()
+
+                # 计算作用在两个物体上的力向量
+                force = force_direction * force_magnitude
+
+                # 施加力到两个物体上
+                body1.apply_force_at_local_point(force, (0, 0))
+                body2.apply_force_at_local_point(-force, (0, 0))
 
     def render_world(self):
         self.space.debug_draw(self.draw_options)

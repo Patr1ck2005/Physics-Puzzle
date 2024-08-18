@@ -2,11 +2,11 @@ import math
 
 import pygame
 
-from core.object import GameObject, BoxObject, CircleObject
+from core.entity import Entity, BoxEntity, CircleEntity
 from .base_ui import BaseUI, BaseUIBox, BaseUICircle
 
 
-class ObjectUI(GameObject, BaseUI):
+class EntityUI(Entity, BaseUI):
 
     @property
     def position(self):
@@ -60,9 +60,9 @@ class ObjectUI(GameObject, BaseUI):
             screen.blit(rotated_image, rotated_rect.topleft)
 
 
-class BoxObjectUI(ObjectUI, BoxObject, BaseUIBox):
+class BoxEntityUI(EntityUI, BoxEntity, BaseUIBox):
     def __init__(self, screen, name, phy_type, position, angle=0, size=(30, 30), ico_path=None, color=(150, 150, 150)):
-        BoxObject.__init__(self, name, phy_type, position, angle, size)
+        BoxEntity.__init__(self, name, phy_type, position, angle, size)
         BaseUIBox.__init__(self, screen, name, position, size, ico_path=ico_path, ico_color=color)
 
     # 将UI的位置和pymunk位置关联在一起
@@ -82,9 +82,9 @@ class BoxObjectUI(ObjectUI, BoxObject, BaseUIBox):
             self.body.position = pos[0]+self.size[0]/2, pos[1]+self.size[1]/2
 
 
-class CircleObjectUI(ObjectUI, CircleObject, BaseUICircle):
+class CircleEntityUI(EntityUI, CircleEntity, BaseUICircle):
     def __init__(self, screen, name, phy_type, center, angle=0, r=20, ico_path=None, color=(150, 150, 150)):
-        CircleObject.__init__(self, name, phy_type, center, angle, r)
+        CircleEntity.__init__(self, name, phy_type, center, angle, r)
         BaseUICircle.__init__(self, screen, name, center, r, ico_path=ico_path, ico_color=color)
 
     @property
