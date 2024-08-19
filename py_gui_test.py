@@ -1,40 +1,40 @@
 import pygame
-import pygame_gui
+from dearpygui.core import *
+from dearpygui.simple import *
 
 # 初始化 Pygame
 pygame.init()
 
-# 创建屏幕
-screen = pygame.display.set_mode((800, 600))
+# 设置 Pygame 窗口尺寸
+window_size = (800, 600)
+screen = pygame.display.set_mode(window_size)
+pygame.display.set_caption("Pygame with Dear PyGui")
 
-# 创建一个 GUI 管理器
-manager = pygame_gui.UIManager((800, 600))
+# 初始化 Dear PyGui
+def setup_dpg():
+    with window("Dear PyGui Window"):
+        add_text("This is a Dear PyGui window inside a Pygame window!")
+        add_button("Click Me", callback=lambda sender, data: print("Button Clicked"))
+        add_slider_float("Slider", default_value=0.5, min_value=0.0, max_value=1.0)
+    start_dearpygui(primary_window="Dear PyGui Window")
 
-# 创建一个按钮
-button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((350, 275), (100, 50)),
-                                      text='Click Me',
-                                      manager=manager)
+setup_dpg()
 
-clock = pygame.time.Clock()
+# Pygame 游戏循环
 running = True
-
 while running:
-    time_delta = clock.tick(60) / 1000.0
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-        # 让 GUI 管理器处理事件
-        manager.process_events(event)
+    # 清屏并设置背景色
+    screen.fill((30, 30, 30))
 
-    # 更新 GUI 元素
-    manager.update(time_delta)
+    # 渲染 Dear PyGui UI
+    render_dearpygui_frame()
 
-    # 绘制 GUI 到屏幕
-    screen.fill((0, 0, 0))
-    manager.draw_ui(screen)
-
+    # 更新 Pygame 显示
     pygame.display.flip()
 
+# 退出 Pygame
 pygame.quit()

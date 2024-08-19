@@ -26,6 +26,10 @@ class EntityManager:
     def process_event(self, event):
         pass
 
+    # 处理点击事件的函数
+    # 遍历当前运行的对象，检查是否有对象被点击
+    # 如果点击的对象是静态物体，则提示不能移动
+    # 否则，更新被点击对象的中心位置
     def on_click(self):
         for obj in self.running_objects.values():
             if obj.on_click(self.m_pos) and self.selected_obj is None:
@@ -38,6 +42,7 @@ class EntityManager:
                     self.selected_obj.center = self.m_pos
                 self.selected_obj = None
                 return
+
 
     def call_back_click(self):
         self.selected_obj = None
