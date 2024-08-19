@@ -1,9 +1,11 @@
 import time
 
-import numpy as np
-import pygame
+from pygame.locals import *
+from OpenGL.GL import *
+from OpenGL.GLU import *
 import pygame_gui
 from pygame import Rect
+import pygame
 
 from gui.layout.box_layout import HBoxLayout, VBoxLayout
 from settings import *
@@ -96,7 +98,7 @@ class EntityPropertyPanel(PropertyPanel):
         """创建UI布局和基本元素"""
         # 创建水平布局用于显示物体的图形和属性信息
         self.head_container = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect((0, 0), (0, 0)),
+            relative_rect=Rect((0, 0), (0, 0)),
             manager=self.manager,
             container=self.panel_container
         )
@@ -105,7 +107,7 @@ class EntityPropertyPanel(PropertyPanel):
 
         # 左侧的物体图形（简单的颜色矩形作为占位符）
         icon = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((0, 0), (60, 60)),
+            relative_rect=Rect((0, 0), (60, 60)),
             text='',
             manager=self.manager,
             container=self.head_container,
@@ -115,7 +117,7 @@ class EntityPropertyPanel(PropertyPanel):
 
         # 右侧的垂直布局，用于显示物体的名称、类型和质量
         self.name_container = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect((0, 0), (0, 0)),
+            relative_rect=Rect((0, 0), (0, 0)),
             manager=self.manager,
             container=self.head_container
         )
@@ -124,21 +126,21 @@ class EntityPropertyPanel(PropertyPanel):
         head_hlayout.add_layout(name_vlayout)
 
         self.name_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, 0), (180, 20)),
+            relative_rect=Rect((0, 0), (180, 20)),
             text=f'Name: {self.entity.name}',
             manager=self.manager,
             container=self.name_container
         )
 
         self.type_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, 0), (180, 20)),
+            relative_rect=Rect((0, 0), (180, 20)),
             text=f'Type: {self.entity.type}',
             manager=self.manager,
             container=self.name_container
         )
 
         self.mass_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, 0), (180, 20)),
+            relative_rect=Rect((0, 0), (180, 20)),
             text=f'Mass: {self.entity.mass:.2f} kg',
             manager=self.manager,
             container=self.name_container
@@ -154,7 +156,7 @@ class EntityPropertyPanel(PropertyPanel):
         """
         # 创建一个垂直布局，标题为 "Entity Property"
         self.entity_property_container = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect((0, 0), (0, 0)),
+            relative_rect=Rect((0, 0), (0, 0)),
             manager=self.manager,
             container=self.panel_container
         )
@@ -186,7 +188,7 @@ class EntityPropertyPanel(PropertyPanel):
         """
         # 创建一个水平布局用于属性标题、值和滑块
         self.property_sub_container = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect((0, 0), (300, 50)),
+            relative_rect=Rect((0, 0), (300, 50)),
             manager=self.manager,
             container=self.entity_property_container
         )
@@ -194,7 +196,7 @@ class EntityPropertyPanel(PropertyPanel):
 
         # 属性名称标签
         property_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, 0), (100, 30)),
+            relative_rect=Rect((0, 0), (100, 30)),
             text=f'{property_name}:',
             manager=self.manager,
             container=self.property_sub_container
@@ -202,7 +204,7 @@ class EntityPropertyPanel(PropertyPanel):
 
         # 当前值标签
         value_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, 0), (50, 30)),
+            relative_rect=Rect((0, 0), (50, 30)),
             text=f'{initial_value:.2f}',
             manager=self.manager,
             container=self.property_sub_container
@@ -210,7 +212,7 @@ class EntityPropertyPanel(PropertyPanel):
 
         # 属性调整滑块
         slider = pygame_gui.elements.UIHorizontalSlider(
-            relative_rect=pygame.Rect((0, 0), (100, 30)),
+            relative_rect=Rect((0, 0), (100, 30)),
             start_value=initial_value,
             value_range=(min_value, max_value),
             manager=self.manager,
@@ -246,7 +248,7 @@ class EntityPropertyPanel(PropertyPanel):
         """
         # 创建一个垂直布局，标题为 "Position"
         self.position_container = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect((0, 0), (300, 300)),
+            relative_rect=Rect((0, 0), (300, 300)),
             manager=self.manager,
             container=self.panel_container
         )
@@ -278,7 +280,7 @@ class EntityPropertyPanel(PropertyPanel):
         """
         # 创建一个垂直布局用于属性标题和值
         self.position_sub_container = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect((0, 0), (300, 100)),
+            relative_rect=Rect((0, 0), (300, 100)),
             manager=self.manager,
             container=self.position_container
         )
@@ -286,7 +288,7 @@ class EntityPropertyPanel(PropertyPanel):
 
         # 属性名称和当前值标签
         property_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, 0), (200, 30)),
+            relative_rect=Rect((0, 0), (200, 30)),
             text=f'{property_name}: {data[-1]:.2f}',
             manager=self.manager,
             container=self.position_sub_container
@@ -294,7 +296,7 @@ class EntityPropertyPanel(PropertyPanel):
 
         # 曲线图显示器
         graph = pygame_gui.elements.UIImage(
-            relative_rect=pygame.Rect((0, 0), (200, 100)),
+            relative_rect=Rect((0, 0), (200, 100)),
             image_surface=self._create_graph_surface(data),
             manager=self.manager,
             container=self.position_sub_container
@@ -311,30 +313,106 @@ class EntityPropertyPanel(PropertyPanel):
 
     def _create_graph_surface(self, data):
         """
-        创建显示曲线图的Surface。
+        使用 Pygame 绘制曲线图的 Surface。
 
         :param data: 显示的历史数据数组
-        :return: pygame.Surface 包含绘制的曲线图
+        :return: Pygame Surface 包含绘制的曲线图
         """
-        fig, ax = plt.subplots(figsize=(2, 1))
-        ax.plot(data, color='blue')
-        ax.set_xlim([0, len(data) - 1])
-        ax.set_ylim([min(data), max(data)])
+        width, height = 200, 100
+        surface = pygame.Surface((width, height), pygame.SRCALPHA)
 
-        # 移除轴线
-        ax.axis('off')
+        # 填充背景为白色
+        surface.fill((255, 255, 255))
 
-        # 绘制到Surface
-        fig.canvas.draw()
+        # 找到数据中的最小值和最大值以进行比例调整
+        min_data = min(data)
+        max_data = max(data)
 
-        # 使用 buffer_rgba 代替 tostring_rgb
-        graph_surface = pygame.Surface((200, 100))
-        graph_surface.blit(
-            pygame.image.frombuffer(fig.canvas.buffer_rgba(), fig.canvas.get_width_height(), "RGBA"),
-            (0, 0)
-        )
+        # 绘制曲线
+        points = []
+        for i in range(len(data)):
+            x = int(i * width / len(data))
+            y = int((data[i] - min_data) / (max_data - min_data + 1) * (height - 10))  # 根据数据调整 y 位置
+            y = height - y  # 将 y 值翻转，使得较大的值在图表顶部
+            points.append((x, y))
 
-        plt.close(fig)  # 关闭matplotlib绘图
-        print(graph_surface)
-        return graph_surface
+        if len(points) > 1:
+            pygame.draw.lines(surface, (0, 0, 255), False, points, 2)  # 使用蓝色绘制曲线
+
+        return surface
+
+    # def _create_graph_surface(self, data):
+    #     # 创建一个新的 OpenGL 纹理并绑定
+    #     texture = glGenTextures(1)
+    #     glBindTexture(GL_TEXTURE_2D, texture)
+    #     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 200, 100, 0, GL_RGBA, GL_UNSIGNED_BYTE, None)
+    #     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    #     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    #
+    #     # 创建并绑定 FBO
+    #     fbo = glGenFramebuffers(1)
+    #     glBindFramebuffer(GL_FRAMEBUFFER, fbo)
+    #     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0)
+    #
+    #     if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE:
+    #         print("Error: Framebuffer is not complete!")
+    #         return None
+    #
+    #     # 设置视口并清除缓冲区
+    #     glViewport(0, 0, 200, 100)
+    #     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    #
+    #     # 设置投影和模型视图矩阵
+    #     glMatrixMode(GL_PROJECTION)
+    #     glLoadIdentity()
+    #     gluOrtho2D(0, len(data) - 1, min(data), max(data))
+    #
+    #     glMatrixMode(GL_MODELVIEW)
+    #     glLoadIdentity()
+    #
+    #     # 绘制曲线
+    #     glColor3f(0.0, 0.0, 1.0)
+    #     glBegin(GL_LINE_STRIP)
+    #     for i in range(len(data)):
+    #         glVertex2f(i, data[i])
+    #     glEnd()
+    #
+    #     # 读取 FBO 内容到 Pygame Surface
+    #     raw_data = glReadPixels(0, 0, 200, 100, GL_RGBA, GL_UNSIGNED_BYTE)
+    #     surface = pygame.image.fromstring(raw_data, (200, 100), "RGBA")
+    #
+    #     # 清理
+    #     glBindFramebuffer(GL_FRAMEBUFFER, 0)
+    #     glDeleteFramebuffers(1, [fbo])
+    #     glDeleteTextures([texture])
+    #
+    #     return surface
+
+    # def _create_graph_surface(self, data):
+    #     """
+    #     创建显示曲线图的Surface。
+    #
+    #     :param data: 显示的历史数据数组
+    #     :return: pygame.Surface 包含绘制的曲线图
+    #     """
+    #     fig, ax = plt.subplots(figsize=(2, 1))
+    #     ax.plot(data, color='blue')
+    #     ax.set_xlim([0, len(data) - 1])
+    #     ax.set_ylim([min(data), max(data)])
+    #
+    #     # 移除轴线
+    #     ax.axis('off')
+    #
+    #     # 绘制到Surface
+    #     fig.canvas.draw()
+    #
+    #     # 使用 buffer_rgba 代替 tostring_rgb
+    #     graph_surface = pygame.Surface((200, 100))
+    #     graph_surface.blit(
+    #         pygame.image.frombuffer(fig.canvas.buffer_rgba(), fig.canvas.get_width_height(), "RGBA"),
+    #         (0, 0)
+    #     )
+    #
+    #     plt.close(fig)  # 关闭matplotlib绘图
+    #     return graph_surface
 

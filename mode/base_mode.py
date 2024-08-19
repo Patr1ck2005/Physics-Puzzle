@@ -2,7 +2,8 @@ import pygame
 
 import json
 
-import time
+from OpenGL.GL import *
+from OpenGL.GLU import *
 import os
 
 from gui.menu import main_menu, pause_menu, settings_menu
@@ -102,6 +103,7 @@ def default_level(screen):
         ui_manager.render_all_ui()
 
         # 所有渲染完成后,更新画面
+        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         pygame.display.flip()
 
         # 游戏帧数为60

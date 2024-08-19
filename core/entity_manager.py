@@ -37,7 +37,7 @@ class EntityManager:
         for obj in self.running_objects.values():
             obj.update(self.m_pos)
         self.manager.update(pygame.time.get_ticks()/1000.0)
-        if time.time() - self.entity_property_panel.last_refresh_time > 1:
+        if time.time() - self.entity_property_panel.last_refresh_time > .01:
             self.entity_property_panel.refresh()
 
     def process_event(self, event):
