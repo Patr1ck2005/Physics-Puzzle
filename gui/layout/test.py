@@ -1,7 +1,7 @@
 import numpy as np
 import pygame_gui
 
-from gui.layout.property_panel import EntityPropertyPanel
+from gui.ui_panel.property_panel import EntityPropertyPanel
 from settings import *
 
 import pygame

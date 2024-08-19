@@ -57,6 +57,7 @@ class EntityUI(Entity, BaseUI):
     def draw(self, screen):
         # 目前简单对于图像覆盖处理
         self.sync_ui()
+        self.draw_mark(screen)
         self.draw_draft(screen)
         if self.ico is not None:
             angle_degrees = math.degrees(self.angle)
@@ -102,3 +103,51 @@ class CircleEntityUI(EntityUI, CircleEntity, BaseUICircle):
         if self.body is not None:
             self.body.position = pos[0]+self.size, pos[1]+self.size
 
+    def draw_icon(self, surface):
+        pygame.draw.circle(surface, self.ico_color, (surface.get_width()//2, surface.get_height()//2), self.size)
+
+
+class BlankEntityUI(Entity, BaseUI):
+    def __init__(self, name='Blank', phy_type='None', center=(0, 0), angle=0, size=(0, 0), ico_color=(150, 150, 150)):
+        self.name = name
+        self.type = phy_type
+        self.shape = None
+        self.ico_color = ico_color
+        self.history_x = (0, 0)
+        self.history_y = (0, 0)
+        self.history_angle = (0, 0)
+
+    @property
+    def center(self):
+        return (0, 0)
+
+    @property
+    def angle(self):
+        return 0
+
+    @property
+    def mass(self):
+        return 0
+
+    @property
+    def moment(self):
+        return 0
+
+    @property
+    def velocity(self):
+        return (0, 0)
+
+    @property
+    def angular_velocity(self):
+        return 0
+
+    @property
+    def friction(self):
+        return 0
+
+    @property
+    def elasticity(self):
+        return 0
+
+    def draw_icon(self, surface):
+        pygame.draw.circle(surface, self.ico_color, (surface.get_width()//2, surface.get_height()//2), 10)

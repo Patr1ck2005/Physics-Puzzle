@@ -1,3 +1,5 @@
+from pygame import Rect
+
 from scripts.utils import Round
 
 import pygame
@@ -19,6 +21,8 @@ class BaseUI:
 
         self.set_click_region()
 
+        self.is_selected = False
+
     @staticmethod
     def highlight(color):
         return [min(int(50 + c), 255) for c in color]
@@ -37,12 +41,19 @@ class BaseUI:
 
     # 在草图的基础上画出图片
     def draw(self, screen):
+        self.draw_mark(screen)
         self.draw_draft(screen)
         if self.ico is not None:
             screen.blit(self.ico, self.position)
 
     # 通过pygame原生图形作图, 需要在子类中重写
     def draw_draft(self, screen):
+        pass
+
+    def draw_mark(self, screen):
+        pass
+
+    def draw_icon(self, screen):
         pass
 
     def is_mouse_over(self, m_pos):
@@ -108,6 +119,10 @@ class BaseUIBox(BaseUI):
         text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
         screen.blit(text, (self.position[0] + 10, self.position[1] + 5))
 
+    def draw_mark(self, screen):
+        if self.is_selected:
+            pygame.draw.rect(screen, (255, 255, 255), Rect(*self.position, *self.size).scale_by(1.1))
+
 
 class BaseUICircle(BaseUI):
     def __init__(self, screen,
@@ -133,3 +148,7 @@ class BaseUICircle(BaseUI):
         pygame.draw.circle(screen, self._color, self.center, self.size)
         text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
         screen.blit(text, (self.center[0]-self.size, self.center[1]-10))
+
+    def draw_mark(self, screen):
+        if self.is_selected:
+            pygame.draw.circle(screen, (255, 255, 255), self.center, self.size*1.1)

@@ -7,7 +7,7 @@ import pygame
 from gui.layout.box_layout import HBoxLayout, VBoxLayout
 from settings import *
 
-from core.phy_object.entity import BlankEntity
+from gui.phy_obj_ui.entity_ui import BlankEntityUI
 
 
 class PropertyPanel:
@@ -33,6 +33,14 @@ class PropertyPanel:
         self.main_layout = VBoxLayout(self.panel_container, padding=10, spacing=5, mode='proportional', title=self.title,
                                       manager=self.manager)
 
+    def show(self):
+        """显示属性面板"""
+        self.panel_container.show()
+
+    def hide(self):
+        """隐藏属性面板"""
+        self.panel_container.hide()
+
 
 class EntityPropertyPanel(PropertyPanel):
     def __init__(self, manager, entity=None, title=None, container_rect=Rect(SCREEN_WIDTH-400, 0, 400, SCREEN_HEIGHT-100)):
@@ -45,13 +53,15 @@ class EntityPropertyPanel(PropertyPanel):
         :param title: 属性面板的标题
         """
         super().__init__(manager, container_rect, title)
-        self.entity = entity if entity else BlankEntity()
+        self.entity = entity if entity else BlankEntityUI()
+
         self.last_refresh_time = 0
 
         # 创建标签和图标
         self._create_layouts()
 
         # 添加物体属性部分
+        self.property_widgets = []
         self._add_entity_properties()
 
         # 添加物体位置信息部分
@@ -60,15 +70,20 @@ class EntityPropertyPanel(PropertyPanel):
     def update_entity(self, entity):
         """更新当前显示的实体"""
         self.entity = entity
-        self.refresh()  # 每次更新实体时，刷新面板内容
+        self.refresh_slider()   # 每次更新实体时，刷新面板内容
+
+    def remove_entity(self):
+        """移除当前显示的实体"""
+        self.entity = BlankEntityUI()
+        self.refresh_slider()  # 每次移除实体时，刷新面板内容
 
     def refresh(self):
         """更新面板内容以反映当前实体的状态"""
         self.name_label.set_text(f'Name: {self.entity.name}')
         self.type_label.set_text(f'Type: {self.entity.type}')
         self.mass_label.set_text(f'Mass: {self.entity.mass:.2f} kg')
-        # self.friction_label.set_text(f'Friction: {self.entity.friction:.2f}')
-        # self.elasticity_label.set_text(f'Elasticity: {self.entity.elasticity:.2f}')
+
+        self.refresh_property()
 
         self.graph_x_label.set_text(f'Position X: {self.entity.center[0]:.2f}')
         self.graph_y_label.set_text(f'Position Y: {self.entity.center[1]:.2f}')
@@ -77,13 +92,26 @@ class EntityPropertyPanel(PropertyPanel):
         # 如果有其他需要更新的内容，例如图表
         self.update_graphs()
 
+    def refresh_property(self):
+        self.mass_value_label.set_text(f'{self.entity.mass:.2f}')
+        self.fri_value_label.set_text(f'{self.entity.friction:.2f}')
+        self.elast_value_label.set_text(f'{self.entity.elasticity:.2f}')
+
+    def refresh_slider(self):
+        self.mass_slider.set_current_value(self.entity.mass)
+        self.fri_slider.set_current_value(self.entity.friction)
+        self.elast_slider.set_current_value(self.entity.elasticity)
+
     def update_graphs(self):
         """更新图表显示"""
         self.last_refresh_time = time.time()
+        head_surface = pygame.Surface((200, 200), pygame.SRCALPHA)
+        self.entity.draw_icon(head_surface)
+        self.icon.set_image(head_surface)  # 用实体的颜色填充图标
         # 这里刷新位置的图表数据
-        position_x_graph_surface = self._create_graph_surface(self.entity.history_x)
-        position_y_graph_surface = self._create_graph_surface(self.entity.history_y)
-        angle_graph_surface = self._create_graph_surface(self.entity.history_angle)
+        position_x_graph_surface = self._create_graph_surface(self.entity.history_x, (255, 0, 0))
+        position_y_graph_surface = self._create_graph_surface(self.entity.history_y, (0, 255, 0))
+        angle_graph_surface = self._create_graph_surface(self.entity.history_angle, (0, 0, 255))
         # 更新图表UI元素
         self.position_graph_x.set_image(position_x_graph_surface)
         self.position_graph_y.set_image(position_y_graph_surface)
@@ -100,24 +128,26 @@ class EntityPropertyPanel(PropertyPanel):
         head_hlayout = HBoxLayout(self.head_container, padding=10, spacing=5, mode='proportional')
         self.main_layout.add_layout(head_hlayout)
 
+        head_surface = pygame.Surface((200, 200), pygame.SRCALPHA)
+        pygame.draw.circle(head_surface, (255, 0, 0), (100, 100), 50)
         # 左侧的物体图形（简单的颜色矩形作为占位符）
-        icon = pygame_gui.elements.UIButton(
+        self.icon = pygame_gui.elements.UIImage(
             relative_rect=Rect((0, 0), (60, 60)),
-            text='',
             manager=self.manager,
             container=self.head_container,
+            image_surface=head_surface,
             object_id="#entity_icon"
         )
-        icon.image.fill(self.entity.color)  # 用实体的颜色填充图标
+        self.icon.image.fill(self.entity.ico_color)  # 用实体的颜色填充图标
 
         # 右侧的垂直布局，用于显示物体的名称、类型和质量
         self.name_container = pygame_gui.elements.UIPanel(
-            relative_rect=Rect((0, 0), (0, 0)),
+            relative_rect=Rect((10, 10), (10, 10)),
             manager=self.manager,
             container=self.head_container
         )
         name_vlayout = VBoxLayout(self.name_container, padding=5, spacing=5, mode='proportional')
-        head_hlayout.add_widget(icon)
+        head_hlayout.add_widget(self.icon)
         head_hlayout.add_layout(name_vlayout)
 
         self.name_label = pygame_gui.elements.UILabel(
@@ -161,14 +191,18 @@ class EntityPropertyPanel(PropertyPanel):
         # 首先, 将实体属性的垂直布局添加到主布局
         self.main_layout.add_layout(entity_property_layout, 2)
         # 质量
-        self._add_property_slider(entity_property_layout, "Mass", self.entity.mass, 0.1, 10.0, 0.1)
-
+        self.mass_slider_label, self.mass_value_label, self.mass_slider = (
+            self._add_property_slider(entity_property_layout, "Mass", self.entity.mass, 0.1, 10.0, 0.1)
+        )
         # 摩擦力
-        self._add_property_slider(entity_property_layout, "Friction", self.entity.friction, 0.0, 1.0, 0.01)
-
+        self.fri_slider_label, self.fri_value_label, self.fri_slider = (
+            self._add_property_slider(entity_property_layout, "Friction", self.entity.friction, 0.0, 1.0, 0.01)
+        )
         # 弹性
-        self._add_property_slider(entity_property_layout, "Elasticity", self.entity.elasticity, 0.0, 1.0,
+        self.elast_slider_label, self.elast_value_label, self.elast_slider = (
+            self._add_property_slider(entity_property_layout, "Elasticity", self.entity.elasticity, 0.0, 1.0,
                                   0.01)
+        )
 
     def _add_property_slider(self, parent_layout, property_name, initial_value, min_value, max_value, step):
         """
@@ -185,7 +219,7 @@ class EntityPropertyPanel(PropertyPanel):
         self.property_sub_container = pygame_gui.elements.UIPanel(
             relative_rect=Rect((0, 0), (300, 50)),
             manager=self.manager,
-            container=self.entity_property_container
+            container=self.entity_property_container,
         )
         property_layout = HBoxLayout(self.property_sub_container, padding=5, spacing=5, mode='proportional')
 
@@ -211,23 +245,12 @@ class EntityPropertyPanel(PropertyPanel):
             start_value=initial_value,
             value_range=(min_value, max_value),
             manager=self.manager,
-            container=self.property_sub_container
+            container=self.property_sub_container,
+            object_id=f"#property_slider_{property_name}",
         )
 
         # 绑定滑块的变化事件，更新值标签
         slider.set_current_value(initial_value)
-
-        def update_value_label():
-            value = slider.get_current_value()
-            value_label.set_text(f'{value:.2f}')
-            if property_name == "Mass":
-                self.entity.mass = value
-            elif property_name == "Friction":
-                self.entity.friction = value
-            elif property_name == "Elasticity":
-                self.entity.elasticity = value
-        #
-        # slider.bind_on_value_changed(update_value_label)
 
         # 将标签和滑块添加到水平布局
         property_layout.add_widget(property_label)
@@ -236,6 +259,7 @@ class EntityPropertyPanel(PropertyPanel):
 
         # 将此属性布局添加到父布局中
         parent_layout.add_layout(property_layout)
+        return property_label, value_label, slider
 
     def _add_position_properties(self):
         """
@@ -247,11 +271,11 @@ class EntityPropertyPanel(PropertyPanel):
             manager=self.manager,
             container=self.panel_container
         )
-        position_layout = VBoxLayout(self.position_container, padding=5, spacing=5, mode='proportional', title="Position",
+        position_layout = VBoxLayout(self.position_container, padding=5, spacing=5, mode='proportional', title=None,
                                      manager=self.manager)
 
         # 将位置属性的垂直布局添加到主布局
-        self.main_layout.add_layout(position_layout, 3)
+        self.main_layout.add_layout(position_layout, 4)
 
         # 位置 X 标签与图表
         self.graph_x_label, self.position_graph_x = (
@@ -306,18 +330,18 @@ class EntityPropertyPanel(PropertyPanel):
 
         return property_label, graph
 
-    def _create_graph_surface(self, data):
+    def _create_graph_surface(self, data, line_color=(255, 255, 255)):
         """
         使用 Pygame 绘制曲线图的 Surface。
 
         :param data: 显示的历史数据数组
         :return: Pygame Surface 包含绘制的曲线图
         """
-        width, height = 200, 100
+        width, height = 600, 200
         surface = pygame.Surface((width, height), pygame.SRCALPHA)
 
-        # 填充背景为白色
-        surface.fill((255, 255, 255))
+        # 填充背景为灰色
+        surface.fill((100, 100, 100))
 
         # 找到数据中的最小值和最大值以进行比例调整
         min_data = min(data)
@@ -327,12 +351,12 @@ class EntityPropertyPanel(PropertyPanel):
         points = []
         for i in range(len(data)):
             x = int(i * width / len(data))
-            y = int((data[i] - min_data) / (max_data - min_data + 1) * (height - 10))  # 根据数据调整 y 位置
+            y = int((data[i] - min_data + 1) / (max_data - min_data + 1) * (height - 10))  # 根据数据调整 y 位置
             y = height - y  # 将 y 值翻转，使得较大的值在图表顶部
             points.append((x, y))
 
         if len(points) > 1:
-            pygame.draw.lines(surface, (0, 0, 255), False, points, 2)  # 使用蓝色绘制曲线
+            pygame.draw.lines(surface, line_color, False, points, 4)  # 使用蓝色绘制曲线
 
         return surface
 

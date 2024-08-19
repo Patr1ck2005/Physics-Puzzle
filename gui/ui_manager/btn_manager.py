@@ -3,6 +3,7 @@ from pygame import Rect, Surface, Color, Vector2, Vector3
 import pygame_gui
 from pygame_gui.elements import UIButton, UILabel, UIPanel, UIImage, UIProgressBar
 
+from gui.ui_panel.bottom_panel import BottomPanel
 from settings import *
 
 
@@ -14,24 +15,13 @@ class ButtonManager:
 
         self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))  # 外置UI管理器
         self.default_size = (50, 30)
-        self.all_buttons = {
-            "setting": UIButton(pygame.Rect(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 50, *self.default_size), text='Setting',
-                                manager=self.manager),
-            "rewind": UIButton(pygame.Rect(50, SCREEN_HEIGHT - 50, *self.default_size), text='rewind',
-                               manager=self.manager),
-            "slow": UIButton(pygame.Rect(200, SCREEN_HEIGHT - 50, *self.default_size), text='slow',
-                             manager=self.manager),
-            "pause/resume": UIButton(pygame.Rect(250, SCREEN_HEIGHT - 50, *self.default_size), text='pause',
-                                     manager=self.manager),
-            "speed": UIButton(pygame.Rect(300, SCREEN_HEIGHT - 50, *self.default_size), text='speed',
-                              manager=self.manager),
-        }
         self.toggle_gravity_window = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(SCREEN_WIDTH - 180, SCREEN_HEIGHT - 50, *self.default_size),
             text='Toggle Menu',
             manager=self.manager
         )
         self._create_gravity_setting()
+        self.button_panel = BottomPanel(self.manager)
 
     def update(self):
         self.manager.update(pygame.time.get_ticks() / 1000.0)
@@ -41,21 +31,21 @@ class ButtonManager:
         self.manager.process_events(event)
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             btn = event.ui_element
-            if btn == self.all_buttons.get('setting', None):
+            if btn == self.button_panel:
                 print("settings clicked!")
-            elif btn == self.all_buttons.get('pause/resume', None):
+            elif btn == self.button_panel.pause_btn:
                 self.engine.pause = not self.engine.pause
                 btn.set_text('resume' if self.engine.pause else 'pause')
-            elif btn == self.all_buttons.get('restart', None):
+            elif btn == self.button_panel.init_btn:
                 self.engine.init_world()
-            elif btn == self.all_buttons.get('speed', None):
+            elif btn == self.button_panel.speed_btn:
                 self.engine.time_scale *= 2.0
                 self.hud.update_time_scale(self.engine.time_scale)
-            elif btn == self.all_buttons.get('slow', None):
+            elif btn == self.button_panel.slow_btn:
                 self.engine.time_scale *= 0.5
                 self.hud.update_time_scale(self.engine.time_scale)
 
-            elif btn == self.toggle_gravity_window:
+            elif btn == self.button_panel.gravity_setting:
                 # 切换菜单窗口的显示状态
                 self.gravity_window.visible = not self.gravity_window.visible
                 if self.gravity_window is None or not self.gravity_window.alive():
@@ -72,6 +62,7 @@ class ButtonManager:
             elif btn == self.universal_gravity_checkbox:
                 self.engine.if_uni_gravity = not self.engine.if_uni_gravity
                 btn.set_text('tune off' if self.engine.if_uni_gravity else 'tune on')
+            return True
 
         if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
             if event.ui_element == self.universal_gravity_slider:
@@ -80,6 +71,12 @@ class ButtonManager:
             elif event.ui_element == self.gravity_slider:
                 self.gravity_value_label.set_text(f'earth gravity:{event.value:.2f}')
                 self.engine.gravity = event.value
+            return True
+
+        if event.type == pygame.USEREVENT:
+            if event.user_type == pygame_gui.UI_BUTTON_ON_HOVERED:
+                return True
+        return False
 
     def render(self):
         self.manager.draw_ui(self.screen)
@@ -87,7 +84,7 @@ class ButtonManager:
     def _create_gravity_setting(self, visible=False):
         # 创建一个 UI 窗口
         self.gravity_window = pygame_gui.elements.UIWindow(
-            rect=pygame.Rect((350, 150), (300, 200)),  # 窗口位置和大小
+            rect=pygame.Rect((SCREEN_WIDTH-600, SCREEN_HEIGHT-300), (300, 200)),  # 窗口位置和大小
             manager=self.manager,
             window_display_title='Gravity Control',
             object_id='#gravity_window',
@@ -112,7 +109,7 @@ class ButtonManager:
 
         # 创建一个标签，实时显示滑块值
         self.universal_gravity_value_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((10, 20), (120, 30)),
+            relative_rect=pygame.Rect((10, 20), (150, 30)),
             text=f'universal gravity:{self.universal_gravity_slider.get_current_value():.2f}',
             manager=self.manager,
             container=self.gravity_window
@@ -129,7 +126,7 @@ class ButtonManager:
 
         # 创建一个标签，实时显示滑块值
         self.gravity_value_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((10, 90), (120, 30)),
+            relative_rect=pygame.Rect((10, 90), (150, 30)),
             text=f'earth gravity:{self.gravity_slider.get_current_value():.2f}',
             manager=self.manager,
             container=self.gravity_window

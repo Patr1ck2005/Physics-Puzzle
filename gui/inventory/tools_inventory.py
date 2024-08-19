@@ -1,8 +1,8 @@
 from gui.phy_obj_ui.tool_ui import FrictionToolUI, ElasticityToolUI
-from gui.item_bar.inventory_manager import InventoryManager
+from gui.inventory.placeable_inventory import PlaceableInventory
 
 
-class ToolsManager(InventoryManager):
+class ToolsInventory(PlaceableInventory):
     def __init__(self, screen):
         super().__init__(screen)
         # 先随便设置位置, 后续会调整位置
@@ -26,7 +26,7 @@ class ToolsManager(InventoryManager):
                 ui_position = ui_position[0]+5, ui_position[1]+5
             else:
                 # 假设每个物体的图标为50x50，依次排开成1列
-                ui_position = (50 + (i % 1) * 70, 300 + (i // 1) * 70)
+                ui_position = (50 + (i % 1) * 70, 350 + (i // 1) * 70)
                 i += 1
             # 设置物体对象UI中心的坐标
             item.center = ui_position

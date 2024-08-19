@@ -22,9 +22,9 @@ import pymunk
 
 class Entity:
     def __init__(self, name, phy_type, shape=None, center=None, angle=None, size=None, color=None):
-        self.history_x = deque((0, 0), maxlen=100)
-        self.history_y = deque((0, 0), maxlen=100)
-        self.history_angle = deque((0, 0), maxlen=100)
+        self.history_x = deque((0, 0), maxlen=256)
+        self.history_y = deque((0, 0), maxlen=256)
+        self.history_angle = deque((0, 0), maxlen=256)
         self.name = name
         self.type = phy_type
         self.body = None
@@ -146,46 +146,3 @@ class BoxEntity(Entity):
 class CircleEntity(Entity):
     def __init__(self, name, phy_type, center=(100, 100), angle=0, radius=30, color=(150, 150, 150)):
         Entity.__init__(self, name, phy_type, "circle", center, angle, radius, color)
-
-
-class BlankEntity(Entity):
-    def __init__(self, name='Blank', phy_type='None', center=(0, 0), angle=0, size=(0, 0), color=(150, 150, 150)):
-        self.name = name
-        self.type = phy_type
-        self.shape = None
-        self.color = color
-        self.history_x = (0, 0)
-        self.history_y = (0, 0)
-        self.history_angle = (0, 0)
-
-    @property
-    def center(self):
-        return (0, 0)
-
-    @property
-    def angle(self):
-        return 0
-
-    @property
-    def mass(self):
-        return 0
-
-    @property
-    def moment(self):
-        return 0
-
-    @property
-    def velocity(self):
-        return (0, 0)
-
-    @property
-    def angular_velocity(self):
-        return 0
-
-    @property
-    def friction(self):
-        return 0
-
-    @property
-    def elasticity(self):
-        return 0

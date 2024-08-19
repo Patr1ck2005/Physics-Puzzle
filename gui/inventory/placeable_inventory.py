@@ -3,7 +3,7 @@ from gui.phy_obj_ui.entity_ui import BoxEntityUI, CircleEntityUI
 from gui.phy_obj_ui.force_ui import ForceUI
 from pymunk import Vec2d
 
-class InventoryManager:
+class PlaceableInventory:
     items: dict[str, BaseUI]
 
     def __init__(self, screen):

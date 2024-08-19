@@ -96,7 +96,7 @@ class BoxLayout:
 
 
 class HBoxLayout(BoxLayout):
-    def __init__(self, container, padding=5, spacing=5, mode='simple', title=None, manager=None):
+    def __init__(self, container, padding=5, spacing=5, mode='proportional', title=None, manager=None):
         """
         初始化 HBoxLayout。
 
@@ -130,18 +130,17 @@ class HBoxLayout(BoxLayout):
         """
         x_offset = self.padding
         y_offset = self.padding if not self.title_element else self.padding + 30
-
+        # scale = self.sub_height
         for element in self.elements:
             element.set_dimensions((element.relative_rect.width, self.sub_height))
             element.set_relative_position(pygame.math.Vector2(x_offset, y_offset))
             x_offset += element.relative_rect.width + self.spacing
 
         for layout, _ in self.layouts:
-            layout_container = layout.container
             layout.container.set_dimensions((layout.container.relative_rect.width, self.sub_height))
-            layout_container.set_relative_position(pygame.math.Vector2(x_offset, y_offset))
+            layout.container.set_relative_position(pygame.math.Vector2(x_offset, y_offset))
             layout.update_layout()
-            x_offset += layout_container.relative_rect.width + self.spacing
+            x_offset += layout.container.relative_rect.width + self.spacing
 
     def _update_proportional_layout(self):
         """

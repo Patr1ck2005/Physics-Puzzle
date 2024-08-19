@@ -9,6 +9,7 @@ class Engine:
     def __init__(self, screen):
         self.screen = screen
         self.draw_options = pymunk.pygame_util.DrawOptions(screen)
+
         self.space = pymunk.Space()
         self.pause = False
         self.time_scale = 1
@@ -45,6 +46,7 @@ class Engine:
         self._G = value*1e6
 
     def init_world(self):
+        self.space.remove(*self.space.bodies, *self.space.shapes, *self.space.constraints)
         if self.if_gravity:
             self.space.gravity = (0.0, self._gravity)
 
