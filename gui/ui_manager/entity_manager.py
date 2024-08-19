@@ -41,6 +41,9 @@ class EntityManager:
         if time.time() - self.entity_property_panel.last_refresh_time > .01:
             self.entity_property_panel.refresh()
 
+    def refresh_panel_sliders(self):
+        self.entity_property_panel.refresh_sliders()
+
     def process_event(self, event):
         self.manager.process_events(event)
         if event.type == pygame_gui.UI_BUTTON_PRESSED:

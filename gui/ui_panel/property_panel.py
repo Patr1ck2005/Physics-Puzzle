@@ -70,12 +70,12 @@ class EntityPropertyPanel(PropertyPanel):
     def update_entity(self, entity):
         """更新当前显示的实体"""
         self.entity = entity
-        self.refresh_slider()   # 每次更新实体时，刷新面板内容
+        self.refresh_sliders()   # 每次更新实体时，刷新面板内容
 
     def remove_entity(self):
         """移除当前显示的实体"""
         self.entity = BlankEntityUI()
-        self.refresh_slider()  # 每次移除实体时，刷新面板内容
+        self.refresh_sliders()  # 每次移除实体时，刷新面板内容
 
     def refresh(self):
         """更新面板内容以反映当前实体的状态"""
@@ -97,7 +97,7 @@ class EntityPropertyPanel(PropertyPanel):
         self.fri_value_label.set_text(f'{self.entity.friction:.2f}')
         self.elast_value_label.set_text(f'{self.entity.elasticity:.2f}')
 
-    def refresh_slider(self):
+    def refresh_sliders(self):
         self.mass_slider.set_current_value(self.entity.mass)
         self.fri_slider.set_current_value(self.entity.friction)
         self.elast_slider.set_current_value(self.entity.elasticity)

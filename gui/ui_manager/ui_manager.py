@@ -97,8 +97,9 @@ class UIManager:
         if self.selected_tool and selected_entity:
             # 应用工具 (先于获取工具选择结果)
             self.selected_tool.affect(target=selected_entity)
-            # 若应用工具则撤回实体点击事件
+            # 若应用工具则撤回实体点击事件并更新实体面板属性
             self.entity_manager.clear_selection()
+            self.entity_manager.refresh_panel_sliders()
         # 获取工具选择结果
         self.selected_tool = self.inventory_manager.selected_tool
 
@@ -106,6 +107,7 @@ class UIManager:
         self.hud.current_selection = selected or selected_entity
 
     def _on_click_right(self):
+        self.clear_selection()
         # 简单储存世界实体右键键选择结果
         selected_entity = self.entity_manager.on_click_right()
 
