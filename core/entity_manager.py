@@ -1,3 +1,5 @@
+import time
+
 from pymunk import Vec2d
 from gui.layout.property_panel import EntityPropertyPanel
 
@@ -35,6 +37,8 @@ class EntityManager:
         for obj in self.running_objects.values():
             obj.update(self.m_pos)
         self.manager.update(pygame.time.get_ticks()/1000.0)
+        if time.time() - self.entity_property_panel.last_refresh_time > 1:
+            self.entity_property_panel.refresh()
 
     def process_event(self, event):
         self.manager.process_events(event)
@@ -43,11 +47,10 @@ class EntityManager:
     # 遍历当前运行的对象，检查是否有对象被点击
     # 如果点击的对象是静态物体，则提示不能移动
     # 否则，更新被点击对象的中心位置
-    def on_click(self):
+    def on_click_left(self):
         for obj in self.running_objects.values():
             if obj.on_click(self.m_pos) and self.selected_obj is None:
                 self.selected_obj = obj
-                self.entity_property_panel.update_entity(obj)
                 return self.selected_obj
             elif self.selected_obj:
                 if self.selected_obj.type == 'static':  # 静态物体不能移动
@@ -57,6 +60,11 @@ class EntityManager:
                 self.selected_obj = None
                 return
 
+    def on_click_right(self):
+        for obj in self.running_objects.values():
+            if obj.on_click(self.m_pos):
+                self.selected_obj = obj
+                self.entity_property_panel.update_entity(obj)
 
     def call_back_click(self):
         self.selected_obj = None

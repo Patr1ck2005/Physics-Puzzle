@@ -57,17 +57,20 @@ class UIManager:
         if event.type == pygame.MOUSEMOTION:
             pass
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            self.pressing_start_time = time.time()
-            self._on_click()
+            if event.button == 1:
+                self.pressing_start_time = time.time()
+                self._on_click_left()
+            if event.button == 3:
+                self._on_click_right()
         elif event.type == pygame.MOUSEBUTTONUP:
             self._on_release()
 
     # 检测哪个UI被点击
-    def _on_click(self):
-        # 简单储存物品栏选择结果
+    def _on_click_left(self):
+        # 简单储存物品栏左键选择结果
         selected = self.item_bar.on_click()
-        # 简单储存世界实体选择结果
-        selected_entity = self.entity_manager.on_click()
+        # 简单储存世界实体左键选择结果
+        selected_entity = self.entity_manager.on_click_left()
         # 获取物品栏放置结果
         placed_item = self.item_bar.placed_item
         if isinstance(placed_item, Entity):
@@ -94,6 +97,10 @@ class UIManager:
 
         # 更新HUD显示物品栏选择结果
         self.hud.current_selection = selected or selected_entity
+
+    def _on_click_right(self):
+        # 简单储存世界实体右键键选择结果
+        selected_entity = self.entity_manager.on_click_right()
 
     # 检测哪个UI被按住
     def _on_press(self):

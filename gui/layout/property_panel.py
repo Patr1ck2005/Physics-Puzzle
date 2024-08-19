@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 import pygame
 import pygame_gui
@@ -9,6 +11,7 @@ from settings import *
 import matplotlib.pyplot as plt
 
 from core.entity import BlankEntity
+
 
 class PropertyPanel:
     def __init__(self, manager, container_rect, title=None):
@@ -46,65 +49,10 @@ class EntityPropertyPanel(PropertyPanel):
         """
         super().__init__(manager, container_rect, title)
         self.entity = entity if entity else BlankEntity()
+        self.last_refresh_time = 0
 
-        # 创建水平布局用于显示物体的图形和属性信息
-        self.head_container = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect((0, 0), (0, 0)),
-            manager=manager,
-            container=self.panel_container
-        )
-        head_hlayout = HBoxLayout(self.head_container, padding=10, spacing=5, mode='proportional')
-        # 首先，将水平布局添加到主垂直布局中
-        self.main_layout.add_layout(head_hlayout)
-
-        # 左侧的物体图形（简单的颜色矩形作为占位符）
-        icon = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((0, 0), (60, 60)),
-            text='',
-            manager=manager,
-            container=self.head_container,
-            object_id="#entity_icon"
-        )
-        icon.image.fill(self.entity.color)  # 用实体的颜色填充图标
-
-        # 右侧的垂直布局，用于显示物体的名称、类型和质量
-        self.name_container = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect((0, 0), (0, 0)),
-            manager=manager,
-            container=self.head_container
-        )
-        name_vlayout = VBoxLayout(self.name_container, padding=5, spacing=5, mode='proportional')
-
-        # 将图标和右侧垂直布局加入水平布局
-        head_hlayout.add_widget(icon)
-        head_hlayout.add_layout(name_vlayout)  # 将垂直布局的容器作为一个整体添加
-
-        name_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, 0), (180, 20)),
-            text=f'Name: {self.entity.name}',
-            manager=manager,
-            container=self.name_container
-        )
-
-        type_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, 0), (180, 20)),
-            text=f'Type: {self.entity.type}',
-            manager=manager,
-            container=self.name_container
-        )
-
-        mass_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, 0), (180, 20)),
-            text=f'Mass: {self.entity.mass:.2f} kg',
-            manager=manager,
-            container=self.name_container
-        )
-
-
-        # 将这些标签加入右侧的垂直布局
-        name_vlayout.add_widget(name_label)
-        name_vlayout.add_widget(type_label)
-        name_vlayout.add_widget(mass_label)
+        # 创建标签和图标
+        self._create_layouts()
 
         # 添加物体属性部分
         self._add_entity_properties()
@@ -113,12 +61,92 @@ class EntityPropertyPanel(PropertyPanel):
         self._add_position_properties()
 
     def update_entity(self, entity):
-        """
-        更新显示的实体。
-
-        :param entity: 要显示属性的 Entity 对象
-        """
+        """更新当前显示的实体"""
         self.entity = entity
+        self.refresh()  # 每次更新实体时，刷新面板内容
+
+    def refresh(self):
+        """更新面板内容以反映当前实体的状态"""
+        self.name_label.set_text(f'Name: {self.entity.name}')
+        self.type_label.set_text(f'Type: {self.entity.type}')
+        self.mass_label.set_text(f'Mass: {self.entity.mass:.2f} kg')
+        # self.friction_label.set_text(f'Friction: {self.entity.friction:.2f}')
+        # self.elasticity_label.set_text(f'Elasticity: {self.entity.elasticity:.2f}')
+
+        self.graph_x_label.set_text(f'Position X: {self.entity.center[0]:.2f}')
+        self.graph_y_label.set_text(f'Position Y: {self.entity.center[1]:.2f}')
+        self.graph_angle_label.set_text(f'Angle: {self.entity.angle:.2f}')
+
+        # 如果有其他需要更新的内容，例如图表
+        self.update_graphs()
+
+    def update_graphs(self):
+        """更新图表显示"""
+        self.last_refresh_time = time.time()
+        # 这里刷新位置的图表数据
+        position_x_graph_surface = self._create_graph_surface(self.entity.history_x)
+        position_y_graph_surface = self._create_graph_surface(self.entity.history_y)
+        angle_graph_surface = self._create_graph_surface(self.entity.history_angle)
+        # 更新图表UI元素
+        self.position_graph_x.set_image(position_x_graph_surface)
+        self.position_graph_y.set_image(position_y_graph_surface)
+        self.graph_angle.set_image(angle_graph_surface)
+
+    def _create_layouts(self):
+        """创建UI布局和基本元素"""
+        # 创建水平布局用于显示物体的图形和属性信息
+        self.head_container = pygame_gui.elements.UIPanel(
+            relative_rect=pygame.Rect((0, 0), (0, 0)),
+            manager=self.manager,
+            container=self.panel_container
+        )
+        head_hlayout = HBoxLayout(self.head_container, padding=10, spacing=5, mode='proportional')
+        self.main_layout.add_layout(head_hlayout)
+
+        # 左侧的物体图形（简单的颜色矩形作为占位符）
+        icon = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((0, 0), (60, 60)),
+            text='',
+            manager=self.manager,
+            container=self.head_container,
+            object_id="#entity_icon"
+        )
+        icon.image.fill(self.entity.color)  # 用实体的颜色填充图标
+
+        # 右侧的垂直布局，用于显示物体的名称、类型和质量
+        self.name_container = pygame_gui.elements.UIPanel(
+            relative_rect=pygame.Rect((0, 0), (0, 0)),
+            manager=self.manager,
+            container=self.head_container
+        )
+        name_vlayout = VBoxLayout(self.name_container, padding=5, spacing=5, mode='proportional')
+        head_hlayout.add_widget(icon)
+        head_hlayout.add_layout(name_vlayout)
+
+        self.name_label = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, 0), (180, 20)),
+            text=f'Name: {self.entity.name}',
+            manager=self.manager,
+            container=self.name_container
+        )
+
+        self.type_label = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, 0), (180, 20)),
+            text=f'Type: {self.entity.type}',
+            manager=self.manager,
+            container=self.name_container
+        )
+
+        self.mass_label = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, 0), (180, 20)),
+            text=f'Mass: {self.entity.mass:.2f} kg',
+            manager=self.manager,
+            container=self.name_container
+        )
+
+        name_vlayout.add_widget(self.name_label)
+        name_vlayout.add_widget(self.type_label)
+        name_vlayout.add_widget(self.mass_label)
 
     def _add_entity_properties(self):
         """
@@ -228,14 +256,17 @@ class EntityPropertyPanel(PropertyPanel):
         # 将位置属性的垂直布局添加到主布局
         self.main_layout.add_layout(position_layout, 3)
 
-        # 位置 X
-        self._add_position_graph(position_layout, "Position X", self.entity.history_x)
+        # 位置 X 标签与图表
+        self.graph_x_label, self.position_graph_x = (
+            self._add_position_graph(position_layout, "Position X", self.entity.history_x))
 
-        # 位置 Y
-        self._add_position_graph(position_layout, "Position Y", self.entity.history_x)
+        # 位置 Y 标签与图表
+        self.graph_y_label, self.position_graph_y = (
+            self._add_position_graph(position_layout, "Position Y", self.entity.history_y))
 
-        # 角度
-        self._add_position_graph(position_layout, "Angle", self.entity.history_angle)
+        # 角度 标签与图表
+        self.graph_angle_label, self.graph_angle = (
+            self._add_position_graph(position_layout, "Angle", self.entity.history_angle))
 
     def _add_position_graph(self, parent_layout, property_name, data):
         """
@@ -276,6 +307,8 @@ class EntityPropertyPanel(PropertyPanel):
         # 将此布局添加到父布局中
         parent_layout.add_layout(position_layout)
 
+        return property_label, graph
+
     def _create_graph_surface(self, data):
         """
         创建显示曲线图的Surface。
@@ -302,6 +335,6 @@ class EntityPropertyPanel(PropertyPanel):
         )
 
         plt.close(fig)  # 关闭matplotlib绘图
-
+        print(graph_surface)
         return graph_surface
 
