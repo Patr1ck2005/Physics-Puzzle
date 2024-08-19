@@ -1,3 +1,5 @@
+from collections import deque
+
 import pymunk
 
 
@@ -20,6 +22,9 @@ import pymunk
 
 class Entity:
     def __init__(self, name, phy_type, shape=None, center=None, angle=None, size=None, color=None):
+        self.history_x = deque((0, 0), maxlen=100)
+        self.history_y = deque((0, 0), maxlen=100)
+        self.history_angle = deque((0, 0), maxlen=100)
         self.name = name
         self.type = phy_type
         self.body = None
@@ -34,6 +39,70 @@ class Entity:
         self.body, self.body_shape = self._create_phys()
 
         self.color = color
+
+    @property
+    def center(self):
+        return self.body.position
+
+    @center.setter
+    def center(self, value):
+        self.body.position = value
+
+    @property
+    def angle(self):
+        return self.body.angle
+
+    @angle.setter
+    def angle(self, value):
+        self.body.angle = value
+
+    @property
+    def mass(self):
+        return self.body.mass
+
+    @mass.setter
+    def mass(self, value):
+        self.body.mass = value
+
+    @property
+    def moment(self):
+        return self.body.moment
+
+    @moment.setter
+    def moment(self, value):
+        self.body.moment = value
+
+    @property
+    def velocity(self):
+        return self.body.velocity
+
+    @velocity.setter
+    def velocity(self, value):
+        self.body.velocity = value
+
+    @property
+    def angular_velocity(self):
+        return self.body.angular_velocity
+
+    @angular_velocity.setter
+    def angular_velocity(self, value):
+        self.body.angular_velocity = value
+
+    @property
+    def friction(self):
+        return self.body_shape.friction
+
+    @friction.setter
+    def friction(self, value):
+        self.body_shape.friction = value
+
+    @property
+    def elasticity(self):
+        return self.body_shape.elasticity
+
+    @elasticity.setter
+    def elasticity(self, value):
+        self.body_shape.elasticity = value
 
     def _create_phys(self):
         switch_shape = {
@@ -56,6 +125,11 @@ class Entity:
         body_shape.elasticity = 0.8
         return body, body_shape
 
+    def record(self):
+        self.history_x.append(self.body.position.x)
+        self.history_y.append(self.body.position.y)
+        self.history_angle.append(self.body.angle)
+
     def add_to_space(self, space, center_pos):
         self.body.position = center_pos
         space.add(self.body, self.body_shape)
@@ -74,4 +148,44 @@ class CircleEntity(Entity):
         Entity.__init__(self, name, phy_type, "circle", center, angle, radius, color)
 
 
+class BlankEntity(Entity):
+    def __init__(self, name='Blank', phy_type='None', center=(0, 0), angle=0, size=(0, 0), color=(150, 150, 150)):
+        self.name = name
+        self.type = phy_type
+        self.shape = None
+        self.color = color
+        self.history_x = (0, 0)
+        self.history_y = (0, 0)
+        self.history_angle = (0, 0)
 
+    @property
+    def center(self):
+        return (0, 0)
+
+    @property
+    def angle(self):
+        return 0
+
+    @property
+    def mass(self):
+        return 0
+
+    @property
+    def moment(self):
+        return 0
+
+    @property
+    def velocity(self):
+        return (0, 0)
+
+    @property
+    def angular_velocity(self):
+        return 0
+
+    @property
+    def friction(self):
+        return 0
+
+    @property
+    def elasticity(self):
+        return 0

@@ -1,108 +1,57 @@
-import pygame
+import numpy as np
 import pygame_gui
 
-from hbox_layout import HBoxLayout
-from vbox_layout import VBoxLayout
+from gui.layout.property_panel import EntityPropertyPanel
+from settings import *
 
-# 示例用法
-pygame.init()
-pygame.display.set_caption('VBox and HBox Layout Demo')
-window_surface = pygame.display.set_mode((600, 600))
+import pygame
 
-background = pygame.Surface((600, 600))
-background.fill(pygame.Color('#000000'))
+if __name__ == '__main__':
+    from gui.entity_ui import BoxEntityUI
+    # 初始化Pygame和窗口
+    pygame.init()
+    pygame.display.set_caption('Entity Property Panel Example')
+    window_surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-manager = pygame_gui.UIManager((600, 600))
+    background = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+    background.fill(pygame.Color('#000000'))
 
-main_container = pygame_gui.elements.UIPanel(
-    relative_rect=pygame.Rect((50, 50), (500, 500)),
-    manager=manager
-)
+    # 创建UI管理器
+    manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-# 主垂直布局
-main_vbox = VBoxLayout(main_container, padding=10, spacing=10, mode='proportional', title="Main Vertical Layout", manager=manager)
+    # 创建一个实体对象并添加位置历史记录
+    entity = BoxEntityUI(window_surface, name="Box1", phy_type="dynamic", position=(0, 0), size=(30, 30), color=(150, 0, 0))
+    entity.position_history_x = np.random.rand(100) * 300  # 模拟随机位置数据
+    entity.position_history_y = np.random.rand(100) * 300
+    entity.angle_history = np.random.rand(100) * 360 - 180
 
-# 子垂直布局
-sub_vbox = pygame_gui.elements.UIPanel(
-    relative_rect=pygame.Rect((0, 0), (300, 150)),
-    manager=manager,
-    container=main_container
-)
-sub_vbox_layout = VBoxLayout(sub_vbox, padding=5, spacing=5, mode='proportional', title="Sub Vertical Layout", manager=manager)
+    # 创建一个实体属性面板
+    entity_property_panel = EntityPropertyPanel(
+        manager=manager,
+        entity=entity,
+        title="Entity Properties"
+    )
 
-# 在子垂直布局中添加按钮
-button_1 = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect((0, 0), (100, 50)),
-    text='SubV Button 1',
-    manager=manager,
-    container=sub_vbox
-)
+    # 主循环
+    clock = pygame.time.Clock()
+    is_running = True
 
-button_2 = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect((0, 0), (100, 50)),
-    text='SubV Button 2',
-    manager=manager,
-    container=sub_vbox
-)
+    while is_running:
+        time_delta = clock.tick(60) / 1000.0
 
-button_3 = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect((0, 0), (100, 50)),
-    text='SubV Button 3',
-    manager=manager,
-    container=sub_vbox
-)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                is_running = False
 
-sub_vbox_layout.add_widget(button_1, ratio=1)
-sub_vbox_layout.add_widget(button_2, ratio=1)
-sub_vbox_layout.add_widget(button_3, ratio=1)
+            manager.process_events(event)
 
-# 子水平布局
-sub_hbox = pygame_gui.elements.UIPanel(
-    relative_rect=pygame.Rect((0, 0), (300, 100)),
-    manager=manager,
-    container=main_container
-)
-sub_hbox_layout = HBoxLayout(sub_hbox, padding=5, spacing=5, mode='proportional', title="Sub Horizontal Layout", manager=manager)
+        # 更新并绘制UI
+        print("Updating UI...")
+        manager.update(time_delta)
 
-# 在子水平布局中添加按钮
-button_4 = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect((0, 0), (50, 100)),
-    text='SubH Button 1',
-    manager=manager,
-    container=sub_hbox
-)
+        print("Drawing UI...")
+        window_surface.blit(background, (0, 0))
+        manager.draw_ui(window_surface)
+        pygame.display.update()
 
-button_5 = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect((0, 0), (50, 100)),
-    text='SubH Button 2',
-    manager=manager,
-    container=sub_hbox
-)
-
-
-sub_hbox_layout.add_widget(button_4, ratio=1)
-sub_hbox_layout.add_widget(button_5, ratio=1)
-
-# 将子布局添加到主布局中
-main_vbox.add_layout(sub_vbox_layout, ratio=3)
-main_vbox.add_layout(sub_hbox_layout, ratio=1)
-
-clock = pygame.time.Clock()
-is_running = True
-
-while is_running:
-    time_delta = clock.tick(60) / 1000.0
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            is_running = False
-
-        manager.process_events(event)
-
-    manager.update(time_delta)
-
-    window_surface.blit(background, (0, 0))
-    manager.draw_ui(window_surface)
-
-    pygame.display.update()
-
-pygame.quit()
+    pygame.quit()

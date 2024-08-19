@@ -36,6 +36,7 @@ class ButtonManager:
     def update(self):
         self.manager.update(pygame.time.get_ticks() / 1000.0)
 
+    # 处理事件的方法，根据事件类型执行相应的操作
     def process_event(self, event):
         self.manager.process_events(event)
         if event.type == pygame_gui.UI_BUTTON_PRESSED:

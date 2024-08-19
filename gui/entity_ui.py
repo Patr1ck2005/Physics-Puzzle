@@ -51,7 +51,8 @@ class EntityUI(Entity, BaseUI):
         self.center = self.body.position
 
     def update(self, m_pos):
-        super().update(m_pos)
+        Entity.record(self)
+        BaseUI.update(self, m_pos)
 
     def draw(self, screen):
         # 目前简单对于图像覆盖处理

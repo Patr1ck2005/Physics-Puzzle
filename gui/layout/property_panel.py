@@ -1,11 +1,14 @@
 import numpy as np
 import pygame
 import pygame_gui
+from pygame import Rect
+
 from gui.layout.box_layout import HBoxLayout, VBoxLayout
-from gui.entity_ui import EntityUI, BoxEntityUI
+from settings import *
 
 import matplotlib.pyplot as plt
 
+from core.entity import BlankEntity
 
 class PropertyPanel:
     def __init__(self, manager, container_rect, title=None):
@@ -32,7 +35,7 @@ class PropertyPanel:
 
 
 class EntityPropertyPanel(PropertyPanel):
-    def __init__(self, manager, container_rect, entity, title=None):
+    def __init__(self, manager, entity=None, title=None, container_rect=Rect(SCREEN_WIDTH-400, 0, 400, SCREEN_HEIGHT-100)):
         """
         初始化实体属性面板。
 
@@ -42,7 +45,7 @@ class EntityPropertyPanel(PropertyPanel):
         :param title: 属性面板的标题
         """
         super().__init__(manager, container_rect, title)
-        self.entity = entity
+        self.entity = entity if entity else BlankEntity()
 
         # 创建水平布局用于显示物体的图形和属性信息
         self.head_container = pygame_gui.elements.UIPanel(
@@ -62,7 +65,7 @@ class EntityPropertyPanel(PropertyPanel):
             container=self.head_container,
             object_id="#entity_icon"
         )
-        icon.image.fill(entity.color)  # 用实体的颜色填充图标
+        icon.image.fill(self.entity.color)  # 用实体的颜色填充图标
 
         # 右侧的垂直布局，用于显示物体的名称、类型和质量
         self.name_container = pygame_gui.elements.UIPanel(
@@ -78,21 +81,21 @@ class EntityPropertyPanel(PropertyPanel):
 
         name_label = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((0, 0), (180, 20)),
-            text=f'Name: {entity.name}',
+            text=f'Name: {self.entity.name}',
             manager=manager,
             container=self.name_container
         )
 
         type_label = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((0, 0), (180, 20)),
-            text=f'Type: {entity.type.capitalize()}',
+            text=f'Type: {self.entity.type}',
             manager=manager,
             container=self.name_container
         )
 
         mass_label = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((0, 0), (180, 20)),
-            text=f'Mass: {entity.body.mass:.2f} kg',
+            text=f'Mass: {self.entity.mass:.2f} kg',
             manager=manager,
             container=self.name_container
         )
@@ -109,6 +112,14 @@ class EntityPropertyPanel(PropertyPanel):
         # 添加物体位置信息部分
         self._add_position_properties()
 
+    def update_entity(self, entity):
+        """
+        更新显示的实体。
+
+        :param entity: 要显示属性的 Entity 对象
+        """
+        self.entity = entity
+
     def _add_entity_properties(self):
         """
         添加物体属性部分，包括质量、摩擦力、弹性及其调整滑块。
@@ -124,17 +135,15 @@ class EntityPropertyPanel(PropertyPanel):
 
         # 首先, 将实体属性的垂直布局添加到主布局
         self.main_layout.add_layout(entity_property_layout, 2)
-
         # 质量
-        self._add_property_slider(entity_property_layout, "Mass", self.entity.body.mass, 0.1, 10.0, 0.1)
+        self._add_property_slider(entity_property_layout, "Mass", self.entity.mass, 0.1, 10.0, 0.1)
 
         # 摩擦力
-        self._add_property_slider(entity_property_layout, "Friction", self.entity.body_shape.friction, 0.0, 1.0, 0.01)
+        self._add_property_slider(entity_property_layout, "Friction", self.entity.friction, 0.0, 1.0, 0.01)
 
         # 弹性
-        self._add_property_slider(entity_property_layout, "Elasticity", self.entity.body_shape.elasticity, 0.0, 1.0,
+        self._add_property_slider(entity_property_layout, "Elasticity", self.entity.elasticity, 0.0, 1.0,
                                   0.01)
-
 
     def _add_property_slider(self, parent_layout, property_name, initial_value, min_value, max_value, step):
         """
@@ -187,11 +196,11 @@ class EntityPropertyPanel(PropertyPanel):
             value = slider.get_current_value()
             value_label.set_text(f'{value:.2f}')
             if property_name == "Mass":
-                self.entity.body.mass = value
+                self.entity.mass = value
             elif property_name == "Friction":
-                self.entity.body_shape.friction = value
+                self.entity.friction = value
             elif property_name == "Elasticity":
-                self.entity.body_shape.elasticity = value
+                self.entity.elasticity = value
         #
         # slider.bind_on_value_changed(update_value_label)
 
@@ -220,13 +229,13 @@ class EntityPropertyPanel(PropertyPanel):
         self.main_layout.add_layout(position_layout, 3)
 
         # 位置 X
-        self._add_position_graph(position_layout, "Position X", self.entity.position_history_x)
+        self._add_position_graph(position_layout, "Position X", self.entity.history_x)
 
         # 位置 Y
-        self._add_position_graph(position_layout, "Position Y", self.entity.position_history_y)
+        self._add_position_graph(position_layout, "Position Y", self.entity.history_x)
 
         # 角度
-        self._add_position_graph(position_layout, "Angle", self.entity.angle_history)
+        self._add_position_graph(position_layout, "Angle", self.entity.history_angle)
 
     def _add_position_graph(self, parent_layout, property_name, data):
         """
@@ -295,55 +304,4 @@ class EntityPropertyPanel(PropertyPanel):
         plt.close(fig)  # 关闭matplotlib绘图
 
         return graph_surface
-
-
-if __name__ == '__main__':
-    # 初始化Pygame和窗口
-    pygame.init()
-    pygame.display.set_caption('Entity Property Panel Example')
-    window_surface = pygame.display.set_mode((600, 900))
-
-    background = pygame.Surface((600, 900))
-    background.fill(pygame.Color('#000000'))
-
-    # 创建UI管理器
-    manager = pygame_gui.UIManager((600, 900))
-
-    # 创建一个实体对象并添加位置历史记录
-    entity = BoxEntityUI(window_surface, name="Box1", phy_type="dynamic", position=(0, 0), size=(30, 30), color=(150, 0, 0))
-    entity.position_history_x = np.random.rand(100) * 300  # 模拟随机位置数据
-    entity.position_history_y = np.random.rand(100) * 300
-    entity.angle_history = np.random.rand(100) * 360 - 180
-
-    # 创建一个实体属性面板
-    entity_property_panel = EntityPropertyPanel(
-        manager=manager,
-        container_rect=pygame.Rect((50, 0), (500, 900)),
-        entity=entity,
-        title="Entity Properties"
-    )
-
-    # 主循环
-    clock = pygame.time.Clock()
-    is_running = True
-
-    while is_running:
-        time_delta = clock.tick(60) / 1000.0
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                is_running = False
-
-            manager.process_events(event)
-
-        # 更新并绘制UI
-        print("Updating UI...")
-        manager.update(time_delta)
-
-        print("Drawing UI...")
-        window_surface.blit(background, (0, 0))
-        manager.draw_ui(window_surface)
-        pygame.display.update()
-
-    pygame.quit()
 

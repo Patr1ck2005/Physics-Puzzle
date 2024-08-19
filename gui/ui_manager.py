@@ -52,7 +52,7 @@ class UIManager:
 
     def process_event(self, event):
         self.btn_manager.process_event(event)
-        # self.entity_manager.process_event(event)
+        self.entity_manager.process_event(event)
         # 当鼠标点击时, 处理鼠标点击和UI的交互
         if event.type == pygame.MOUSEMOTION:
             pass

@@ -1,17 +1,29 @@
 from pymunk import Vec2d
+from gui.layout.property_panel import EntityPropertyPanel
 
 import pygame
+import pygame_gui
+
+from settings import *
 
 
 class EntityManager:
     def __init__(self, screen, space):
+        self.entity_property_panel = None
         self.screen = screen
         self.space = space
+        self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running_objects = {}
         self.selected_obj = None
         self.pressed_obj = None
         self.m_pos = None
         self.m_d_pos = None
+
+        # 创建一个实体属性面板
+        self.entity_property_panel = EntityPropertyPanel(
+            manager=self.manager,
+            title="Entity Properties"
+        )
 
     def add_entity(self, obj):
         self.running_objects[obj.name] = obj  # 以字典的形式储存obj对象, 例如: {'ball_1': CircleObjectUI(),}
@@ -22,9 +34,10 @@ class EntityManager:
         self.m_d_pos = m_d_pos
         for obj in self.running_objects.values():
             obj.update(self.m_pos)
+        self.manager.update(pygame.time.get_ticks()/1000.0)
 
     def process_event(self, event):
-        pass
+        self.manager.process_events(event)
 
     # 处理点击事件的函数
     # 遍历当前运行的对象，检查是否有对象被点击
@@ -34,6 +47,7 @@ class EntityManager:
         for obj in self.running_objects.values():
             if obj.on_click(self.m_pos) and self.selected_obj is None:
                 self.selected_obj = obj
+                self.entity_property_panel.update_entity(obj)
                 return self.selected_obj
             elif self.selected_obj:
                 if self.selected_obj.type == 'static':  # 静态物体不能移动
@@ -70,5 +84,6 @@ class EntityManager:
     def render_running_objs(self):
         for obj in self.running_objects.values():
             obj.draw(self.screen)
+        self.manager.draw_ui(self.screen)
 
 
