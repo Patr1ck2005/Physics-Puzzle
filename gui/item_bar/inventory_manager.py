@@ -1,6 +1,6 @@
-from .base_ui import BaseUI
-from .entity_ui import BoxEntityUI, CircleEntityUI
-from .force_ui import ForceUI
+from gui.base_ui import BaseUI
+from gui.phy_obj_ui.entity_ui import BoxEntityUI, CircleEntityUI
+from gui.phy_obj_ui.force_ui import ForceUI
 from pymunk import Vec2d
 
 class InventoryManager:

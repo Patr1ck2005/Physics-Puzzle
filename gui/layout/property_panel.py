@@ -1,8 +1,5 @@
 import time
 
-from pygame.locals import *
-from OpenGL.GL import *
-from OpenGL.GLU import *
 import pygame_gui
 from pygame import Rect
 import pygame
@@ -10,9 +7,7 @@ import pygame
 from gui.layout.box_layout import HBoxLayout, VBoxLayout
 from settings import *
 
-import matplotlib.pyplot as plt
-
-from core.entity import BlankEntity
+from core.phy_object.entity import BlankEntity
 
 
 class PropertyPanel:

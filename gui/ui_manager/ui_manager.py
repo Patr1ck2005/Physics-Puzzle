@@ -1,18 +1,15 @@
 import time
 
 import pygame
-import pygame_gui
 
-from .hud import HUD
-from .item_bar_ui import ItemBar
-from .button_manager import ButtonManager
-from core.entity_manager import EntityManager
-from core.force_manager import ForceManager
-from settings import *
+from gui.hud import HUD
+from gui.item_bar.item_bar_ui import ItemBar
+from gui.ui_manager.button_manager import ButtonManager
+from gui.ui_manager.entity_manager import EntityManager
+from gui.ui_manager.force_manager import ForceManager
 
-from core.entity import Entity
-from core.force import AbstractForce
-from core.tool import Tool
+from core.phy_object.entity import Entity
+from core.phy_object.force import AbstractForce
 
 
 class UIManager:

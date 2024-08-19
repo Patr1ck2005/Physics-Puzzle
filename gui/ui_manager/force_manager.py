@@ -1,4 +1,4 @@
-from gui.force_ui import ForceUI
+from gui.phy_obj_ui.force_ui import ForceUI
 
 
 class ForceManager:

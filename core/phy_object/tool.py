@@ -1,4 +1,4 @@
-from gui.entity_ui import EntityUI
+from gui.phy_obj_ui.entity_ui import EntityUI
 
 
 class Tool:

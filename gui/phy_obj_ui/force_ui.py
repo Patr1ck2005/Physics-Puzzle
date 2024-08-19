@@ -1,9 +1,8 @@
 import pygame
 
-from core.force import AbstractForce
-from .base_ui import BaseUICircle
+from core.phy_object.force import AbstractForce
+from gui.base_ui import BaseUICircle
 
-from .entity_ui import EntityUI
 from pymunk import Vec2d
 
 

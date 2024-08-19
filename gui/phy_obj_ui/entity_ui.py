@@ -2,8 +2,8 @@ import math
 
 import pygame
 
-from core.entity import Entity, BoxEntity, CircleEntity
-from .base_ui import BaseUI, BaseUIBox, BaseUICircle
+from core.phy_object.entity import Entity, BoxEntity, CircleEntity
+from gui.base_ui import BaseUI, BaseUIBox, BaseUICircle
 
 
 class EntityUI(Entity, BaseUI):

@@ -1,8 +1,6 @@
-import math
-
 from pymunk import Vec2d
 
-from gui.entity_ui import EntityUI
+from gui.phy_obj_ui.entity_ui import EntityUI
 
 
 class AbstractForce:

@@ -1,7 +1,6 @@
-from .entity_ui import *
+from gui.phy_obj_ui.entity_ui import *
 from .inventory_manager import InventoryManager
-from .tools_manager import ToolsManager
-from core.entity_manager import EntityManager
+from gui.ui_manager.tools_manager import ToolsManager
 
 
 class ItemBar:

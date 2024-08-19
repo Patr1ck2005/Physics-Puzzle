@@ -1,5 +1,5 @@
-from core.tool import Tool, FrictionTool, ElasticityTool
-from .base_ui import BaseUI, BaseUIBox
+from core.phy_object.tool import Tool, FrictionTool, ElasticityTool
+from gui.base_ui import BaseUI, BaseUIBox
 
 
 class ToolUI(Tool, BaseUI):

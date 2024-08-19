@@ -7,7 +7,7 @@ from settings import *
 import pygame
 
 if __name__ == '__main__':
-    from gui.entity_ui import BoxEntityUI
+    from gui.phy_obj_ui.entity_ui import BoxEntityUI
     # 初始化Pygame和窗口
     pygame.init()
     pygame.display.set_caption('Entity Property Panel Example')

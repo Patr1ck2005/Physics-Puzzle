@@ -1,5 +1,5 @@
-from .tool_ui import FrictionToolUI, ElasticityToolUI
-from .inventory_manager import InventoryManager
+from gui.phy_obj_ui.tool_ui import FrictionToolUI, ElasticityToolUI
+from gui.item_bar.inventory_manager import InventoryManager
 
 
 class ToolsManager(InventoryManager):

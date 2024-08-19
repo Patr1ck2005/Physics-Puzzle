@@ -2,15 +2,12 @@ import pygame
 
 import json
 
-from OpenGL.GL import *
-from OpenGL.GLU import *
 import os
 
-from gui.menu import main_menu, pause_menu, settings_menu
+from gui.menu import pause_menu
 from core.engine import Engine
 
-from gui.ui_manager import UIManager
-from core.entity_manager import EntityManager
+from gui.ui_manager.ui_manager import UIManager
 
 
 def default_level(screen):
