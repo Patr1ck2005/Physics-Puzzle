@@ -11,22 +11,13 @@ class ForceUI(AbstractForce, BaseUICircle):
         AbstractForce.__init__(self, force, loc)
         BaseUICircle.__init__(self, screen, name, loc, radius=10, ico_color=(0, 200, 0))
 
-    @property
-    def normalised_direction(self):
-        return self.force.normalized()
-
-    @property
-    def magnitude(self):
-        return self.force.magnitude()
-
     def update(self, m_pos):
-        super().update(m_pos)
-        self.force = self.force.rotated(0.1)
+        BaseUICircle.update(self, m_pos)
+        AbstractForce.update(self)
+        # 在这里可以更新力, 例如实现力的'圆周运动'
+        # self.force = self.force.rotated(0.1)
         if self.target:
             self.target.body.apply_force_at_world_point(self.force, self.target.body.position)
-
-    def add_to_space(self, *args, **kwargs):
-        self.set_target(kwargs['target'])
 
     # 将UI的位置和受力物体位置关联在一起
     def sync_ui(self):

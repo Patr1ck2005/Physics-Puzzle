@@ -16,7 +16,7 @@ def default_level(screen):
 
     # 初始化pygame
     clock = pygame.time.Clock()
-    player_rect = pygame.Rect(300, 300, 50, 60)  # 玩家debug方块
+    # player_rect = pygame.Rect(300, 300, 50, 60)  # 玩家debug方块
     running = True
     # 初始化物理世界: 后续计算该世界
     engine = Engine(screen)
@@ -83,8 +83,8 @@ def default_level(screen):
                     if game_state == 'main_menu':
                         return 'main_menu'
 
-        # DEBUG 示例游戏逻辑：简单的左右移动
-        debug_player(player_rect)
+        # # DEBUG 示例游戏逻辑：简单的左右移动
+        # debug_player(player_rect)
 
         # 计算更新物理世界(可更新多次以增加精确度)
         engine.update_world()
@@ -94,7 +94,8 @@ def default_level(screen):
         engine.render_world()  # 渲染底层物理对象
 
         # 渲染高级视觉对象
-        pygame.draw.rect(screen, (255, 0, 0), player_rect)  # 绘制玩家
+        pass
+        # pygame.draw.rect(screen, (255, 0, 0), player_rect)  # 绘制玩家
 
         # 渲染UI
         ui_manager.render_all_ui()
@@ -109,13 +110,13 @@ def default_level(screen):
     return 'main_menu'
 
 
-def debug_player(player_rect):
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
-        player_rect.x -= 5
-    if keys[pygame.K_RIGHT]:
-        player_rect.x += 5
-    if keys[pygame.K_UP]:
-        player_rect.y -= 5
-    if keys[pygame.K_DOWN]:
-        player_rect.y += 5
+# def debug_player(player_rect):
+#     keys = pygame.key.get_pressed()
+#     if keys[pygame.K_LEFT]:
+#         player_rect.x -= 5
+#     if keys[pygame.K_RIGHT]:
+#         player_rect.x += 5
+#     if keys[pygame.K_UP]:
+#         player_rect.y -= 5
+#     if keys[pygame.K_DOWN]:
+#         player_rect.y += 5

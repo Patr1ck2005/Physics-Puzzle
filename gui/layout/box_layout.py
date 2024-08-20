@@ -8,7 +8,7 @@ class BoxLayout:
         初始化 HBoxLayout。
 
         :param container: pygame_gui.elements.UIPanel 用于放置子元素的容器
-        :param padding: 布局左右的填充（像素）
+        :param padding: 布局边界的填充（像素）
         :param spacing: 各子元素之间的间距（像素）
         :param mode: 布局模式 ('simple' 或 'proportional')
         :param title: 布局的标题文本（可选）
@@ -19,18 +19,18 @@ class BoxLayout:
 
         self.spacing = spacing
         self.mode = mode
-        self.elements = []
-        self.ratios = []
         self.title = title
         self.manager = manager
         self.title_element = None
         self.layouts = []
+        self.elements = []
+        self.ratios = []
 
         self.sub_width = self.container.relative_rect.width - 2 * self.padding
         self.sub_height = self.container.relative_rect.height - 2 * self.padding
 
-        if self.title:
-            self.padding += 10  # 增加 padding 以避免覆盖标题
+        # if self.title:
+        #     self.padding += 10  # 增加 padding 以避免覆盖标题
 
     def add_widget(self, widget, ratio=1):
         """
@@ -57,12 +57,15 @@ class BoxLayout:
         """
         更新布局，重新排列所有子元素和子布局的位置。
         """
+
+        self.sub_width = self.container.relative_rect.width - 2 * self.padding
+        self.sub_height = self.container.relative_rect.height - 2 * self.padding
         if self.mode == 'proportional':
             self._update_proportional_layout()
         else:
             self._update_simple_layout()
-        self.sub_width = self.container.relative_rect.width - 2 * self.padding
-        self.sub_height = self.container.relative_rect.height - 2 * self.padding
+        for layout, _ in self.layouts:
+            layout.update_layout()
         if self.title:
             self.title_element = pygame_gui.elements.UILabel(
                 relative_rect=pygame.Rect((self.padding, self.padding), (self.sub_width, 20)),
@@ -70,8 +73,6 @@ class BoxLayout:
                 manager=self.manager,
                 container=self.container
             )
-        for layout, _ in self.layouts:
-            layout.update_layout()
 
     def _update_simple_layout(self):
         """
@@ -219,12 +220,12 @@ class VBoxLayout(BoxLayout):
         """
         更新比例模式布局，按比例分配容器的高度并调整控件大小。
         """
-        total_height = self.container.relative_rect.height
+        total_height = self.container.relative_rect.height if not self.title_element else self.container.relative_rect.height - 20
         total_ratio = sum(self.ratios) + sum(ratio for _, ratio in self.layouts)
         available_height = total_height - 2 * self.padding - (len(self.elements) + len(self.layouts) - 1) * self.spacing
 
         x_offset = self.padding
-        y_offset = self.padding if not self.title_element else self.padding + 30
+        y_offset = self.padding if not self.title_element else self.padding + 20
 
         for element, ratio in zip(self.elements, self.ratios):
             widget_height = int((ratio / total_ratio) * available_height)
@@ -236,6 +237,6 @@ class VBoxLayout(BoxLayout):
             layout_height = int((ratio / total_ratio) * available_height)
             layout.container.set_dimensions((self.sub_width, layout_height))
             layout.container.set_relative_position(pygame.math.Vector2(x_offset, y_offset))
-            layout.update_layout()
+            layout.update_layout()  # 递归更新子布局
             y_offset += layout_height + self.spacing
 

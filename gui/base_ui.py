@@ -56,6 +56,10 @@ class BaseUI:
     def draw_icon(self, screen):
         pass
 
+    # 显示调用
+    def draw_center2mouse(self, screen, m_pos):
+        pygame.draw.line(screen, (255, 255, 255), self.center, m_pos, 3)
+
     def is_mouse_over(self, m_pos):
         if self.click_region.collidepoint(*m_pos):
             self._color = self.highlight(self.ico_color)
@@ -152,3 +156,17 @@ class BaseUICircle(BaseUI):
     def draw_mark(self, screen):
         if self.is_selected:
             pygame.draw.circle(screen, (255, 255, 255), self.center, self.size*1.1)
+
+
+class BaseUILine(BaseUI):
+    def __init__(self, screen,
+                 name='de_Line', position=None,
+                 width=10, text=None, ico_path=None, ico_color=(100, 100, 100), ):
+        super().__init__(screen, name, position, width, text, ico_path, ico_color, )
+
+    def update(self, m_pos):
+        pass
+
+    def draw_draft(self, screen):
+        if self.position:
+            pygame.draw.line(screen, self._color, self.position[0], self.position[1], self.size)

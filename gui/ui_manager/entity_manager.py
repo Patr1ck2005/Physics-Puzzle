@@ -1,6 +1,8 @@
 import time
 
 from pymunk import Vec2d
+
+from gui.phy_obj_ui.entity_ui import EntityUI
 from gui.ui_panel.property_panel import EntityPropertyPanel
 
 import pygame
@@ -57,19 +59,22 @@ class EntityManager:
 
         if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
             slider = event.ui_element
-            if slider.object_ids[-1] == "#property_slider_Mass":
-                self.entity_property_panel.entity.mass = slider.current_value
-            elif slider.object_ids[-1] == "#property_slider_Friction":
-                self.entity_property_panel.entity.friction = slider.current_value
-            elif slider.object_ids[-1] == "#property_slider_Elasticity":
-                self.entity_property_panel.entity.elasticity = slider.current_value
+            if self.entity_property_panel.entity.name != 'Blank':
+                if slider.object_ids[-1] == "#property_slider_Mass":
+                    self.entity_property_panel.entity.mass = slider.current_value
+                elif slider.object_ids[-1] == "#property_slider_Friction":
+                    self.entity_property_panel.entity.friction = slider.current_value
+                elif slider.object_ids[-1] == "#property_slider_Elasticity":
+                    self.entity_property_panel.entity.elasticity = slider.current_value
+            else:
+                print('请先选择物体')
             return True
 
     # 处理点击事件的函数
     # 遍历当前运行的对象，检查是否有对象被点击
     # 如果点击的对象是静态物体，则提示不能移动
     # 否则，更新被点击对象的中心位置
-    def on_click_left(self):
+    def on_click_left(self) -> EntityUI | None:
         for obj in self.running_objects.values():
             if obj.on_click(self.m_pos) and self.left_selection is None:
                 self.left_selection = obj
@@ -83,7 +88,7 @@ class EntityManager:
                 self.left_selection = None
                 return
 
-    def on_click_right(self):
+    def on_click_right(self) -> EntityUI | None:
         for obj in self.running_objects.values():
             if obj.on_click(self.m_pos):
                 if self.right_selection != obj:

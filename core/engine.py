@@ -50,19 +50,33 @@ class Engine:
         if self.if_gravity:
             self.space.gravity = (0.0, self._gravity)
 
-        # 创建地面
+        # 创建一个静态的 body，用于附加墙壁
         static_body = pymunk.Body(body_type=pymunk.Body.STATIC)
-        ground = pymunk.Segment(static_body, (SCREEN_WIDTH/10, 500), (9*SCREEN_WIDTH/10, 500), 5)
-        ground.friction = 1.0
-        ground.elasticity = 1
-        self.space.add(static_body, ground)
+        # 添加静态 body 到空间
+        self.space.add(static_body)
+        # # 创建地面
+        # ground = pymunk.Segment(static_body, (SCREEN_WIDTH/10, 500), (9*SCREEN_WIDTH/10, 500), 5)
+        # ground.friction = 1.0
+        # ground.elasticity = 1
+        # self.space.add(static_body, ground)
+        # 在四周创建墙壁
+        static_lines = [
+            pymunk.Segment(static_body, (0, 0), (0, SCREEN_HEIGHT), 5),
+            pymunk.Segment(static_body, (0, 0), (SCREEN_WIDTH, 0), 5),
+            pymunk.Segment(static_body, (SCREEN_WIDTH, 0), (SCREEN_WIDTH, SCREEN_HEIGHT), 5),
+            pymunk.Segment(static_body, (0, SCREEN_HEIGHT), (SCREEN_WIDTH, SCREEN_HEIGHT), 5),
+        ]
+        for line in static_lines:
+            line.friction = 1.0
+            line.elasticity = 1
+            self.space.add(line)
 
         # 创建一个球体
         mass = 1
         radius = 15
         moment = pymunk.moment_for_circle(mass, 0, radius)
         ball_body = pymunk.Body(mass, moment)
-        ball_body.position = (400, 50)
+        ball_body.position = (SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
         ball_shape = pymunk.Circle(ball_body, radius)
         ball_shape.friction = 0.7
         ball_shape.elasticity = 0.8

@@ -1,4 +1,5 @@
 from gui.base_ui import BaseUI
+from gui.phy_obj_ui.constrain_ui import *
 from gui.phy_obj_ui.entity_ui import BoxEntityUI, CircleEntityUI
 from gui.phy_obj_ui.force_ui import ForceUI
 from pymunk import Vec2d
@@ -23,6 +24,9 @@ class PlaceableInventory:
             'f_2': ForceUI(screen, 'f_2', Vec2d(100, 0)),
             'f_3': ForceUI(screen, 'f_3', Vec2d(0, 100)),
             'f_4': ForceUI(screen, 'f_4', Vec2d(100, 100)),
+            'c_1': PinJointUI(screen, 'c_1', Vec2d(100, 100)),
+            'c_2': SlideJointUI(screen, 'c_2', Vec2d(100, 100)),
+            'c_3': SpringUI(screen, 'c_3', Vec2d(100, 100)),
         }
         # 调整位置排列物品栏
         self.align_items()

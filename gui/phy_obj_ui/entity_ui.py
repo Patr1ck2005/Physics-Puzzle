@@ -44,7 +44,7 @@ class EntityUI(Entity, BaseUI):
     def rect_pos(self, pos):
         pass
 
-    # 将UI的位置和pymunk位置关联在一起
+    # 将UI的位置和pymunk位置关联在一起, 并在绘制时随时更新
     def sync_ui(self):
         # 将 UI 位置同步为 Pymunk 位置
         self.set_click_region()

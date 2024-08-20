@@ -126,7 +126,7 @@ class EntityPropertyPanel(PropertyPanel):
             container=self.panel_container
         )
         head_hlayout = HBoxLayout(self.head_container, padding=10, spacing=5, mode='proportional')
-        self.main_layout.add_layout(head_hlayout)
+        self.main_layout.add_layout(head_hlayout, 1)
 
         head_surface = pygame.Surface((200, 200), pygame.SRCALPHA)
         pygame.draw.circle(head_surface, (255, 0, 0), (100, 100), 50)
@@ -186,7 +186,7 @@ class EntityPropertyPanel(PropertyPanel):
             container=self.panel_container
         )
         entity_property_layout = VBoxLayout(self.entity_property_container, padding=5, spacing=5, mode='simple',
-                                            title="Entity Property", manager=self.manager)
+                                            title="Physics", manager=self.manager)
 
         # 首先, 将实体属性的垂直布局添加到主布局
         self.main_layout.add_layout(entity_property_layout, 2)
@@ -249,13 +249,13 @@ class EntityPropertyPanel(PropertyPanel):
             object_id=f"#property_slider_{property_name}",
         )
 
-        # 绑定滑块的变化事件，更新值标签
+        # 初始化滑块值
         slider.set_current_value(initial_value)
 
         # 将标签和滑块添加到水平布局
-        property_layout.add_widget(property_label)
-        property_layout.add_widget(value_label)
-        property_layout.add_widget(slider)
+        property_layout.add_widget(property_label, 1)
+        property_layout.add_widget(value_label, 1)
+        property_layout.add_widget(slider, 3)
 
         # 将此属性布局添加到父布局中
         parent_layout.add_layout(property_layout)

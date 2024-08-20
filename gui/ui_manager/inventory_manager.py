@@ -9,7 +9,7 @@ class InventoryManager:
         self.placeable_inventory = PlaceableInventory(screen)
         self.tools_inventory = ToolsInventory(screen)
         self.item_bg_uis = {}
-        self.placed_item = None
+        self.pre_placed_item = None
         self.selected_item = None
         self.selected_tool = None
         self.m_pos = None
@@ -25,7 +25,7 @@ class InventoryManager:
             self.item_bg_uis[item.name] = item_bg_ui
 
     def update(self, m_pos):
-        self.placed_item = None
+        self.pre_placed_item = None
         self.m_pos = m_pos
         for item in self.placeable_inventory.items.values():
             if item.update(m_pos):
@@ -51,7 +51,7 @@ class InventoryManager:
                 self.selected_item = item_ui
                 return item_ui
             elif self.selected_item:
-                self.placed_item = self.selected_item
+                self.pre_placed_item = self.selected_item
                 self.selected_item = None
                 return
         # 再处理工具栏物品点击事件
