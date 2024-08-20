@@ -20,7 +20,7 @@ if __name__ == '__main__':
     manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     # 创建一个实体对象并添加位置历史记录
-    entity = BoxEntityUI(window_surface, name="Box1", phy_type="dynamic", position=(0, 0), size=(30, 30), color=(150, 0, 0))
+    entity = BoxEntityUI(name="Box1", phy_type="dynamic", position=(0, 0), size=(30, 30), color=(150, 0, 0))
     entity.position_history_x = np.random.rand(100) * 300  # 模拟随机位置数据
     entity.position_history_y = np.random.rand(100) * 300
     entity.angle_history = np.random.rand(100) * 360 - 180

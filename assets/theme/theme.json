@@ -1,0 +1,30 @@
+{
+    "labels": {
+        "font": {
+            "name": "Times New Roman",
+            "size": 30,
+            "bold": 1
+        }
+    },
+    "#custom_label": {
+        "font": {
+            "name": "Times New Roman",
+            "size": 32,
+            "italic": 1
+        }
+    },
+    "#main_menu_title": {
+        "font": {
+            "name": "Times New Roman",
+            "size": 64,
+            "italic": 1
+        }
+    },
+    "#main_menu_btn": {
+        "font": {
+            "name": "Times New Roman",
+            "size": 32,
+            "italic": 1
+        }
+    }
+}

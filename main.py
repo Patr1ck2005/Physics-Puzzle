@@ -1,7 +1,9 @@
 import pygame
 import pygame_gui
+
+from menus.chapter_menu import ChapterMenu
 from menus.main_menu import MainMenu
-from menus.level_selection_menu import LevelSelectionMenu
+from menus.level_menu import LevelMenu
 from menus.game_scene import GameScene
 from menus.pause_menu import PauseMenu
 
@@ -27,14 +29,20 @@ game_scene = None
 # 初始化界面的工厂函数
 def load_main_menu():
     global current_manager, current_screen
-    current_manager = pygame_gui.UIManager(WINDOW_SIZE)
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE, 'assets/theme/theme.json')
     current_screen = MainMenu(current_manager)
+
+
+def load_chapter_menu():
+    global current_manager, current_screen
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE)
+    current_screen = ChapterMenu(current_manager)
 
 
 def load_level_selection_menu():
     global current_manager, current_screen
     current_manager = pygame_gui.UIManager(WINDOW_SIZE)
-    current_screen = LevelSelectionMenu(current_manager)
+    current_screen = LevelMenu(current_manager)
 
 
 def load_game_scene():
@@ -66,6 +74,8 @@ while is_running:
 
         # 根据处理结果切换不同的屏幕
         if screen_result == "start_game":
+            load_chapter_menu()
+        elif screen_result and screen_result.startswith("chapter"):
             load_level_selection_menu()
         elif screen_result and screen_result.startswith("level_"):
             load_game_scene()

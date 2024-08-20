@@ -3,7 +3,7 @@ import pygame_gui
 
 
 class BoxLayout:
-    def __init__(self, container, padding=5, spacing=5, mode='simple', title=None, manager=None):
+    def __init__(self, container, padding=5, spacing=5, mode='proportional', title=None, manager=None):
         """
         初始化 HBoxLayout。
 
@@ -31,6 +31,14 @@ class BoxLayout:
 
         # if self.title:
         #     self.padding += 10  # 增加 padding 以避免覆盖标题
+
+    @property
+    def height(self):
+        return self.container.relative_rect.height
+
+    @property
+    def width(self):
+        return self.container.relative_rect.width
 
     def add_widget(self, widget, ratio=1):
         """
@@ -64,8 +72,8 @@ class BoxLayout:
             self._update_proportional_layout()
         else:
             self._update_simple_layout()
-        for layout, _ in self.layouts:
-            layout.update_layout()
+        # for layout, _ in self.layouts:
+        #     layout.update_layout()
         if self.title:
             self.title_element = pygame_gui.elements.UILabel(
                 relative_rect=pygame.Rect((self.padding, self.padding), (self.sub_width, 20)),
@@ -202,7 +210,7 @@ class VBoxLayout(BoxLayout):
         更新简单模式布局，从上到下按间隔排列控件，不改变控件大小。
         """
         x_offset = self.padding
-        y_offset = self.padding if not self.title_element else self.padding + 30
+        y_offset = self.padding if not self.title_element else self.padding + 20
 
         for element in self.elements:
             element.set_dimensions((self.sub_width, element.relative_rect.height))
@@ -210,11 +218,11 @@ class VBoxLayout(BoxLayout):
             y_offset += element.relative_rect.height + self.spacing
 
         for layout, _ in self.layouts:
-            layout_container = layout.container
-            layout.container.set_dimensions((self.sub_width, layout.container.relative_rect.height))
-            layout_container.set_relative_position(pygame.math.Vector2(x_offset, y_offset))
-            layout.update_layout()
-            y_offset += layout_container.relative_rect.height + self.spacing
+            height = layout.container.relative_rect.height
+            layout.container.set_dimensions((self.sub_width, height))
+            layout.container.set_relative_position(pygame.math.Vector2(x_offset, y_offset))
+            layout.update_layout()  # 递归更新子布局
+            y_offset += height + self.spacing
 
     def _update_proportional_layout(self):
         """
