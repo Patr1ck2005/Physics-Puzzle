@@ -7,9 +7,9 @@ from pymunk import Vec2d
 
 
 class ForceUI(AbstractForce, BaseUICircle):
-    def __init__(self, screen, name, force=Vec2d(100, 100), loc=(0, 0)):
+    def __init__(self, name, force=Vec2d(100, 100), loc=(0, 0)):
         AbstractForce.__init__(self, force, loc)
-        BaseUICircle.__init__(self, screen, name, loc, radius=10, ico_color=(0, 200, 0))
+        BaseUICircle.__init__(self, name, loc, radius=10, ico_color=(0, 200, 0))
 
     def update(self, m_pos):
         BaseUICircle.update(self, m_pos)

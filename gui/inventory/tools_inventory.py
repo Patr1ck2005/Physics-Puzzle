@@ -3,13 +3,13 @@ from gui.inventory.placeable_inventory import PlaceableInventory
 
 
 class ToolsInventory(PlaceableInventory):
-    def __init__(self, screen):
-        super().__init__(screen)
+    def __init__(self):
+        super().__init__()
         # 先随便设置位置, 后续会调整位置
         center = (0, 0)
         self.items = {
-            'frictionless': FrictionToolUI(screen, 'frictionless', center, color=(200, 0, 200), ico_path='assets/images/g2.png', friction=0),
-            'elastic': ElasticityToolUI(screen, 'elastic', center, color=(200, 0, 200), ico_path='assets/images/g2.png', elasticity=1),
+            'frictionless': FrictionToolUI('frictionless', center, color=(200, 0, 200), ico_path='assets/images/g2.png', friction=0),
+            'elastic': ElasticityToolUI('elastic', center, color=(200, 0, 200), ico_path='assets/images/g2.png', elasticity=1),
         }
         # 调整位置排列物品栏
         self.align_items()

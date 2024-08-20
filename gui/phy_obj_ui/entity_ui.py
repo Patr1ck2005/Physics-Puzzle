@@ -67,9 +67,9 @@ class EntityUI(Entity, BaseUI):
 
 
 class BoxEntityUI(EntityUI, BoxEntity, BaseUIBox):
-    def __init__(self, screen, name, phy_type, position, angle=0, size=(30, 30), ico_path=None, color=(150, 150, 150)):
+    def __init__(self, name, phy_type, position, angle=0, size=(30, 30), ico_path=None, color=(150, 150, 150)):
         BoxEntity.__init__(self, name, phy_type, position, angle, size)
-        BaseUIBox.__init__(self, screen, name, position, size, ico_path=ico_path, ico_color=color)
+        BaseUIBox.__init__(self, name, position, size, ico_path=ico_path, ico_color=color)
 
     # 将UI的位置和pymunk位置关联在一起
     def sync_ui(self):
@@ -89,9 +89,9 @@ class BoxEntityUI(EntityUI, BoxEntity, BaseUIBox):
 
 
 class CircleEntityUI(EntityUI, CircleEntity, BaseUICircle):
-    def __init__(self, screen, name, phy_type, center, angle=0, r=20, ico_path=None, color=(150, 150, 150)):
+    def __init__(self, name, phy_type, center, angle=0, r=20, ico_path=None, color=(150, 150, 150)):
         CircleEntity.__init__(self, name, phy_type, center, angle, r)
-        BaseUICircle.__init__(self, screen, name, center, r, ico_path=ico_path, ico_color=color)
+        BaseUICircle.__init__(self, name, center, r, ico_path=ico_path, ico_color=color)
 
     @property
     def rect_pos(self):

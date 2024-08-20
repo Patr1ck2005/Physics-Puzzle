@@ -8,8 +8,7 @@ from settings import *
 
 
 class ButtonManager:
-    def __init__(self, screen, engine, hud):
-        self.screen = screen
+    def __init__(self, engine, hud):
         self.engine = engine
         self.hud = hud
 
@@ -78,8 +77,8 @@ class ButtonManager:
                 return True
         return False
 
-    def render(self):
-        self.manager.draw_ui(self.screen)
+    def render(self, screen):
+        self.manager.draw_ui(screen)
 
     def _create_gravity_setting(self, visible=False):
         # 创建一个 UI 窗口

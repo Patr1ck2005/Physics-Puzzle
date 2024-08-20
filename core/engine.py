@@ -6,9 +6,7 @@ import pymunk.pygame_util
 from settings import *
 
 class Engine:
-    def __init__(self, screen):
-        self.screen = screen
-        self.draw_options = pymunk.pygame_util.DrawOptions(screen)
+    def __init__(self):
 
         self.space = pymunk.Space()
         self.pause = False
@@ -124,8 +122,8 @@ class Engine:
                 body1.apply_force_at_world_point(force, body1.position)
                 body2.apply_force_at_world_point(-force, body2.position)
 
-    def render_world(self):
-        self.space.debug_draw(self.draw_options)
+    def render_world(self, screen):
+        self.space.debug_draw(pymunk.pygame_util.DrawOptions(screen))
 
     def debug_add(self, selected_item, m_pos):
         # 创建一个球体

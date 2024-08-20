@@ -12,9 +12,8 @@ from settings import *
 
 
 class EntityManager:
-    def __init__(self, screen, space):
+    def __init__(self, space):
         self.entity_property_panel = None
-        self.screen = screen
         self.space = space
         self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running_objects = {}
@@ -127,13 +126,13 @@ class EntityManager:
         for obj in self.running_objects.values():
             obj.on_release(self.m_pos)
 
-    def render_running_objs(self):
+    def render_running_objs(self, screen):
         for obj in self.running_objects.values():
-            obj.draw(self.screen)
-        self.manager.draw_ui(self.screen)
+            obj.draw(screen)
+        self.manager.draw_ui(screen)
         # 如果有选中物品则绘制鼠标位置
         if self.left_selection:
-            self.draw_mouse_mark()
+            self.draw_mouse_mark(screen)
 
-    def draw_mouse_mark(self):
-        pygame.draw.circle(self.screen, (255, 0, 0), self.m_pos, 5)
+    def draw_mouse_mark(self, screen):
+        pygame.draw.circle(screen, (255, 0, 0), self.m_pos, 5)

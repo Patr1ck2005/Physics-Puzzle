@@ -4,8 +4,7 @@ from gui.phy_obj_ui.force_ui import ForceUI
 class ForceManager:
     running_forces: dict[str, ForceUI]
 
-    def __init__(self, screen, space):
-        self.screen = screen
+    def __init__(self, space):
         self.space = space
         self.running_forces = {}
         self.selected_obj = None
@@ -17,9 +16,9 @@ class ForceManager:
         for force in self.running_forces.values():
             force.update(m_pos)
 
-    def render_running_forces(self):
+    def render_running_forces(self, screen):
         for force in self.running_forces.values():
-            force.draw(self.screen)
+            force.draw(screen)
 
     def add_force(self, force):
         self.running_forces[force.name] = force

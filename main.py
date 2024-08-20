@@ -1,91 +1,93 @@
 import pygame
-import sys
-
-from game_mode.base_mode import default_level
-from gui.menu import main_menu, pause_menu, settings_menu
-from gui.hud import HUD
+import pygame_gui
+from menus.main_menu import MainMenu
+from menus.level_selection_menu import LevelSelectionMenu
+from menus.game_scene import GameScene
+from menus.pause_menu import PauseMenu
 
 from settings import *
 
-# 初始化Pygame
 pygame.init()
 
-# 屏幕尺寸
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Physics!')
+# 设置窗口大小和标题
+screen = pygame.display.set_mode(WINDOW_SIZE)
+pygame.display.set_caption('My Game')
 
-# 设置帧率
 clock = pygame.time.Clock()
-FPS = 60
+is_running = True
 
-# 初始化HUD
-hud = HUD(screen)
+# 当前界面和管理器
+current_screen = None
+current_manager = None
 
-# 游戏状态管理
-game_state = 'main_menu'  # 可能的状态有 'main_menu', 'playing', 'paused', 'settings_menu'
-
-
-def start_game():
-    global game_state
-    game_state = default_level(screen)
-    hud.reset()  # 开始新游戏时重置HUD
+# 创建持久的游戏场景实例
+game_scene = None
 
 
-def pause_game():
-    global game_state
-    game_state = 'paused'
+# 初始化界面的工厂函数
+def load_main_menu():
+    global current_manager, current_screen
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE)
+    current_screen = MainMenu(current_manager)
 
 
-def resume_game():
-    global game_state
-    game_state = 'playing'
+def load_level_selection_menu():
+    global current_manager, current_screen
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE)
+    current_screen = LevelSelectionMenu(current_manager)
 
 
-# 主游戏循环
-running = True
+def load_game_scene():
+    global current_manager, current_screen, game_scene
+    if game_scene is None:  # 仅在首次加载时创建
+        game_scene = GameScene()
+        current_manager = game_scene.manager  # 这里有所不同, game_scene自带UIManager
+    current_manager = game_scene.manager  # 切换回游戏场景的UIManager
+    current_screen = game_scene
 
-# 加载主菜单音乐
-# pygame.mixer.music.load('assets/music/theme.mp3')
-# pygame.mixer.music.set_volume(0.2)
-# pygame.mixer.music.play(-1)
 
-while running:
-    if game_state == 'main_menu':
-        selected_menu = main_menu()
-        if selected_menu == 'start_game':
-            start_game()
-        elif selected_menu == 'settings_menu':
-            game_state = 'settings_menu'
-    elif game_state == 'settings_menu':
-        selected_menu = settings_menu(screen)
-        if selected_menu == 'back':
-            game_state = 'main_menu'
+def load_pause_menu():
+    global current_manager, current_screen
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE)
+    current_screen = PauseMenu(current_manager)
 
-        # 游戏逻辑更新
-        hud.update_score(1)  # 示例：每帧增加1分
 
-        # 清屏
-        screen.fill((0, 0, 0))
+# 加载初始界面
+load_main_menu()
 
-        # 渲染HUD
-        hud.render()
-
-        # 更新显示
-        pygame.display.flip()
-
-        # 控制帧率
-        clock.tick(FPS)
-    elif game_state == 'paused':
-        selected_menu = pause_menu(screen)
-        if selected_menu == 'resume_game':
-            resume_game()
-        elif selected_menu == 'settings_menu':
-            game_state = 'settings_menu'
-
-    # 其他状态下的事件处理
+while is_running:
+    time_delta = clock.tick(60) / 1000.0
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            is_running = False
+
+        # 处理当前屏幕的事件
+        screen_result = current_screen.handle_event(event)
+
+        # 根据处理结果切换不同的屏幕
+        if screen_result == "start_game":
+            load_level_selection_menu()
+        elif screen_result and screen_result.startswith("level_"):
+            load_game_scene()
+            current_screen.load_level(screen_result)  # 加载选定的关卡
+        elif screen_result == "pause":
+            load_pause_menu()
+        elif screen_result == "resume_game":
+            load_game_scene()  # 切换回游戏场景
+        elif screen_result == "back_to_menu":
+            game_scene = None  # 如果返回主菜单，销毁当前游戏场景实例
+            load_main_menu()
+        elif screen_result == "exit":
+            is_running = False
+
+        current_manager.process_events(event)
+
+    current_screen.update()  # 更新窗口, 涉及到物理引擎的更新
+    current_manager.update(time_delta)  # 更新UIManager
+
+    screen.fill((0, 0, 0))
+    current_screen.draw(screen)  # 窗口类中的渲染不可交互图形
+    current_manager.draw_ui(screen)  # UIManager中渲染UI
+    pygame.display.flip()
 
 pygame.quit()
-sys.exit()

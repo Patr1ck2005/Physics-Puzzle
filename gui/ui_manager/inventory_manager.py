@@ -4,10 +4,9 @@ from gui.inventory.tools_inventory import ToolsInventory
 
 
 class InventoryManager:
-    def __init__(self, screen):
-        self.screen = screen
-        self.placeable_inventory = PlaceableInventory(screen)
-        self.tools_inventory = ToolsInventory(screen)
+    def __init__(self):
+        self.placeable_inventory = PlaceableInventory()
+        self.tools_inventory = ToolsInventory()
         self.item_bg_uis = {}
         self.pre_placed_item = None
         self.selected_item = None
@@ -21,7 +20,7 @@ class InventoryManager:
             bg_ui_position = item.center[0] - 25, item.center[1] - 25
             # 设置物体对象的图标, 颜色淡化
             ico_color = [max(c - 100, 0) for c in item.ico_color]
-            item_bg_ui = BaseUIBox(self.screen, item.name, bg_ui_position, (50, 50), ico_color=ico_color)
+            item_bg_ui = BaseUIBox(item.name, bg_ui_position, (50, 50), ico_color=ico_color)
             self.item_bg_uis[item.name] = item_bg_ui
 
     def update(self, m_pos):
@@ -74,16 +73,16 @@ class InventoryManager:
         for item_ui in self.placeable_inventory.items.values():
             item_ui.on_release(m_pos)
 
-    def render(self):
+    def render(self, screen):
         for item_bg_ui in list(self.item_bg_uis.values())[::-1]:
-            item_bg_ui.draw(self.screen)
+            item_bg_ui.draw(screen)
         for item in list(self.placeable_inventory.items.values())[::-1]:
-            item.draw(self.screen)
+            item.draw(screen)
         for tool in list(self.tools_inventory.tools.values())[::-1]:
-            tool.draw(self.screen)
+            tool.draw(screen)
         if self.selected_item or self.selected_tool:
-            self.draw_mouse_mark()
+            self.draw_mouse_mark(screen)
 
-    def draw_mouse_mark(self):
-        pygame.draw.circle(self.screen, (0, 255, 0), self.m_pos, 5)
+    def draw_mouse_mark(self, screen):
+        pygame.draw.circle(screen, (0, 255, 0), self.m_pos, 5)
 

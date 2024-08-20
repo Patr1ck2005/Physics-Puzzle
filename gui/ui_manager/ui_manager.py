@@ -15,14 +15,13 @@ from core.phy_object.force import AbstractForce
 
 
 class UIManager:
-    def __init__(self, screen, engine):
-        self.screen = screen
+    def __init__(self, engine):
         self.engine = engine
-        self.hud = HUD(screen)   # HUD
-        self.entity_manager = EntityManager(screen, engine.space)   # 物理对象UI管理器
-        self.force_manager = ForceManager(screen, self.entity_manager)
-        self.btn_manager = ButtonManager(screen, engine, self.hud)   # 按钮UI
-        self.inventory_manager = InventoryManager(screen)   # 物品栏UI
+        self.hud = HUD()   # HUD
+        self.entity_manager = EntityManager(engine.space)   # 物理对象UI管理器
+        self.force_manager = ForceManager(self.entity_manager)
+        self.btn_manager = ButtonManager(engine, self.hud)   # 按钮UI
+        self.inventory_manager = InventoryManager()   # 物品栏UI
 
         self.m_pos = None
         self.m_d_pos = None
@@ -35,7 +34,7 @@ class UIManager:
         self.pre_placed_constrain = None
         self.ui_on_hovered = False
 
-    def update(self):
+    def update(self, t_delta):
         # 始终同步鼠标位置
         self.m_pos = pygame.mouse.get_pos()
         self.m_d_pos = pygame.mouse.get_rel()
@@ -54,7 +53,7 @@ class UIManager:
                 # 触发长按的时候需要撤回实体点击事件 (例如, 双次点击放置和长按放置取其一即可)
                 self.entity_manager.clear_selection()
 
-    def process_event(self, event):
+    def process_events(self, event):
         if self.btn_manager.process_event(event):
             # 这里很奇怪
             pass
@@ -169,14 +168,14 @@ class UIManager:
         self.entity_manager.on_release()
 
     # 依次渲染所有UI
-    def render_all_ui(self):
-        self.entity_manager.render_running_objs()
-        self.force_manager.render_running_forces()
-        self.inventory_manager.render()
-        self.btn_manager.render()
-        self.hud.render()
+    def draw_ui(self, screen):
+        self.entity_manager.render_running_objs(screen)
+        self.force_manager.render_running_forces(screen)
+        self.inventory_manager.render(screen)
+        self.btn_manager.render(screen)
+        self.hud.render(screen)
         if self.pre_constraint_entity:
-            self.pre_constraint_entity.draw_center2mouse(self.screen, self.m_pos)
+            self.pre_constraint_entity.draw_center2mouse(screen, self.m_pos)
 
     # 若鼠标长按则撤回点击事件
     def _call_back_click(self):

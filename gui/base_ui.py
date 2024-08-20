@@ -6,10 +6,9 @@ import pygame
 
 
 class BaseUI:
-    def __init__(self, screen,
+    def __init__(self,
                  name='Default', position=None, size=None, text=None, ico_path=None, ico_color=(100, 100, 100)):
         self.name = name
-        self.screen = screen
         self.font = pygame.font.Font(None, 36)
         self.text = text if text else name
         self.ico = None
@@ -100,9 +99,9 @@ class BaseUI:
 
 
 class BaseUIBox(BaseUI):
-    def __init__(self, screen,
+    def __init__(self,
                  name='de_Box', position=None, size=(60, 40), text=None, ico_path=None, ico_color=(100, 100, 100), ):
-        super().__init__(screen, name, position, size, text, ico_path, ico_color, )
+        super().__init__(name, position, size, text, ico_path, ico_color, )
         self.ico = pygame.transform.scale(pygame.image.load(ico_path),
                                           (int(size[0]), int(size[1]))) if ico_path is not None else None
 
@@ -129,10 +128,10 @@ class BaseUIBox(BaseUI):
 
 
 class BaseUICircle(BaseUI):
-    def __init__(self, screen,
+    def __init__(self,
                  name='de_Circle', center=None,
                  radius=30, text=None, ico_path=None, ico_color=(100, 100, 100), ):
-        super().__init__(screen, name, center, radius, text, ico_path, ico_color, )
+        super().__init__(name, center, radius, text, ico_path, ico_color, )
         self.ico = pygame.transform.scale(pygame.image.load(ico_path),
                                           (int(radius*2), int(radius*2))) if ico_path is not None else None
 
@@ -159,10 +158,10 @@ class BaseUICircle(BaseUI):
 
 
 class BaseUILine(BaseUI):
-    def __init__(self, screen,
+    def __init__(self,
                  name='de_Line', position=None,
                  width=10, text=None, ico_path=None, ico_color=(100, 100, 100), ):
-        super().__init__(screen, name, position, width, text, ico_path, ico_color, )
+        super().__init__(name, position, width, text, ico_path, ico_color, )
 
     def update(self, m_pos):
         pass
