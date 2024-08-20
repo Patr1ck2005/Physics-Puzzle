@@ -8,15 +8,14 @@ from gui.menu import pause_menu
 from core.engine import Engine
 
 from gui.ui_manager.ui_manager import UIManager
+from settings import MAX_FPS
 
 
 def default_level(screen):
     # 定义常量
-    pressing_start_time = None
-
+    pass
     # 初始化pygame
     clock = pygame.time.Clock()
-    # player_rect = pygame.Rect(300, 300, 50, 60)  # 玩家debug方块
     running = True
     # 初始化物理世界: 后续计算该世界
     engine = Engine(screen)
@@ -83,9 +82,6 @@ def default_level(screen):
                     if game_state == 'main_menu':
                         return 'main_menu'
 
-        # # DEBUG 示例游戏逻辑：简单的左右移动
-        # debug_player(player_rect)
-
         # 计算更新物理世界(可更新多次以增加精确度)
         engine.update_world()
 
@@ -104,19 +100,9 @@ def default_level(screen):
         # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         pygame.display.flip()
 
-        # 游戏帧数为60
-        clock.tick(60)
+        # 游戏帧数
+        fps = clock.get_fps()
+        print(f"Current FPS: {fps}")
+        clock.tick(MAX_FPS)
 
     return 'main_menu'
-
-
-# def debug_player(player_rect):
-#     keys = pygame.key.get_pressed()
-#     if keys[pygame.K_LEFT]:
-#         player_rect.x -= 5
-#     if keys[pygame.K_RIGHT]:
-#         player_rect.x += 5
-#     if keys[pygame.K_UP]:
-#         player_rect.y -= 5
-#     if keys[pygame.K_DOWN]:
-#         player_rect.y += 5
