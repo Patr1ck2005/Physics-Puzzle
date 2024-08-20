@@ -43,6 +43,12 @@ def resume_game():
 
 # 主游戏循环
 running = True
+
+# 加载主菜单音乐
+# pygame.mixer.music.load('assets/music/theme.mp3')
+# pygame.mixer.music.set_volume(0.2)
+# pygame.mixer.music.play(-1)
+
 while running:
     if game_state == 'main_menu':
         selected_menu = main_menu()

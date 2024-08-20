@@ -17,13 +17,13 @@ def default_level(screen):
     # 初始化pygame
     clock = pygame.time.Clock()
     running = True
-    # 初始化物理世界: 后续计算该世界
+    # 初始化物理世界
     engine = Engine(screen)
     engine.init_world()
     # 初始化UI管理器 (UI管理器需要处理UI与渲染与物理世界的关系)
     ui_manager = UIManager(screen, engine)
     # 加载并播放背景音乐
-    pygame.mixer.music.load('Aerie.mp3')
+    pygame.mixer.music.load('assets/music/Aerie.mp3')
     pygame.mixer.music.play(-1)  # 循环播放
     pygame.mixer.music.set_volume(0.1)  # 设置音量为 50%
 

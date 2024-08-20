@@ -1,6 +1,9 @@
+import math
+
 import pygame
 import sys
 
+from scripts.utils import interpolate_color
 from settings import *
 
 # 初始化Pygame
@@ -39,7 +42,10 @@ def draw_text(text, font, color, surface, x, y):
 def main_menu():
     global selected_option
     while True:
-        screen.fill(BLACK)
+        # 动态调整颜色
+        t = (math.sin(pygame.time.get_ticks() * 0.001) + 1) / 2
+        color = interpolate_color((255, 100, 100), (100, 100, 255), t)
+        screen.fill(color)
         draw_text('Main Menu', font, WHITE, screen, SCREEN_WIDTH//2, SCREEN_HEIGHT//4)
 
         for i, option in enumerate(MAIN_MENU):
