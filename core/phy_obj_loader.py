@@ -60,7 +60,11 @@ class ObjsLoader:
                 angle=obj_config.get("angle", 0),
                 size=tuple(obj_config.get("size", (30, 30))),
                 ico_path=obj_config.get("ico_path"),
-                color=tuple(obj_config.get("color", (150, 150, 150)))
+                color=tuple(obj_config.get("color", (150, 150, 150))),
+                mass=obj_config.get("mass", 1),
+                elasticity=obj_config.get("elasticity", 0),
+                friction=obj_config.get("friction", 0),
+                charge=obj_config.get("charge", 0)
             )
         elif obj_type == "CircleEntityUI":
             return CircleEntityUI(
@@ -70,7 +74,11 @@ class ObjsLoader:
                 angle=obj_config.get("angle", 0),
                 r=obj_config.get("r", 20),
                 ico_path=obj_config.get("ico_path"),
-                color=tuple(obj_config.get("color", (150, 150, 150)))
+                color=tuple(obj_config.get("color", (150, 150, 150))),
+                mass=obj_config.get("mass", 1),
+                elasticity=obj_config.get("elasticity", 0),
+                friction=obj_config.get("friction", 0),
+                charge=obj_config.get("charge", 0)
             )
         elif obj_type == "PolyEntityUI":
             return PolyEntityUI(
@@ -80,6 +88,10 @@ class ObjsLoader:
                 angle=obj_config.get("angle", 0),
                 ico_path=obj_config.get("ico_path"),
                 color=tuple(obj_config.get("color", (150, 150, 150))),
+                mass=obj_config.get("mass", 1),
+                elasticity=obj_config.get("elasticity", 0),
+                friction=obj_config.get("friction", 0),
+                charge=obj_config.get("charge", 0)
             )
         # 创建 Force 类型的对象
         elif obj_type == "ForceUI":
@@ -121,8 +133,8 @@ class ObjsLoader:
                     position=tuple(obj_config["position"]),
                     target_a=target_a,
                     target_b=target_b,
-                    anchor_a=tuple(obj_config.get("anchor_a", (0, 0))),
-                    anchor_b=tuple(obj_config.get("anchor_b", (0, 0))),
+                    anchor_a=Vec2d(*obj_config.get("anchor_a", (0, 0))),
+                    anchor_b=Vec2d(*obj_config.get("anchor_b", (0, 0))),
                 )
             elif obj_type == "SlideJointUI":
                 return SlideJointUI(
@@ -130,8 +142,8 @@ class ObjsLoader:
                     position=tuple(obj_config["position"]),
                     target_a=target_a,
                     target_b=target_b,
-                    anchor_a=tuple(obj_config.get("anchor_a", (0, 0))),
-                    anchor_b=tuple(obj_config.get("anchor_b", (0, 0))),
+                    anchor_a=Vec2d(*obj_config.get("anchor_a", (0, 0))),
+                    anchor_b=Vec2d(*obj_config.get("anchor_b", (0, 0))),
                 )
             elif obj_type == "SpringUI":
                 return SpringUI(
@@ -139,8 +151,8 @@ class ObjsLoader:
                     position=tuple(obj_config["position"]),
                     target_a=target_a,
                     target_b=target_b,
-                    anchor_a=tuple(obj_config.get("anchor_a", (0, 0))),
-                    anchor_b=tuple(obj_config.get("anchor_b", (0, 0))),
+                    anchor_a=Vec2d(*obj_config.get("anchor_a", (0, 0))),
+                    anchor_b=Vec2d(*obj_config.get("anchor_b", (0, 0))),
                 )
 
         return None

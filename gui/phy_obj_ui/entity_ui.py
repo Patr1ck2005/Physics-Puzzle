@@ -58,8 +58,9 @@ class EntityUI(Entity, BaseUI):
 
 
 class BoxEntityUI(EntityUI, BoxEntity, BaseUIBox):
-    def __init__(self, name, phy_type, center, angle=0, size=(30, 30), ico_path=None, color=(150, 150, 150)):
-        BoxEntity.__init__(self, name, phy_type, center, angle, size)
+    def __init__(self, name, phy_type, center, angle=0, size=(30, 30), ico_path=None, color=(150, 150, 150),
+                 mass=1, elasticity=0, friction=0, charge=0):
+        BoxEntity.__init__(self, name, phy_type, center, angle, size, color, mass, elasticity, friction, charge)
         BaseUIBox.__init__(self, name, center, angle, size, ico_path=ico_path, ico_color=color)
 
     # 将UI的位置和pymunk位置关联在一起
@@ -99,8 +100,9 @@ class BoxEntityUI(EntityUI, BoxEntity, BaseUIBox):
 
 
 class CircleEntityUI(EntityUI, CircleEntity, BaseUICircle):
-    def __init__(self, name, phy_type, center, angle=0, r=20, ico_path=None, color=(150, 150, 150)):
-        CircleEntity.__init__(self, name, phy_type, center, angle, r)
+    def __init__(self, name, phy_type, center, angle=0, r=20, ico_path=None, color=(150, 150, 150),
+                 mass=1, elasticity=0, friction=0, charge=0):
+        CircleEntity.__init__(self, name, phy_type, center, angle, r, color, mass, elasticity, friction, charge)
         BaseUICircle.__init__(self, name, center, r, ico_path=ico_path, ico_color=color)
 
     @property
@@ -118,11 +120,12 @@ class CircleEntityUI(EntityUI, CircleEntity, BaseUICircle):
 
 
 class PolyEntityUI(EntityUI, PolyEntity, BaseUIPoly):
-    def __init__(self, name, phy_type, world_points, angle, ico_path=None, color=(150, 150, 150)):
+    def __init__(self, name, phy_type, world_points, angle, ico_path=None, color=(150, 150, 150),
+                 mass=1, elasticity=0, friction=0, charge=0):
         poly = Poly(world_points)
         center = poly.center
         local_points = poly.local_points
-        PolyEntity.__init__(self, name, phy_type, local_points, center, angle)
+        PolyEntity.__init__(self, name, phy_type, local_points, center, angle, color, mass, elasticity, friction, charge)
         BaseUIPoly.__init__(self, name, world_points, angle, ico_path=ico_path, ico_color=color)
 
     # 将UI的位置和pymunk位置关联在一起

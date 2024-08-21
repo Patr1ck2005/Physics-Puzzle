@@ -70,6 +70,8 @@ class GameScene:
                 self.running = False  # 按下ESC键退出关卡
             elif event.key == pygame.K_p:  # 按下P键暂停
                 return 'pause'
+            elif event.key == pygame.K_q:  # 按下P键暂停
+                return 'level_menu'
         return None
 
     def update(self):

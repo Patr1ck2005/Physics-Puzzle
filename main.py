@@ -75,7 +75,8 @@ while is_running:
         # 根据处理结果切换不同的屏幕
         if screen_result == "start_game":
             load_chapter_menu()
-        elif screen_result and screen_result.startswith("chapter"):
+        elif (screen_result and screen_result.startswith("chapter")) or screen_result == "level_menu":
+            game_scene = None  # 如果返回关卡，销毁当前游戏场景实例
             load_level_selection_menu()
         elif screen_result and screen_result.startswith("level_"):
             load_game_scene()

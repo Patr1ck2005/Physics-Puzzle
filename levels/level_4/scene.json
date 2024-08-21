@@ -1,0 +1,45 @@
+{
+  "entities": [
+    {
+      "type": "BoxEntityUI",
+      "name": "table",
+      "phy_type": "static",
+      "center": [600, 620],
+      "angle": 0,
+      "size": [800, 40],
+      "ico_path": null,
+      "color": [139, 69, 19]
+    },
+    {
+      "type": "BoxEntityUI",
+      "name": "plank",
+      "phy_type": "dynamic",
+      "center": [600, 590],
+      "angle": 0,
+      "size": [400, 20],
+      "ico_path": null,
+      "color": [160, 82, 45]
+    },
+    {
+      "type": "CircleEntityUI",
+      "name": "hanging_ball",
+      "phy_type": "dynamic",
+      "center": [600, 550],
+      "angle": 0,
+      "r": 20,
+      "ico_path": null,
+      "color": [255, 215, 0]
+    }
+  ],
+  "constraints": [
+    {
+      "type": "SlideJointUI",
+      "name": "lever_model",
+      "position": [600, 500],
+      "target_a": "plank",
+      "target_b": "hanging_ball",
+      "anchor_a": [0, -200],
+      "anchor_b": [0, 0]
+    }
+  ]
+}

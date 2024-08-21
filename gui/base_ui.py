@@ -4,6 +4,8 @@ from scripts.utils import Round, Poly
 
 import pygame
 
+from settings import WHITE
+
 
 class BaseUI:
     def __init__(self,
@@ -154,7 +156,7 @@ class BaseUICircle(BaseUI):
 
     def draw_mark(self, screen):
         if self.is_selected:
-            pygame.draw.circle(screen, (255, 255, 255), self._center, self.size * 1.1)
+            pygame.draw.circle(screen, (255, 255, 255), self._center, self.size * 1.1+5, 3)
 
 
 class BaseUILine(BaseUI):
@@ -208,11 +210,12 @@ class BaseUIBox(BaseUI):
     def draw_draft(self, screen):
         pygame.draw.polygon(screen, self._color, self.click_region.points)
         text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
-        screen.blit(text, (self.ui_center[0] - self.size[0], self.ui_center[1] - 10))
+        screen.blit(text, (self.ui_center[0] - self.size[0]//2, self.ui_center[1] - self.size[1]//2))
 
     def draw_mark(self, screen):
         if self.is_selected:
-            pygame.draw.polygon(screen, self._color, self.click_region.points)
+            pygame.draw.circle(screen, WHITE, self.ui_center,
+                               max(self.click_region.rect_width, self.click_region.rect_height)//1.5, 3)
 
 
 class BaseUIPoly(BaseUI):
@@ -257,4 +260,5 @@ class BaseUIPoly(BaseUI):
 
     def draw_mark(self, screen):
         if self.is_selected:
-            pygame.draw.polygon(screen, self._color, self.click_region.points)
+            pygame.draw.circle(screen, WHITE, self.ui_center,
+                               max(self.click_region.rect_width, self.click_region.rect_height)//1.5, 3)

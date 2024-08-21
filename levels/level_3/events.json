@@ -1,0 +1,53 @@
+{
+  "events": {
+    "state_transition_to_b": {
+      "handler": "transition_to_state_b"
+    },
+    "show_message_event": {
+      "handler": "show_console_message",
+      "params": {
+        "message": "Hello, this is a custom message!"
+      }
+    },
+    "message_running_out_of_time": {
+      "handler": "show_console_message",
+      "params": {
+        "message": "You running out of time!"
+      }
+    }
+
+  },
+  "states": [
+    {
+      "name": "StateA",
+      "triggers": [
+        {
+          "type": "PointQueryTrigger",
+          "entity_name": "ball_2",
+          "target_point": [300, 300],
+          "events": ["show_message_event"],
+          "space": "pymunk_space",
+          "min_duration": 1
+        },
+        {
+          "type": "TimerTrigger",
+          "duration": 3,
+          "events": ["message_running_out_of_time"],
+          "start_immediately": true,
+          "once": true
+        }
+      ]
+    },
+    {
+      "name": "StateB",
+      "triggers": [
+        {
+          "type": "TimerTrigger",
+          "duration": 2,
+          "events": ["show_message_event"],
+          "start_immediately": true
+        }
+      ]
+    }
+  ]
+}

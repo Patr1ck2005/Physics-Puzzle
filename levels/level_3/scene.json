@@ -50,9 +50,9 @@
       "angle": 0,
       "r": 20,
       "ico_path": null,
-      "color": [255, 215, 0],
+      "color": [53, 52, 51],
 
-      "mass": 1,
+      "mass": 3,
       "elasticity": 1,
       "friction": 0
     },
@@ -64,9 +64,9 @@
       "angle": 0,
       "size": [60, 40],
       "ico_path": null,
-      "color": [160, 82, 45],
+      "color": [56, 82, 45],
 
-      "mass": 1,
+      "mass": 3,
       "elasticity": 1,
       "friction": 0
     },
@@ -78,9 +78,9 @@
       "angle": 0,
       "size": [60, 40],
       "ico_path": null,
-      "color": [160, 82, 45],
+      "color": [56, 82, 45],
 
-      "mass": 1,
+      "mass": 3,
       "elasticity": 1,
       "friction": 0
     }
