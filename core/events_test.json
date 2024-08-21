@@ -1,12 +1,31 @@
 {
+  "events": {
+    "state_transition_to_b": {
+      "handler": "transition_to_state_b"
+    },
+    "show_message_event": {
+      "handler": "show_console_message",
+      "params": {
+        "message": "Hello, this is a custom message!"
+      }
+    }
+  },
   "states": [
     {
       "name": "StateA",
       "triggers": [
         {
+          "type": "PointQueryTrigger",
+          "entity_name": "circle1",
+          "target_point": [300, 300],
+          "events": ["state_transition_to_b"],
+          "space": "pymunk_space",
+          "min_duration": 0
+        },
+        {
           "type": "TimerTrigger",
           "duration": 1,
-          "events": ["state_transition_to_b"],
+          "events": ["show_message_event", "state_transition_to_b"],
           "start_immediately": true
         }
       ]
@@ -15,15 +34,12 @@
       "name": "StateB",
       "triggers": [
         {
-          "condition": "condition_for_message",
+          "type": "TimerTrigger",
+          "duration": 2,
           "events": ["show_message_event"],
-          "once": true
+          "start_immediately": true
         }
       ]
     }
-  ],
-  "events": {
-    "state_transition_to_b": "transition_to_state_b",
-    "show_message_event": "show_console_message"
-  }
+  ]
 }

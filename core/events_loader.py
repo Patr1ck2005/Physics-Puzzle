@@ -6,20 +6,16 @@ from core.event.trigger.timer_trigger import TimerTrigger
 from core.event.trigger.query_trigger import PointQueryTrigger
 from core.event.events.events import show_console_message
 
+
 class EventLoader:
-    def __init__(self, events_json_file, entities, space=None):
+    def __init__(self, events_json_file, entities, space):
         self.events_json_file = events_json_file
-        self.entities = entities  # 从EntityLoader加载的实体
-        self.space = space or pymunk.Space()  # Pymunk space
+        self.entities = entities  # 从 EntityLoader 加载的实体
+        self.space = space  # Pymunk space
         self.event_manager = EventManager()
         self.trigger_manager = TriggerManager(self.event_manager)
-        self.event_mapping = {
-            "transition_to_state_b": self.transition_to_state_b,
-            "show_console_message": lambda *args, **kwargs: show_console_message("You are now in StateB"),
-        }
 
-    def transition_to_state_b(self, *args, **kwargs):
-        print("Transitioning to StateB")
+    def trans_to_state_b(self, *args, **kwargs):
         self.trigger_manager.transition_to_state("StateB")
 
     def load_events(self):
@@ -28,8 +24,16 @@ class EventLoader:
 
         # 加载事件
         for event_name, event_handler in config['events'].items():
-            if event_handler in self.event_mapping:
-                self.event_manager.register_event(event_name, self.event_mapping[event_handler])
+            handler_name = event_handler.get("handler")
+            handler_params = event_handler.get("params", {})
+
+            if handler_name == "show_console_message":
+                self.event_manager.register_event(
+                    event_name,
+                    lambda *args, **kwargs: show_console_message(handler_params.get("message", "Default Message"))
+                )
+            elif handler_name == "transition_to_state_b":
+                self.event_manager.register_event(event_name, self.trans_to_state_b)
 
         # 加载状态和触发器
         for state_config in config['states']:

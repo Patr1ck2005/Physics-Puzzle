@@ -28,7 +28,7 @@ class PointQueryTrigger(Trigger):
         self.time_entered = None
 
     def _point_condition(self):
-        shapes = self.space.point_query(self.target_point, max_distance=0, shape_filter=pymunk.ShapeFilter())
+        shapes = self.space.point_query(point=self.target_point, max_distance=0, shape_filter=pymunk.ShapeFilter())
         if any(shape.shape == self.entity.body_shape for shape in shapes):
             if self.time_entered is None:
                 self.time_entered = time.time()

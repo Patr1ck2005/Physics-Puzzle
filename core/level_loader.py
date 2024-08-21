@@ -34,7 +34,7 @@ class LevelLoader:
 # 使用 GameLoader 类
 if __name__ == '__main__':
     pygame.init()
-    space = pymunk.Space
+    space = pymunk.Space()
     game_loader = LevelLoader('world_test.json', 'events_test.json', space)
 
     # 加载实体
