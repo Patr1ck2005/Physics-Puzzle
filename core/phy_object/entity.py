@@ -130,8 +130,9 @@ class Entity:
         self.history_y.append(self.body.position.y)
         self.history_angle.append(self.body.angle)
 
-    def add_to_space(self, space, center_pos):
-        self.body.position = center_pos
+    def add_to_space(self, space, center_pos=None):
+        if center_pos:
+            self.body.position = center_pos
         space.add(self.body, self.body_shape)
 
     def remove_from_space(self, space):

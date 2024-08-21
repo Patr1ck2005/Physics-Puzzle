@@ -28,11 +28,17 @@ class PlaceableInventory:
             'c_2': SlideJointUI('c_2', Vec2d(100, 100)),
             'c_3': SpringUI('c_3', Vec2d(100, 100)),
         }
+        self.items = {}
         # 调整位置排列物品栏
-        self.align_items()
+        self._align_items()
 
     def add_item(self, item):
         self.items[item.name] = item
+        self._align_items()
+
+    def add_item_dict(self, item_dict: dict):
+        self.items = {**self.items, **item_dict['entities'], **item_dict['forces'], **item_dict['constraints']}
+        self._align_items()
 
     def remove_item_by_name(self, name):
         self.items.pop(name)
@@ -40,7 +46,7 @@ class PlaceableInventory:
     def get_item_by_name(self, name):
         return self.items[name]
 
-    def align_items(self):
+    def _align_items(self):
         old_name = 'default'
         i = 0
         for item in self.items.values():

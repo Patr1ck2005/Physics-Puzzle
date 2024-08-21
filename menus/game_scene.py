@@ -2,6 +2,9 @@ import pygame
 import json
 import os
 from core.engine import Engine
+from core.events_loader import EventLoader
+from core.level_loader import LevelLoader
+from core.phy_obj_loader import ObjsLoader
 from gui.ui_manager.ui_manager import UIManager
 from settings import MAX_FPS
 
@@ -13,6 +16,7 @@ class GameScene:
 
         # 初始化物理世界和内部的UI管理器
         self.engine = Engine()
+        self.space = self.engine.space
         self.engine.init_world()
 
         self.ui_manager = UIManager(self.engine)
@@ -22,23 +26,35 @@ class GameScene:
         pygame.mixer.music.play(-1)  # 循环播放
         pygame.mixer.music.set_volume(0.1)  # 设置音量为 50%
 
+        # 初始化加载器 (在这里还没有加载具体的关卡)
+        self.game_loader = None
+        self.trigger_manager = None
+        self.event_manager = None
+
     @property
     def manager(self):
         return self.ui_manager
 
     def load_level(self, level):
         # 获取上级目录中的 levels 文件夹路径
-        levels_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'levels')
-        file_name = 'level_example_usable.json'
-        file_path = os.path.join(levels_dir, file_name)
+        levels_dir = 'levels'
 
-        # 读取 JSON 文件，并指定编码为 UTF-8
-        with open(file_path, 'r', encoding='utf-8') as file:
-            items = json.load(file)
+        # 加载物品栏, 场景和事件 JSON 文件
+        inventory_file = os.path.join(levels_dir, f'{level}', 'inventory.json')
+        scene_file = os.path.join(levels_dir, f'{level}', 'scene.json')
+        events_file = os.path.join(levels_dir, f'{level}', 'events.json')
 
-        # # 处理物品数据 (这里可以直接交给Engine来处理)
-        # for item in items:
-        #     self.engine.process_item(item)  # 假设Engine有这个方法来处理物品
+        # 载入物品栏入UIManager
+        inventory = ObjsLoader(inventory_file).load_objs()
+        self.ui_manager.inventory_manager.placeable_inventory.add_item_dict(inventory)
+        # 载入场景入UIManage
+        scene = ObjsLoader(scene_file).load_objs()
+        self.ui_manager.entity_manager.add_entities_dict(scene['entities'])
+
+        # 设置关卡事件
+        all_objs = {**inventory, **scene}
+        self.trigger_manager, self.event_manager\
+            = EventLoader(events_file, all_objs, self.space).load_events()  # 加载所有事件和触发器
 
     def handle_event(self, event):
         if event.type == pygame.QUIT:
@@ -53,6 +69,9 @@ class GameScene:
     def update(self):
         # 更新物理世界
         self.engine.update_world()
+        # 检查并触发事件
+        if self.trigger_manager:
+            self.trigger_manager.check_triggers()
 
     def draw(self, screen):
         self.engine.render_world(screen)  # 渲染底层物理世界

@@ -4,7 +4,7 @@ import pygame
 import pymunk
 
 from core.events_loader import EventLoader
-from core.phy_obj_loader import EntityLoader
+from core.phy_obj_loader import ObjsLoader
 
 
 class LevelLoader:
@@ -15,7 +15,7 @@ class LevelLoader:
         self.space = space
 
     def load_entities(self):
-        entity_loader = EntityLoader(self.entities_json_file)
+        entity_loader = ObjsLoader(self.entities_json_file)
         self.entities = entity_loader.load_entities()
         return self.entities
 

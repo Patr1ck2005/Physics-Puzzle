@@ -12,13 +12,13 @@ class ToolsInventory(PlaceableInventory):
             'elastic': ElasticityToolUI('elastic', center, color=(200, 0, 200), ico_path='assets/images/g2.png', elasticity=1),
         }
         # 调整位置排列物品栏
-        self.align_items()
+        self._align_items()
 
     @property
     def tools(self):
         return self.items
 
-    def align_items(self):
+    def _align_items(self):
         old_name = 'default'
         i = 0
         for item in self.items.values():

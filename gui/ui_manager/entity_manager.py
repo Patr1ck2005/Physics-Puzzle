@@ -33,6 +33,11 @@ class EntityManager:
         self.running_objects[obj.name] = obj  # 以字典的形式储存obj对象, 例如: {'ball_1': CircleObjectUI(),}
         obj.add_to_space(self.space, self.m_pos)  # ObjectsManager管理的都是已添加进space中的UI元素
 
+    def add_entities_dict(self, entities_dict):
+        self.running_objects = {**self.running_objects, **entities_dict}
+        for obj in entities_dict.values():
+            obj.add_to_space(self.space)
+
     def update(self, m_pos, m_d_pos):
         self.m_pos = m_pos
         self.m_d_pos = m_d_pos
