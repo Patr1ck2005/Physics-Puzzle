@@ -50,18 +50,21 @@ class ChapterMenu:
                                                       object_id=ObjectID(f'#chapter_button_{title}'))
 
         # 描述面板（初始透明）
-        description_panel = pygame_gui.elements.UIPanel(relative_rect=Rect((0, 200), (200, 300)),
+        description_panel = pygame_gui.elements.UIPanel(relative_rect=Rect((10, 200), (200, 300)),
                                                         manager=self.manager,
                                                         container=panel,
                                                         object_id="#description_panel")
 
-        description_panel.background_colour = Color(0, 0, 0, 0)  # 初始全透明背景
+        description_panel.background_colour = Color(0, 0, 0, 30)  # 初始全透明背景
+        description_panel.rebuild()
 
         # 添加描述标签
-        description_label = pygame_gui.elements.UILabel(relative_rect=Rect(10, 10, 180, 100),
-                                                        text=description,
-                                                        manager=self.manager,
-                                                        container=description_panel)
+        description_textbox = pygame_gui.elements.UITextBox(
+            html_text=description,
+            relative_rect=pygame.Rect((0, 10), (180, 200)),
+            manager=self.manager,
+            container=description_panel
+        )
 
         # 设置按钮事件：鼠标悬停时开始动画
         chapter_button.set_text('')  # 隐藏按钮文本
@@ -73,7 +76,7 @@ class ChapterMenu:
             'layout': layout,
             'button': chapter_button,
             'description_panel': description_panel,
-            'description_label': description_label
+            'description_textbox': description_textbox
         }
 
     def start_animation(self, panel):

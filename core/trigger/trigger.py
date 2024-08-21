@@ -1,33 +1,44 @@
 from core.event.event_manager import EventManager
 
+import time
+
 
 class Trigger:
-    def __init__(self, condition, event_name, event_manager, once=True):
+    def __init__(self, condition, event_names, event_manager, once=True, debounce_time=0):
         """
-        初始化触发器。
-
-        :param condition: 检查触发条件的函数，返回布尔值
-        :param event_name: 条件满足时要触发的事件名称
-        :param event_manager: 用于触发事件的事件管理器实例
-        :param once: 如果为 True，条件满足后触发一次事件；如果为 False，则每次条件满足都会触发事件
+        :param event_names: 可以是一个事件名称或一个事件名称列表
         """
         self.condition = condition
-        self.event_name = event_name
+        self.event_names = event_names if isinstance(event_names, list) else [event_names]
         self.event_manager = event_manager
         self.once = once
         self.triggered = False
+        self.debounce_time = debounce_time
+        self.last_trigger_time = 0
 
     def check_and_trigger(self):
-        """
-        检查条件并在条件满足时触发事件。
-        """
-        if self.condition():  # 条件函数返回 True 时，触发事件
+        current_time = time.time()
+        if self.condition() and (current_time - self.last_trigger_time >= self.debounce_time):
             if not self.triggered or not self.once:
-                self.event_manager.trigger_event(self.event_name)
+                for event_name in self.event_names:
+                    # 例如将条件结果作为参数传递
+                    self.event_manager.trigger_event(event_name, condition_met=True)
                 self.triggered = True
         else:
             if not self.once:
-                self.triggered = False  # 重置触发状态以允许再次触发
+                self.triggered = False
+
+
+class ComplexCondition:
+    # # 使用方式
+    # complex_condition = ComplexCondition([condition1, condition2])
+    # complex_trigger = Trigger(complex_condition, "complex_event", event_manager)
+    def __init__(self, conditions):
+        self.conditions = conditions
+
+    def __call__(self):
+        return all(condition() for condition in self.conditions)
+
 
 # 示例用法
 if __name__ == "__main__":
@@ -38,10 +49,10 @@ if __name__ == "__main__":
     event_manager = EventManager()
 
     # 定义一些事件处理函数
-    def on_low_health():
+    def on_low_health(*args, **kwargs):
         print("Warning: Player health is low!")
 
-    def on_coin_collected():
+    def on_coin_collected(*args, **kwargs):
         print(f"Coins collected: {player['coins']}")
 
     # 注册事件
