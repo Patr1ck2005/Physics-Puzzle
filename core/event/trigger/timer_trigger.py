@@ -1,15 +1,15 @@
 import time
 
-from core.trigger.trigger import Trigger
+from core.event.trigger.trigger import Trigger
 
 
 class TimerTrigger(Trigger):
-    def __init__(self, duration, event_name, event_manager, start_immediately=True):
+    def __init__(self, duration, event_names, event_manager, start_immediately=True):
         """
         :param duration: 定时器的时间长度（秒）
         :param start_immediately: 是否立即开始计时
         """
-        super().__init__(self._time_condition, event_name, event_manager, once=False)
+        super().__init__(self._time_condition, event_names, event_manager, once=False)
         self.duration = duration
         self.start_time = time.time() if start_immediately else None
 

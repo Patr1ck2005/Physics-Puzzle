@@ -1,0 +1,59 @@
+{
+  "entities": [
+    {
+      "type": "BoxEntityUI",
+      "name": "box1",
+      "phy_type": "dynamic",
+      "position": [100, 100],
+      "angle": 45,
+      "size": [50, 50],
+      "ico_path": null,
+      "color": [255, 0, 0]
+    },
+    {
+      "type": "CircleEntityUI",
+      "name": "circle1",
+      "phy_type": "static",
+      "center": [200, 200],
+      "angle": 0,
+      "r": 25,
+      "ico_path": null,
+      "color": [0, 255, 0]
+    }
+  ],
+  "events": {
+    "state_transition_to_b": "transition_to_state_b",
+    "show_message_event": "show_console_message"
+  },
+  "states": [
+    {
+      "name": "StateA",
+      "triggers": [
+        {
+          "type": "PointQueryTrigger",
+          "entity_name": "circle1",
+          "target_point": [300, 300],
+          "events": ["state_transition_to_b"],
+          "space": "pymunk_space",
+          "min_duration": 1
+        },
+        {
+          "type": "TimerTrigger",
+          "duration": 1,
+          "events": ["state_transition_to_b"],
+          "start_immediately": true
+        }
+      ]
+    },
+    {
+      "name": "StateB",
+      "triggers": [
+        {
+          "condition": "condition_for_message",
+          "events": ["show_message_event"],
+          "once": true
+        }
+      ]
+    }
+  ]
+}

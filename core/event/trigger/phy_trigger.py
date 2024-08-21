@@ -1,4 +1,4 @@
-from core.trigger.trigger import Trigger
+from core.event.trigger.trigger import Trigger
 
 
 class PositionTrigger(Trigger):

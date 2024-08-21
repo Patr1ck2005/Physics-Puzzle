@@ -1,0 +1,29 @@
+{
+  "states": [
+    {
+      "name": "StateA",
+      "triggers": [
+        {
+          "type": "TimerTrigger",
+          "duration": 1,
+          "events": ["state_transition_to_b"],
+          "start_immediately": true
+        }
+      ]
+    },
+    {
+      "name": "StateB",
+      "triggers": [
+        {
+          "condition": "condition_for_message",
+          "events": ["show_message_event"],
+          "once": true
+        }
+      ]
+    }
+  ],
+  "events": {
+    "state_transition_to_b": "transition_to_state_b",
+    "show_message_event": "show_console_message"
+  }
+}

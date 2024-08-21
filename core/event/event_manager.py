@@ -1,5 +1,6 @@
 import logging
 
+
 class EventManager:
     def __init__(self):
         self.events = {}
@@ -24,7 +25,7 @@ class EventManager:
     def trigger_event(self, event_name, *args, **kwargs):
         if event_name in self.events:
             logging.info(f"Event '{event_name}' triggered.")
-            for callback in self.events[event_name]:
+            for _, callback in self.events[event_name]:
                 callback(*args, **kwargs)
         else:
             logging.warning(f"Event '{event_name}' not found.")
