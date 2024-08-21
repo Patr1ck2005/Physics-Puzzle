@@ -28,6 +28,11 @@ class Trigger:
             if not self.once:
                 self.triggered = False
 
+    # 可视化触发器
+    def draw(self, screen):
+        # 在子类中重写
+        pass
+
 
 class ComplexCondition:
     # # 使用方式

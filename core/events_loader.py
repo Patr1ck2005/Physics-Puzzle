@@ -58,7 +58,8 @@ class EventLoader:
                 duration=trigger_config['duration'],
                 event_names=trigger_config['events'],
                 event_manager=self.event_manager,
-                start_immediately=trigger_config.get("start_immediately", True)
+                start_immediately=trigger_config.get("start_immediately", True),
+                once=trigger_config.get("once", True)
             )
         elif trigger_type == "PointQueryTrigger":
             entity_name = trigger_config['entity_name']

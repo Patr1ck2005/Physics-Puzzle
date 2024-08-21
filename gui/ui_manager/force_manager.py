@@ -23,4 +23,7 @@ class ForceManager:
     def add_force(self, force):
         self.running_forces[force.name] = force
 
+    def add_force_dict(self, force_dict):
+        self.running_forces = {**self.running_forces, **force_dict}
+
 

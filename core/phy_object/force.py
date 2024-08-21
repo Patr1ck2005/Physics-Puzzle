@@ -4,11 +4,11 @@ from gui.phy_obj_ui.entity_ui import EntityUI
 
 
 class AbstractForce:
-    def __init__(self, force: Vec2d, loc):
+    def __init__(self, force: Vec2d, loc, target):
         self.force = force
         self.loc = loc
 
-        self.target = None
+        self.target = target
 
     @property
     def normalised_direction(self):

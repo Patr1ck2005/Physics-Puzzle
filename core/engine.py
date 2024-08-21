@@ -13,7 +13,7 @@ class Engine:
         self.time_scale = 1
         self.universal_gravity = True
 
-        self.if_uni_gravity = False
+        self._if_uni_gravity = False
         self._if_gravity = False
         self._gravity = 1e3
         self._G = 1e6
@@ -43,6 +43,16 @@ class Engine:
     def G(self, value):
         self._G = value*1e6
 
+    @property
+    def universal_gravity(self):
+        return self._G/1e6
+
+    @universal_gravity.setter
+    def universal_gravity(self, value):
+        if value > 0:
+            self._G = value*1e6
+            self._if_uni_gravity = True
+
     def init_world(self):
         self.space.remove(*self.space.bodies, *self.space.shapes, *self.space.constraints)
         if self.if_gravity:
@@ -69,24 +79,13 @@ class Engine:
             line.elasticity = 1
             self.space.add(line)
 
-        # 创建一个球体
-        mass = 1
-        radius = 15
-        moment = pymunk.moment_for_circle(mass, 0, radius)
-        ball_body = pymunk.Body(mass, moment)
-        ball_body.position = (SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
-        ball_shape = pymunk.Circle(ball_body, radius)
-        ball_shape.friction = 0.7
-        ball_shape.elasticity = 0.8
-        self.space.add(ball_body, ball_shape)
-
     def update_world(self):
         if self.pause:
             return
         self.space.step(1/180*self.time_scale)
         self.space.step(1/180*self.time_scale)
         self.space.step(1/180*self.time_scale)
-        if self._G != 0 and self.if_uni_gravity:
+        if self._G != 0 and self._if_uni_gravity:
             self.apply_gravitational_force()
         for body in self.space.bodies:
             x, y = body.position

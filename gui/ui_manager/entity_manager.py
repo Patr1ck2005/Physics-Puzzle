@@ -34,8 +34,9 @@ class EntityManager:
         obj.add_to_space(self.space, self.m_pos)  # ObjectsManager管理的都是已添加进space中的UI元素
 
     def add_entities_dict(self, entities_dict):
-        self.running_objects = {**self.running_objects, **entities_dict}
-        for obj in entities_dict.values():
+        new_obj = {**entities_dict["entities"], **entities_dict["constraints"]}
+        self.running_objects = {**self.running_objects, **entities_dict["entities"]}
+        for obj in new_obj.values():
             obj.add_to_space(self.space)
 
     def update(self, m_pos, m_d_pos):
@@ -87,7 +88,6 @@ class EntityManager:
                 if self.left_selection.type == 'static':  # 静态物体不能移动
                     print('静态物体不能被移动')
                 else:
-                    print(2)
                     self.left_selection.center = self.m_pos
                 self.left_selection = None
                 return
@@ -123,7 +123,7 @@ class EntityManager:
         # 只要存在被按住的物体就移动
         if self.pressed_obj:
             self.pressed_obj.center = self.m_pos
-            self.pressed_obj.body.velocity = Vec2d(*self.m_d_pos) * 20
+            self.pressed_obj.body.velocity = Vec2d(*self.m_d_pos) * 40
 
     def on_release(self):
         # 仅在释放鼠标时松开物体

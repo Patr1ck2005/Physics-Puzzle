@@ -1,0 +1,83 @@
+{
+  "entities": [
+    {
+      "type": "BoxEntityUI",
+      "name": "table",
+      "phy_type": "static",
+      "center": [600, 620],
+      "angle": 0,
+      "size": [1200, 40],
+      "ico_path": null,
+      "color": [139, 69, 19],
+
+      "elasticity": 0
+    },
+    {
+      "type": "PolyEntityUI",
+      "name": "left_slope",
+      "phy_type": "dynamic",
+      "world_points": [[400, 600], [100, 500], [100, 600]],
+      "angle": 0,
+      "ico_path": null,
+      "color": [165, 42, 42],
+
+
+      "elasticity": 0
+    },
+    {
+      "type": "PolyEntityUI",
+      "name": "right_slope",
+      "phy_type": "dynamic",
+      "world_points": [[900, 600], [900, 500], [700, 600]],
+      "angle": 0,
+      "ico_path": null,
+      "color": [165, 42, 42],
+
+
+      "elasticity": 0
+    },
+    {
+      "type": "CircleEntityUI",
+      "name": "ball",
+      "phy_type": "dynamic",
+      "center": [450, 550],
+      "angle": 0,
+      "r": 20,
+      "ico_path": null,
+      "color": [255, 215, 0]
+    },
+    {
+      "type": "BoxEntityUI",
+      "name": "left_block",
+      "phy_type": "dynamic",
+      "center": [550, 580],
+      "angle": 0,
+      "size": [60, 40],
+      "ico_path": null,
+      "color": [160, 82, 45],
+      "friction": 0
+    },
+    {
+      "type": "BoxEntityUI",
+      "name": "right_block",
+      "phy_type": "dynamic",
+      "center": [650, 580],
+      "angle": 0,
+      "size": [60, 40],
+      "ico_path": null,
+      "color": [160, 82, 45],
+      "friction": 0
+    }
+  ],
+  "constraints": [
+    {
+      "type": "SpringUI",
+      "name": "spring",
+      "position": [600, 580],
+      "target_a": "left_block",
+      "target_b": "right_block",
+      "anchor_a": [30, 0],
+      "anchor_b": [-30, 0]
+    }
+  ]
+}

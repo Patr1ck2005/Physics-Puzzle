@@ -2,20 +2,12 @@ import math
 
 import pygame
 
-from core.phy_object.entity import Entity, BoxEntity, CircleEntity
-from gui.base_ui import BaseUI, BaseUIBox, BaseUICircle
+from core.phy_object.entity import Entity, BoxEntity, CircleEntity, PolyEntity
+from gui.base_ui import BaseUI, BaseUICircle, BaseUIBox, BaseUIPoly
+from scripts.utils import Poly
 
 
 class EntityUI(Entity, BaseUI):
-
-    @property
-    def position(self):
-        return self.rect_pos
-
-    @position.setter
-    def position(self, pos):
-        self.rect_pos = pos
-        self.set_click_region()
 
     @property
     def angle(self):
@@ -27,14 +19,14 @@ class EntityUI(Entity, BaseUI):
 
     @property
     def center(self):
-        return self._center
+        return self.body.position
 
     @center.setter
     def center(self, pos):
-        self._center = pos
-        self.set_click_region()
+        self.ui_center = pos
         if self.body is not None:
             self.body.position = pos
+        self.set_click_region()
 
     @property
     def rect_pos(self):
@@ -47,7 +39,6 @@ class EntityUI(Entity, BaseUI):
     # 将UI的位置和pymunk位置关联在一起, 并在绘制时随时更新
     def sync_ui(self):
         # 将 UI 位置同步为 Pymunk 位置
-        self.set_click_region()
         self.center = self.body.position
 
     def update(self, m_pos):
@@ -67,15 +58,34 @@ class EntityUI(Entity, BaseUI):
 
 
 class BoxEntityUI(EntityUI, BoxEntity, BaseUIBox):
-    def __init__(self, name, phy_type, position, angle=0, size=(30, 30), ico_path=None, color=(150, 150, 150)):
-        BoxEntity.__init__(self, name, phy_type, position, angle, size)
-        BaseUIBox.__init__(self, name, position, size, ico_path=ico_path, ico_color=color)
+    def __init__(self, name, phy_type, center, angle=0, size=(30, 30), ico_path=None, color=(150, 150, 150)):
+        BoxEntity.__init__(self, name, phy_type, center, angle, size)
+        BaseUIBox.__init__(self, name, center, angle, size, ico_path=ico_path, ico_color=color)
 
     # 将UI的位置和pymunk位置关联在一起
     def sync_ui(self):
         # 将 UI 位置同步为 Pymunk 位置
-        self.set_click_region()
-        self.center = self.body.position
+        self.ui_center = self.body.position
+        self.set_ui_angle(self.body.angle, self.body.position)
+
+    @property
+    def center(self):
+        return self.body.position
+
+    @center.setter
+    def center(self, pos):
+        self.ui_center = pos
+        if self.body is not None:
+            self.body.position = pos
+
+    @property
+    def angle(self):
+        return self.body.angle
+
+    @angle.setter
+    def angle(self, angle):
+        self.body.angle = angle
+        self.set_ui_angle(math.degrees(angle), self.body.position)
 
     @property
     def rect_pos(self):
@@ -105,6 +115,41 @@ class CircleEntityUI(EntityUI, CircleEntity, BaseUICircle):
 
     def draw_icon(self, surface):
         pygame.draw.circle(surface, self.ico_color, (surface.get_width()//2, surface.get_height()//2), self.size)
+
+
+class PolyEntityUI(EntityUI, PolyEntity, BaseUIPoly):
+    def __init__(self, name, phy_type, world_points, angle, ico_path=None, color=(150, 150, 150)):
+        poly = Poly(world_points)
+        center = poly.center
+        local_points = poly.local_points
+        PolyEntity.__init__(self, name, phy_type, local_points, center, angle)
+        BaseUIPoly.__init__(self, name, world_points, angle, ico_path=ico_path, ico_color=color)
+
+    # 将UI的位置和pymunk位置关联在一起
+    def sync_ui(self):
+        # 将 UI 位置同步为 Pymunk 位置
+        self.ui_center = self.body.position
+        world_coords = [self.body.local_to_world(vertex) for vertex in self.body_shape.get_vertices()]
+        self.click_region.points = world_coords
+
+    @property
+    def center(self):
+        return self.body.position
+
+    @center.setter
+    def center(self, pos):
+        self.ui_center = pos
+        if self.body is not None:
+            self.body.position = pos
+
+    @property
+    def angle(self):
+        return self.body.angle
+
+    @angle.setter
+    def angle(self, angle):
+        self.body.angle = angle
+        self.set_ui_angle(math.degrees(angle), self.body.position)
 
 
 class BlankEntityUI(Entity, BaseUI):

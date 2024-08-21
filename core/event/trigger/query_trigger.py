@@ -1,11 +1,12 @@
 import time
-
+import pygame
 import pymunk
 import pymunk.pygame_util
 
 from core.event.event_manager import EventManager
 from core.phy_object.entity import CircleEntity
 from core.event.trigger.trigger import Trigger
+from settings import WHITE
 
 
 class PointQueryTrigger(Trigger):
@@ -37,6 +38,9 @@ class PointQueryTrigger(Trigger):
         else:
             self.time_entered = None
         return False
+
+    def draw(self, screen):
+        pygame.draw.circle(screen, WHITE, self.target_point, 5)
 
 
 class SegmentQueryTrigger(Trigger):
@@ -72,6 +76,9 @@ class SegmentQueryTrigger(Trigger):
             self.time_entered = None
         return False
 
+    def draw(self, screen):
+        pygame.draw.line(screen, WHITE, self.segment_start, self.segment_end, 2)
+
 
 class BBQueryTrigger(Trigger):
     def __init__(self, entity, target_bb, event_names, event_manager, space, min_duration=0):
@@ -102,6 +109,9 @@ class BBQueryTrigger(Trigger):
         else:
             self.time_entered = None
         return False
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, WHITE, self.target_bb.bb, 2)
 
 
 if __name__ == "__main__":

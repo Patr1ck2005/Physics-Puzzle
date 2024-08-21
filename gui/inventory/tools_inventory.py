@@ -7,16 +7,21 @@ class ToolsInventory(PlaceableInventory):
         super().__init__()
         # 先随便设置位置, 后续会调整位置
         center = (0, 0)
-        self.items = {
-            'frictionless': FrictionToolUI('frictionless', center, color=(200, 0, 200), ico_path='assets/images/g2.png', friction=0),
-            'elastic': ElasticityToolUI('elastic', center, color=(200, 0, 200), ico_path='assets/images/g2.png', elasticity=1),
-        }
+        # self.items = {
+        #     'frictionless': FrictionToolUI('frictionless', center, color=(200, 0, 200), ico_path='assets/images/g2.png', friction=0),
+        #     'elastic': ElasticityToolUI('elastic', center, color=(200, 0, 200), ico_path='assets/images/g2.png', elasticity=1),
+        # }
+        self.items = {}
         # 调整位置排列物品栏
         self._align_items()
 
     @property
     def tools(self):
         return self.items
+
+    def add_item_dict(self, item_dict: dict):
+        self.items = {**self.items, **item_dict.get('tools', {})}
+        self._align_items()
 
     def _align_items(self):
         old_name = 'default'

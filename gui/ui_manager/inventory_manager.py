@@ -1,3 +1,4 @@
+from gui.base_ui import BaseUIRect
 from gui.phy_obj_ui.entity_ui import *
 from gui.inventory.placeable_inventory import PlaceableInventory
 from gui.inventory.tools_inventory import ToolsInventory
@@ -20,7 +21,7 @@ class InventoryManager:
             bg_ui_position = item.center[0] - 25, item.center[1] - 25
             # 设置物体对象的图标, 颜色淡化
             ico_color = [max(c - 100, 0) for c in item.ico_color]
-            item_bg_ui = BaseUIBox(item.name, bg_ui_position, (50, 50), ico_color=ico_color)
+            item_bg_ui = BaseUIRect(item.name, bg_ui_position, (50, 50), ico_color=ico_color)
             self.item_bg_uis[item.name] = item_bg_ui
 
     def update(self, m_pos):
@@ -35,6 +36,11 @@ class InventoryManager:
         for tool_ui in self.tools_inventory.tools.values():
             if tool_ui.update(m_pos):
                 return True
+
+    def add_item_dict(self, item_dict: dict):
+        self.placeable_inventory.add_item_dict(item_dict)
+        self.tools_inventory.add_item_dict(item_dict)
+        self._create_bg_uis_for_items()
 
     def remove_item_by_name(self, name):
         self.placeable_inventory.remove_item_by_name(name)

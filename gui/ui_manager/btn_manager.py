@@ -59,8 +59,8 @@ class ButtonManager:
                 self.engine.if_gravity = not self.engine.if_gravity
                 btn.set_text('tune off' if self.engine.if_gravity else 'tune on')
             elif btn == self.universal_gravity_checkbox:
-                self.engine.if_uni_gravity = not self.engine.if_uni_gravity
-                btn.set_text('tune off' if self.engine.if_uni_gravity else 'tune on')
+                self.engine._if_uni_gravity = not self.engine._if_uni_gravity
+                btn.set_text('tune off' if self.engine._if_uni_gravity else 'tune on')
             return True
 
         if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:

@@ -1,6 +1,8 @@
+import time
 from collections import deque
 
 import pymunk
+from pymunk import Vec2d
 
 
 # # Body: 物体的物理状态。
@@ -21,18 +23,20 @@ import pymunk
 
 
 class Entity:
-    def __init__(self, name, phy_type, shape=None, center=None, angle=None, size=None, color=None):
+    def __init__(self, name, phy_type, center: Vec2d = None, angle=None, size=None, color=None):
         self.history_x = deque((0, 0), maxlen=256)
         self.history_y = deque((0, 0), maxlen=256)
         self.history_angle = deque((0, 0), maxlen=256)
+        self.record_delta = 0.5
+        self.last_record_time = 0
+
         self.name = name
         self.type = phy_type
         self.body = None
         self.body_shape = None
-        self.shape = shape
         self._center = center
         self._angle = angle
-        self.size = size
+        self._size = size
 
         self.icon_rect = None
 
@@ -41,11 +45,11 @@ class Entity:
         self.color = color
 
     @property
-    def center(self):
+    def phy_center(self):
         return self.body.position
 
-    @center.setter
-    def center(self, value):
+    @phy_center.setter
+    def phy_center(self, value):
         self.body.position = value
 
     @property
@@ -105,27 +109,16 @@ class Entity:
         self.body_shape.elasticity = value
 
     def _create_phys(self):
-        switch_shape = {
-            "box": pymunk.Poly.create_box,
-            "circle": pymunk.Circle,
-            "segment": pymunk.Segment,
-        }
-        switch_type = {
-            "dynamic": pymunk.Body.DYNAMIC,
-            "static": pymunk.Body.STATIC,
-            "kinematic": pymunk.Body.KINEMATIC
-        }
-        mass = 1
-        moment = pymunk.moment_for_circle(mass, 0, 30)
-        body = pymunk.Body(mass, moment, body_type=switch_type.get(self.type, pymunk.Body.DYNAMIC))
-        body.position = self._center
-        body.angle = self._angle
-        body_shape = switch_shape.get(self.shape, pymunk.Circle)(body, self.size)
-        body_shape.friction = 0.7
-        body_shape.elasticity = 0.8
-        return body, body_shape
+        pass
 
     def record(self):
+        # if time.time() - self.last_record_time > self.record_delta:
+        #     self.history_x.append(self.body.position.x)
+        #     self.history_y.append(self.body.position.y)
+        #     self.history_angle.append(self.body.angle)
+        #     self.last_record_time = time.time()
+        # else:
+        #     return
         self.history_x.append(self.body.position.x)
         self.history_y.append(self.body.position.y)
         self.history_angle.append(self.body.angle)
@@ -140,10 +133,70 @@ class Entity:
 
 
 class BoxEntity(Entity):
-    def __init__(self, name, phy_type, center=(100, 100), angle=0, size=(30, 30), color=(150, 150, 150)):
-        Entity.__init__(self, name, phy_type, "box", center, angle, size, color)
+    def __init__(self, name, phy_type, center, angle=0, size=(30, 30), color=(150, 150, 150)):
+        Entity.__init__(self, name, phy_type, center, angle, size, color)
+
+    def _create_phys(self):
+        switch_type = {
+            "dynamic": pymunk.Body.DYNAMIC,
+            "static": pymunk.Body.STATIC,
+            "kinematic": pymunk.Body.KINEMATIC
+        }
+        mass = 1
+        moment = pymunk.moment_for_circle(mass, 0, 30)
+        body = pymunk.Body(mass, moment, body_type=switch_type.get(self.type, pymunk.Body.DYNAMIC))
+        body.position = self._center
+        body.angle = self._angle
+        body_shape = pymunk.Poly.create_box(body, self._size)
+        body_shape.friction = 0.7
+        body_shape.elasticity = 0.8
+        return body, body_shape
 
 
 class CircleEntity(Entity):
-    def __init__(self, name, phy_type, center=(100, 100), angle=0, radius=30, color=(150, 150, 150)):
-        Entity.__init__(self, name, phy_type, "circle", center, angle, radius, color)
+    def __init__(self, name, phy_type, center, angle=0, radius=30, color=(150, 150, 150)):
+        Entity.__init__(self, name, phy_type, center, angle, radius, color)
+
+    def _create_phys(self):
+        switch_type = {
+            "dynamic": pymunk.Body.DYNAMIC,
+            "static": pymunk.Body.STATIC,
+            "kinematic": pymunk.Body.KINEMATIC
+        }
+        mass = 1
+        moment = pymunk.moment_for_circle(mass, 0, 30)
+        body = pymunk.Body(mass, moment, body_type=switch_type.get(self.type, pymunk.Body.DYNAMIC))
+        body.position = self._center
+        body.angle = self._angle
+        body_shape = pymunk.Circle(body, self._size)
+        body_shape.friction = 0.7
+        body_shape.elasticity = 0.8
+        return body, body_shape
+
+
+class PolyEntity(Entity):
+    def __init__(self, name, phy_type, local_points, center, angle=0, color=(150, 150, 150)):
+        self._center = center
+        self._local_points = local_points
+        Entity.__init__(self, name, phy_type, center, angle, None, color)
+
+    @property
+    def points(self):
+        return 0
+
+    def _create_phys(self):
+        switch_type = {
+            "dynamic": pymunk.Body.DYNAMIC,
+            "static": pymunk.Body.STATIC,
+            "kinematic": pymunk.Body.KINEMATIC
+        }
+        mass = 10
+        moment = pymunk.moment_for_poly(mass, self._local_points)
+        body = pymunk.Body(mass, moment, body_type=switch_type.get(self.type, pymunk.Body.DYNAMIC))
+        body_shape = pymunk.Poly(body, self._local_points)
+
+        body.position = self._center
+        body.angle = self._angle
+        body_shape.friction = 0.7
+        body_shape.elasticity = 0.8
+        return body, body_shape

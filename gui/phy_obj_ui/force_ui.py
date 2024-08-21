@@ -7,33 +7,40 @@ from pymunk import Vec2d
 
 
 class ForceUI(AbstractForce, BaseUICircle):
-    def __init__(self, name, force=Vec2d(100, 100), loc=(0, 0)):
-        AbstractForce.__init__(self, force, loc)
-        BaseUICircle.__init__(self, name, loc, radius=10, ico_color=(0, 200, 0))
+    def __init__(self, name, force=Vec2d(0, 0), loc=(0, 0), target=None):
+        AbstractForce.__init__(self, force, loc, target)
+        BaseUICircle.__init__(self, name, loc, radius=10, ico_color=(100, 100, 100))
+
+    @property
+    def center(self):
+        return self.ui_center
+
+    @center.setter
+    def center(self, pos):
+        self.ui_center = pos
+        self.set_click_region()
 
     def update(self, m_pos):
-        BaseUICircle.update(self, m_pos)
-        AbstractForce.update(self)
         # 在这里可以更新力, 例如实现力的'圆周运动'
         # self.force = self.force.rotated(0.1)
-        if self.target:
-            self.target.body.apply_force_at_world_point(self.force, self.target.body.position)
+        BaseUICircle.update(self, m_pos)
+        AbstractForce.update(self)
 
     # 将UI的位置和受力物体位置关联在一起
     def sync_ui(self):
         # 将 UI 位置同步为 Pymunk 位置
+        self.ui_center = self.target.body.position
         self.set_click_region()
-        self.center = self.target.body.position
 
     def draw_draft(self, screen):
         if self.target:
             self.sync_ui()
         super().draw_draft(screen)
         # 计算箭头的终点
-        arrow_end = self.center + self.force/5
+        arrow_end = self.ui_center + self.force/5
 
         # 绘制力的箭头
-        pygame.draw.line(screen, (255, 0, 0), self.center, arrow_end, 3)  # 绘制主线段
+        pygame.draw.line(screen, (255, 0, 0), self.ui_center, arrow_end, 3)  # 绘制主线段
 
         # 箭头的尺寸和角度
         arrow_size = 10
