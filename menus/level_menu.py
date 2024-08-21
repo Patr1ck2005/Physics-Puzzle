@@ -1,5 +1,7 @@
 import pygame
 import pygame_gui
+from pygame_gui.core import ObjectID
+
 from gui.layout.box_layout import VBoxLayout, HBoxLayout
 from settings import *
 
@@ -20,8 +22,9 @@ class LevelMenu:
             relative_rect=pygame.Rect((0, 0), (800, SCREEN_HEIGHT)),
             manager=manager,
             container=self.main_panel,
+            object_id=ObjectID(object_id='#custom_scroll_container'),
         )
-        self.scroll_panel.vert_scroll_bar.hide()
+        self.scroll_panel.vert_scroll_bar.set_dimensions((110, 110))
         self.scroll_panel.horiz_scroll_bar.hide()
 
         # 创建垂直布局

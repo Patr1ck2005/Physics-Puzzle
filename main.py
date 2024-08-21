@@ -35,13 +35,13 @@ def load_main_menu():
 
 def load_chapter_menu():
     global current_manager, current_screen
-    current_manager = pygame_gui.UIManager(WINDOW_SIZE)
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE, 'assets/theme/theme.json')
     current_screen = ChapterMenu(current_manager)
 
 
 def load_level_selection_menu():
     global current_manager, current_screen
-    current_manager = pygame_gui.UIManager(WINDOW_SIZE)
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE, 'assets/theme/theme.json')
     current_screen = LevelMenu(current_manager)
 
 

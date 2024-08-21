@@ -160,7 +160,7 @@ class HBoxLayout(BoxLayout):
         available_width = total_width - 2 * self.padding - (len(self.elements) + len(self.layouts) - 1) * self.spacing
 
         x_offset = self.padding
-        y_offset = self.padding if not self.title_element else self.padding + 30
+        y_offset = self.padding if not self.title_element else self.padding + 20
 
         for element, ratio in zip(self.elements, self.ratios):
             widget_width = int((ratio / total_ratio) * available_width)

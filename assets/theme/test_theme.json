@@ -1,0 +1,18 @@
+{
+    "button": {
+        "images": {
+            "normal_image": {
+                "path": "g2.png"
+            },
+            "hovered_image": {
+                "path": "images/button_hovered.png"
+            },
+            "selected_image": {
+                "path": "images/button_selected.png"
+            },
+            "disabled_image": {
+                "path": "images/button_disabled.png"
+            }
+        }
+    }
+}

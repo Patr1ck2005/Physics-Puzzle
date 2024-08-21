@@ -1,4 +1,19 @@
-{
+{   "defaults": {
+        "font": {
+            "name": "Arial",
+            "size": 14,
+            "colour": "#FFFFFF"
+        },
+        "colours": {
+            "normal_bg": "#3D3D3D",
+            "hovered_bg": "#5A5A5A",
+            "active_bg": "#2A2A2A"
+        },
+        "misc": {
+            "border_width": 2,
+            "shape": "rectangle"
+        }
+    },
     "labels": {
         "font": {
             "name": "Times New Roman",
@@ -26,5 +41,21 @@
             "size": 32,
             "italic": 1
         }
+    },
+    "#custom_scroll_container": {
+        "vertical_scroll_bar": {
+            "misc": {
+                "border_width": "2",
+                "shape": "rounded_rectangle",
+                "shape_corner_radius": "5",
+                "width": "20"
+            },
+            "colours": {
+                "normal_bg": "#888888",
+                "hovered_bg": "#AAAAAA",
+                "active_bg": "#555555"
+            }
+        }
     }
 }
+
