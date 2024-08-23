@@ -1,8 +1,8 @@
-from gui.phy_obj_ui.entity_ui import EntityUI
+from gui.phy_obj_ui.entity_ui import EntityUIAddition
 
 
 class Tool:
-    target: EntityUI = None
+    target: EntityUIAddition = None
 
     def __init__(self):
         self.target = None

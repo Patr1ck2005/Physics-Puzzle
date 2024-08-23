@@ -1,6 +1,6 @@
 from pymunk import Vec2d
 
-from gui.phy_obj_ui.entity_ui import EntityUI
+from gui.phy_obj_ui.entity_ui import EntityUIAddition
 
 
 class AbstractForce:
@@ -18,7 +18,7 @@ class AbstractForce:
     def magnitude(self):
         return self.force.magnitude()
 
-    def set_target(self, target: EntityUI):
+    def set_target(self, target: EntityUIAddition):
         self.target = target
 
     def add_to_space(self, *args, **kwargs):

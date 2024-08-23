@@ -1,13 +1,13 @@
 from pymunk import Vec2d
 
-from gui.phy_obj_ui.entity_ui import EntityUI
+from gui.phy_obj_ui.entity_ui import EntityUIAddition
 
 import pymunk
 
 
 class Constrain:
-    target_a: None | EntityUI
-    target_b: None | EntityUI
+    target_a: None | EntityUIAddition
+    target_b: None | EntityUIAddition
 
     def __init__(self, name, target_a=None, target_b=None, anchor_a=Vec2d(0, 0), anchor_b=Vec2d(0, 0)):
         self.name = name

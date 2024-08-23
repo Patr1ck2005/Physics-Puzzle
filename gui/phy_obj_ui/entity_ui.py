@@ -4,11 +4,13 @@ import pygame
 
 from core.phy_object.entity import Entity, BoxEntity, CircleEntity, PolyEntity
 from gui.base_ui import BaseUI, BaseUICircle, BaseUIBox, BaseUIPoly
-from gui.phy_obj_ui.obj_ui import ObjUI
+from gui.phy_obj_ui.obj_ui import ObjUIAddition
 from scripts.utils import Poly
 
 
-class EntityUI(Entity, ObjUI):
+class EntityUIAddition(Entity, ObjUIAddition):
+    def __init__(self):
+        ObjUIAddition.__init__(self)
 
     @property
     def angle(self):
@@ -56,12 +58,13 @@ class EntityUI(Entity, ObjUI):
             rotated_image = pygame.transform.rotate(self.ico, -angle_degrees)
             rotated_rect = rotated_image.get_rect(center=self._center)
             screen.blit(rotated_image, rotated_rect.topleft)
-        ObjUI.draw_labels(self, screen)  # 绘制物理对象附带的图形
+        ObjUIAddition.draw_labels(self, screen)  # 绘制物理对象附带的图形
 
 
-class BoxEntityUI(EntityUI, BoxEntity, BaseUIBox):
+class BoxEntityUI(EntityUIAddition, BoxEntity, BaseUIBox):
     def __init__(self, name, phy_type, center, angle=0, size=(30, 30), ico_path=None, color=(150, 150, 150),
                  mass=1, elasticity=0, friction=0, charge=0):
+        EntityUIAddition.__init__(self)
         BoxEntity.__init__(self, name, phy_type, center, angle, size, color, mass, elasticity, friction, charge)
         BaseUIBox.__init__(self, name, center, angle, size, ico_path=ico_path, ico_color=color)
 
@@ -101,9 +104,10 @@ class BoxEntityUI(EntityUI, BoxEntity, BaseUIBox):
             self.body.position = pos[0]+self.size[0]/2, pos[1]+self.size[1]/2
 
 
-class CircleEntityUI(EntityUI, CircleEntity, BaseUICircle):
+class CircleEntityUI(EntityUIAddition, CircleEntity, BaseUICircle):
     def __init__(self, name, phy_type, center, angle=0, r=20, ico_path=None, color=(150, 150, 150),
                  mass=1, elasticity=0, friction=0, charge=0):
+        EntityUIAddition.__init__(self)
         CircleEntity.__init__(self, name, phy_type, center, angle, r, color, mass, elasticity, friction, charge)
         BaseUICircle.__init__(self, name, center, r, ico_path=ico_path, ico_color=color)
 
@@ -121,12 +125,13 @@ class CircleEntityUI(EntityUI, CircleEntity, BaseUICircle):
         pygame.draw.circle(surface, self.ico_color, (surface.get_width()//2, surface.get_height()//2), self.size)
 
 
-class PolyEntityUI(EntityUI, PolyEntity, BaseUIPoly):
+class PolyEntityUI(EntityUIAddition, PolyEntity, BaseUIPoly):
     def __init__(self, name, phy_type, world_points, angle, ico_path=None, color=(150, 150, 150),
                  mass=1, elasticity=0, friction=0, charge=0):
         poly = Poly(world_points)
         center = poly.center
         local_points = poly.local_points
+        EntityUIAddition.__init__(self)
         PolyEntity.__init__(self, name, phy_type, local_points, center, angle, color, mass, elasticity, friction, charge)
         BaseUIPoly.__init__(self, name, world_points, angle, ico_path=ico_path, ico_color=color)
 

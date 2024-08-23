@@ -1,13 +1,10 @@
-from typing import List, Any
-
 from gui.base_ui import BaseUI
 
 
-class ObjUI(BaseUI):
+class ObjUIAddition(BaseUI):
     labels: list[BaseUI]
 
-    def __init__(self, name, center, angle=0, size=None, ico_path=None, color=(150, 150, 150)):
-        BaseUI.__init__(self, name, center, angle, size, ico_path=ico_path, ico_color=color)
+    def __init__(self):
         self.labels = []
 
     def add_label(self, label: BaseUI):
