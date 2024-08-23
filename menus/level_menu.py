@@ -60,7 +60,8 @@ class LevelMenu:
                 relative_rect=pygame.Rect((0, 0), (200, 50)),
                 text=f'Level {i + 1}',
                 manager=manager,
-                container=level_panel
+                container=level_panel,
+                object_id=ObjectID('#level_btn')
             )
             level_layout.add_widget(level_button)
 
@@ -72,7 +73,8 @@ class LevelMenu:
                 relative_rect=pygame.Rect((0, 0), (600, 50)),  # 确保文本框占据足够的宽度
                 text=f'Level {i + 1} Description',
                 manager=manager,
-                container=level_panel
+                container=level_panel,
+                object_id=ObjectID('#level_text')
             )
             level_layout.add_widget(level_description, ratio=3)
 

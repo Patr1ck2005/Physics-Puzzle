@@ -47,13 +47,13 @@ class ChapterMenu:
                                                       text='',
                                                       manager=self.manager,
                                                       container=panel,
-                                                      object_id=ObjectID(f'#chapter_button_{title}'))
+                                                      object_id=ObjectID('#chapter_btn'))
 
         # 描述面板（初始透明）
         description_panel = pygame_gui.elements.UIPanel(relative_rect=Rect((10, 200), (200, 300)),
                                                         manager=self.manager,
                                                         container=panel,
-                                                        object_id="#description_panel")
+                                                        object_id=ObjectID("#description_panel"))
 
         description_panel.background_colour = Color(0, 0, 0, 30)  # 初始全透明背景
         description_panel.rebuild()

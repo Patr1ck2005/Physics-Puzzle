@@ -4,10 +4,11 @@ import pygame
 
 from core.phy_object.entity import Entity, BoxEntity, CircleEntity, PolyEntity
 from gui.base_ui import BaseUI, BaseUICircle, BaseUIBox, BaseUIPoly
+from gui.phy_obj_ui.obj_ui import ObjUI
 from scripts.utils import Poly
 
 
-class EntityUI(Entity, BaseUI):
+class EntityUI(Entity, ObjUI):
 
     @property
     def angle(self):
@@ -55,6 +56,7 @@ class EntityUI(Entity, BaseUI):
             rotated_image = pygame.transform.rotate(self.ico, -angle_degrees)
             rotated_rect = rotated_image.get_rect(center=self._center)
             screen.blit(rotated_image, rotated_rect.topleft)
+        ObjUI.draw_labels(self, screen)  # 绘制物理对象附带的图形
 
 
 class BoxEntityUI(EntityUI, BoxEntity, BaseUIBox):

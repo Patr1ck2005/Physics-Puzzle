@@ -8,7 +8,7 @@
       "angle": 45,
       "size": [50, 50],
       "ico_path": null,
-      "color": [255, 0, 0]
+      "color": [155, 0, 0]
     },
     {
       "type": "CircleEntityUI",
@@ -18,7 +18,7 @@
       "angle": 0,
       "r": 25,
       "ico_path": null,
-      "color": [0, 255, 0]
+      "color": [0, 55, 155]
     },
     {
       "type": "PolyEntityUI",
@@ -58,7 +58,7 @@
       "type": "PinJointUI",
       "name": "c_1",
       "position": [100, 100],
-      "target_a": "box1",
+      "target_a": "poly1",
       "target_b": "circle1",
       "anchor_a": [0, 0],
       "anchor_b": [0, 0]
@@ -68,7 +68,7 @@
       "name": "c_2",
       "position": [100, 100],
       "target_a": "box1",
-      "target_b": "circle1",
+      "target_b": "poly1",
       "anchor_a": [0, 0],
       "anchor_b": [0, 0]
     }

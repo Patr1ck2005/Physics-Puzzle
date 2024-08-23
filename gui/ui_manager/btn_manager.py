@@ -12,7 +12,7 @@ class ButtonManager:
         self.engine = engine
         self.hud = hud
 
-        self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))  # 外置UI管理器
+        self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), 'gui/theme.json')  # 外置UI管理器
         self.default_size = (50, 30)
         self.toggle_gravity_window = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(SCREEN_WIDTH - 180, SCREEN_HEIGHT - 50, *self.default_size),

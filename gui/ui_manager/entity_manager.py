@@ -15,7 +15,7 @@ class EntityManager:
     def __init__(self, space):
         self.entity_property_panel = None
         self.space = space
-        self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), 'gui/ui_panel/property_theme.json')
         self.running_objects = {}
         self.left_selection = None
         self.right_selection = None
@@ -28,6 +28,10 @@ class EntityManager:
             manager=self.manager,
             title="Selected Entity Properties"
         )
+
+        # 用户操作限制
+        self.click_to_move = False
+        self.drag_to_move = False
 
     def add_entity(self, obj):
         self.running_objects[obj.name] = obj  # 以字典的形式储存obj对象, 例如: {'ball_1': CircleObjectUI(),}
@@ -88,7 +92,10 @@ class EntityManager:
                 if self.left_selection.type == 'static':  # 静态物体不能移动
                     print('静态物体不能被移动')
                 else:
-                    self.left_selection.center = self.m_pos
+                    if self.click_to_move:
+                        self.left_selection.center = self.m_pos
+                    else:
+                        print('已禁用点击移动功能')
                 self.left_selection = None
                 return
 
@@ -108,28 +115,35 @@ class EntityManager:
                 self.right_selection = obj
                 return
 
-    def clear_selection(self):
-        self.left_selection = None
-
-    def on_press(self):
+    def on_press(self) -> EntityUI | None:
         for obj in self.running_objects.values():
             # 按住鼠标可以拖动物体
             if obj.on_press(self.m_pos):
                 if obj.type == 'static':  # 静态物体不能移动
                     print('静态物体不能被移动')
                     self.pressed_obj = None
+                    return None
                 else:
                     self.pressed_obj = obj
-        # 只要存在被按住的物体就移动
+                    return obj
+        # 只要存在被按住的物体
         if self.pressed_obj:
-            self.pressed_obj.center = self.m_pos
-            self.pressed_obj.body.velocity = Vec2d(*self.m_d_pos) * 40
+            # 如果启用了拖动移动功能，则更新被按下对象的中心位置和速度
+            if self.drag_to_move:
+                self.pressed_obj.center = self.m_pos
+                self.pressed_obj.body.velocity = Vec2d(*self.m_d_pos) * 40
+
+            else:
+                print('已禁用拖动移动功能')
 
     def on_release(self):
         # 仅在释放鼠标时松开物体
         self.pressed_obj = None
         for obj in self.running_objects.values():
             obj.on_release(self.m_pos)
+
+    def clear_selection(self):
+        self.left_selection = None
 
     def render_running_objs(self, screen):
         for obj in self.running_objects.values():

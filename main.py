@@ -29,19 +29,19 @@ game_scene = None
 # 初始化界面的工厂函数
 def load_main_menu():
     global current_manager, current_screen
-    current_manager = pygame_gui.UIManager(WINDOW_SIZE, 'assets/theme/theme.json')
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE, 'assets/theme/menu_theme.json')
     current_screen = MainMenu(current_manager)
 
 
 def load_chapter_menu():
     global current_manager, current_screen
-    current_manager = pygame_gui.UIManager(WINDOW_SIZE, 'assets/theme/theme.json')
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE, 'assets/theme/menu_theme.json')
     current_screen = ChapterMenu(current_manager)
 
 
 def load_level_selection_menu():
     global current_manager, current_screen
-    current_manager = pygame_gui.UIManager(WINDOW_SIZE, 'assets/theme/theme.json')
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE, 'assets/theme/menu_theme.json')
     current_screen = LevelMenu(current_manager)
 
 

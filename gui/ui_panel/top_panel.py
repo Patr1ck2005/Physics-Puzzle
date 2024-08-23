@@ -6,7 +6,7 @@ from settings import *
 from gui.layout.box_layout import HBoxLayout
 
 
-class BottomPanel:
+class TopPanel:
     def __init__(self, manager):
         """
         初始化底部面板。
@@ -14,7 +14,7 @@ class BottomPanel:
         :param manager: pygame_gui 的 UIManager，用于管理UI元素
         """
         self.manager = manager
-        self.container_rect = pygame.Rect((0, SCREEN_HEIGHT - 60), (SCREEN_WIDTH, 60))
+        self.container_rect = pygame.Rect((SCREEN_WIDTH-200, 0), (200, 60))
 
         # 创建主面板容器
         self.panel_container = pygame_gui.elements.UIPanel(
@@ -27,51 +27,51 @@ class BottomPanel:
                                       manager=self.manager)
 
         # 添加时间管理部分
-        self._create_time_management_section()
+        self._create_setting_section()
 
-        # 添加第二部分
-        self._create_second_part_section()
+        # # 添加第二部分
+        # self._create_second_part_section()
 
-        # 添加第三部分
-        self._create_third_part_section()
+        # # 添加第三部分
+        # self._create_third_part_section()
 
-    def _create_time_management_section(self):
+    def _create_setting_section(self):
         """
         创建时间管理部分的布局，包含三个按钮。
         """
-        self.time_management_container = pygame_gui.elements.UIPanel(
+        self.setting_container = pygame_gui.elements.UIPanel(
             relative_rect=pygame.Rect((0, 0), (0, 0)),
             manager=self.manager,
             container=self.panel_container
         )
-        self.time_management_layout = HBoxLayout(self.time_management_container, padding=5, spacing=10,
+        self.setting_layout = HBoxLayout(self.setting_container, padding=5, spacing=10,
                                                  mode='proportional',
                                                  manager=self.manager)
 
-        self.main_layout.add_layout(self.time_management_layout, 1)
+        self.main_layout.add_layout(self.setting_layout, 1)
 
         self.slow_btn = UIButton(
             pygame.Rect(0, 0, 0, 0),
             text='slow',
             manager=self.manager,
-            container=self.time_management_container)
+            container=self.setting_container)
 
         self.pause_btn = UIButton(
             relative_rect=pygame.Rect((0, 0), (100, 50)),
             text='pause',
             manager=self.manager,
-            container=self.time_management_container
+            container=self.setting_container
         )
-        self.speed_btn = pygame_gui.elements.UIButton(
+        self.speed_btn = UIButton(
             relative_rect=pygame.Rect((0, 0), (100, 50)),
             text='speed',
             manager=self.manager,
-            container=self.time_management_container
+            container=self.setting_container
         )
 
-        self.time_management_layout.add_widget(self.slow_btn)
-        self.time_management_layout.add_widget(self.pause_btn)
-        self.time_management_layout.add_widget(self.speed_btn)
+        self.setting_layout.add_widget(self.slow_btn)
+        self.setting_layout.add_widget(self.pause_btn)
+        self.setting_layout.add_widget(self.speed_btn)
 
     def _create_second_part_section(self):
         """
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     background = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
     background.fill(pygame.Color("#000000"))
 
-    bottom_panel = BottomPanel(manager)
+    bottom_panel = TopPanel(manager)
 
     clock = pygame.time.Clock()
     is_running = True

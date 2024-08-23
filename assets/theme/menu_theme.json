@@ -1,4 +1,4 @@
-{   "defaults": {
+{   "default": {
         "font": {
             "name": "Arial",
             "size": 14,
@@ -14,11 +14,38 @@
             "shape": "rectangle"
         }
     },
-    "labels": {
+    "button": {
+        "font": {
+            "name": "Times New Roman",
+            "size": 14,
+            "bold": 1,
+            "italic": 0
+        }
+    },
+    "label": {
         "font": {
             "name": "Times New Roman",
             "size": 30,
             "bold": 1
+        }
+    },
+    "text_box": {
+        "colours": {
+            "normal_bg": "#FFFFFF",
+            "normal_text": "#FFFFFF",
+            "selected_bg": "#FF0000",
+            "selected_text": "#FFFFFF"
+        },
+        "font": {
+            "name": "Arial",
+            "size": 18,
+            "bold": 0,
+            "italic": 0
+        },
+        "misc": {
+            "border_width": 1,
+            "shadow_width": 2,
+            "shape": "rectangle"
         }
     },
     "#custom_label": {
@@ -39,6 +66,20 @@
         "font": {
             "name": "Times New Roman",
             "size": 32,
+            "italic": 1
+        }
+    },
+    "#level_btn": {
+        "font": {
+            "name": "Times New Roman",
+            "size": 28,
+            "italic": 1
+        }
+    },
+    "#level_text": {
+        "font": {
+            "name": "Times New Roman",
+            "size": 20,
             "italic": 1
         }
     },
