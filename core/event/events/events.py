@@ -5,7 +5,7 @@ from pygame_gui.windows import UIMessageWindow
 from settings import *
 
 
-def show_message(manager, title, message, *args, **kwargs):
+def show_message(manager, title='message', message='contents', *args, **kwargs):
     """
     触发后在屏幕上弹出一个消息框。
 

@@ -22,12 +22,12 @@ class ButtonManager:
         self._create_gravity_setting()
         self.button_panel = BottomPanel(self.manager)
 
-    def update(self):
-        self.manager.update(pygame.time.get_ticks() / 1000.0)
+    def update(self, time_delta):
+        self.manager.update(time_delta)
 
     # 处理事件的方法，根据事件类型执行相应的操作
     def process_event(self, event):
-        self.manager.process_events(event)
+        self.button_panel.process_events(event)
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             btn = event.ui_element
             if btn == self.button_panel:
@@ -43,6 +43,9 @@ class ButtonManager:
             elif btn == self.button_panel.slow_btn:
                 self.engine.time_scale *= 0.5
                 self.hud.update_time_scale(self.engine.time_scale)
+
+            elif btn == self.button_panel.exit_btn:
+                return 'level'
 
             elif btn == self.button_panel.gravity_setting:
                 # 切换菜单窗口的显示状态

@@ -35,6 +35,9 @@ class BottomPanel:
         # 添加第三部分
         self._create_third_part_section()
 
+    def process_events(self, event):
+        self.manager.process_events(event)
+
     def _create_time_management_section(self):
         """
         创建时间管理部分的布局，包含三个按钮。
@@ -51,7 +54,7 @@ class BottomPanel:
         self.main_layout.add_layout(self.time_management_layout, 1)
 
         self.slow_btn = UIButton(
-            pygame.Rect(0, 0, 0, 0),
+            pygame.Rect(0, 0, 100, 50),
             text='slow',
             manager=self.manager,
             container=self.time_management_container)
@@ -68,10 +71,17 @@ class BottomPanel:
             manager=self.manager,
             container=self.time_management_container
         )
+        self.restart_btn = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((0, 0), (100, 50)),
+            text='O',
+            manager=self.manager,
+            container=self.time_management_container
+        )
 
-        self.time_management_layout.add_widget(self.slow_btn)
-        self.time_management_layout.add_widget(self.pause_btn)
-        self.time_management_layout.add_widget(self.speed_btn)
+        self.time_management_layout.add_widget(self.slow_btn, 2)
+        self.time_management_layout.add_widget(self.pause_btn, 2)
+        self.time_management_layout.add_widget(self.speed_btn, 2)
+        self.time_management_layout.add_widget(self.restart_btn, 1)
 
     def _create_second_part_section(self):
         """
@@ -136,16 +146,16 @@ class BottomPanel:
             manager=self.manager,
             container=self.third_part_container
         )
-        self.property_btn = pygame_gui.elements.UIButton(
+        self.exit_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((0, 0), (100, 50)),
-            text='hide property',
+            text='exit',
             manager=self.manager,
             container=self.third_part_container
         )
 
         self.third_part_layout.add_widget(self.gravity_setting)
         self.third_part_layout.add_widget(self.init_btn)
-        self.third_part_layout.add_widget(self.property_btn)
+        self.third_part_layout.add_widget(self.exit_btn)
 
 
 # 示例用法

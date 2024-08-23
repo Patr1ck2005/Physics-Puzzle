@@ -14,12 +14,12 @@ class ToolUI(Tool, BaseUI):
 
 
 class FrictionToolUI(ToolUI, FrictionTool, BaseUICircle):
-    def __init__(self, name, center, r=15, ico_path=None, color=(150, 150, 150), friction=0.5):
+    def __init__(self, name, center=None, r=15, ico_path=None, color=(150, 150, 150), friction=0.5, **kwargs):
         FrictionTool.__init__(self, friction)
         BaseUICircle.__init__(self, name, center, r, ico_path=ico_path, ico_color=color)
 
 
 class ElasticityToolUI(ToolUI, ElasticityTool, BaseUICircle):
-    def __init__(self, name, center, r=15, ico_path=None, color=(150, 150, 150), elasticity=0.5):
+    def __init__(self, name, center=None, r=15, ico_path=None, color=(150, 150, 150), elasticity=0.5, **kwargs):
         ElasticityTool.__init__(self, elasticity)
         BaseUICircle.__init__(self, name, center, r, ico_path=ico_path, ico_color=color)

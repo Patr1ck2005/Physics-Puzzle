@@ -58,7 +58,6 @@ class EntityUIAddition(Entity, ObjUIAddition):
             rotated_image = pygame.transform.rotate(self.ico, -angle_degrees)
             rotated_rect = rotated_image.get_rect(center=self._center)
             screen.blit(rotated_image, rotated_rect.topleft)
-        ObjUIAddition.draw_labels(self, screen)  # 绘制物理对象附带的图形
 
 
 class BoxEntityUI(EntityUIAddition, BoxEntity, BaseUIBox):

@@ -9,16 +9,10 @@
         "message": "Hello, this is a custom message!"
       }
     },
-    "show_message": {
-      "handler": "show_message",
-      "params": {
-        "message": "Hello, this is a custom message!"
-      }
-    },
     "message_running_out_of_time": {
       "handler": "show_console_message",
       "params": {
-        "message": "You are running out of time!"
+        "message": "You running out of time!"
       }
     }
 
@@ -37,8 +31,8 @@
         },
         {
           "type": "TimerTrigger",
-          "duration": 1,
-          "events": ["message_running_out_of_time", "show_message"],
+          "duration": 3,
+          "events": ["message_running_out_of_time"],
           "start_immediately": true,
           "once": true
         }

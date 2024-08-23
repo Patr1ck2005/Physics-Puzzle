@@ -39,7 +39,7 @@ class PlaceableInventory:
         self._align_items()
 
     def remove_item_by_name(self, name):
-        self.items.pop(name)
+        self.items.pop(name, None)
 
     def get_item_by_name(self, name):
         return self.items[name]

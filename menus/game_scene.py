@@ -1,13 +1,16 @@
 import pygame
 import json
 import os
+
+import pygame_gui
+
 from core.engine import Engine
 from core.events_loader import EventLoader
 from core.level_loader import LevelLoader
 from core.phy_obj_loader import ObjsLoader
 from core.setting_loader import EngineLoader
 from gui.ui_manager.ui_manager import UIManager
-from settings import MAX_FPS
+from settings import *
 
 
 class GameScene:
@@ -55,12 +58,12 @@ class GameScene:
         # 载入场景入UIManage
         scene = ObjsLoader(scene_file).load_objs()
         self.ui_manager.entity_manager.add_entities_dict(scene)
-        self.ui_manager.force_manager.add_force_dict(scene['forces'])
+        self.ui_manager.addition_manager.add_force_dict(scene['forces'])
 
         # 设置关卡事件
         all_objs = {**inventory['entities'], **scene['entities']}
         self.trigger_manager, self.event_manager\
-            = EventLoader(events_file, all_objs, self.space).load_events()  # 加载所有事件和触发器
+            = EventLoader(events_file, all_objs, self.space, self.ui_manager.event_ui_manager).load_events()  # 加载所有事件和触发器
 
     def handle_event(self, event):
         if event.type == pygame.QUIT:
@@ -71,6 +74,10 @@ class GameScene:
             elif event.key == pygame.K_p:  # 按下P键暂停
                 return 'pause'
             elif event.key == pygame.K_q:  # 按下P键暂停
+                return 'level_menu'
+        elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+            btn = event.ui_element
+            if btn.text == 'exit':
                 return 'level_menu'
         return None
 

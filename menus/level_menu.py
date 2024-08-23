@@ -10,6 +10,19 @@ class LevelMenu:
     def __init__(self, manager):
         self.manager = manager
 
+        self.chapter_1_level_descriptions = {
+            '1': 'Time! History and future',
+            '2': 'Where is it? O_o',
+            '3': 'They are moving!',
+            '4': 'Strange motion? O_o',
+            '5': '#Position, #Velocity and #Acceleration',
+            '6': 'Weight, or Mass? Here comes force',
+            '7': 'Strong Man!',
+            '8': '#Force and #Acceleration',
+            '9': 'Too many force',
+            '10': '*Magical Circle :O'
+        }
+
         # 创建主容器面板
         self.main_panel = pygame_gui.elements.UIPanel(
             relative_rect=pygame.Rect((SCREEN_WIDTH // 2 - 400, 0), (800, SCREEN_HEIGHT)),
@@ -71,7 +84,7 @@ class LevelMenu:
             # 添加描述文本框
             level_description = pygame_gui.elements.UILabel(
                 relative_rect=pygame.Rect((0, 0), (600, 50)),  # 确保文本框占据足够的宽度
-                text=f'Level {i + 1} Description',
+                text=self.chapter_1_level_descriptions[f'{i + 1}'],
                 manager=manager,
                 container=level_panel,
                 object_id=ObjectID('#level_text')

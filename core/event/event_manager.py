@@ -29,6 +29,7 @@ class EventManager:
                 callback(*args, **kwargs)
         else:
             logging.warning(f"Event '{event_name}' not found.")
+            raise Exception(f"Event '{event_name}' not found.")
 
     def clear_all_events(self):
         self.events.clear()

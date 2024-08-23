@@ -29,8 +29,7 @@ class ForceUI(AbstractForce, BaseUICircle):
     # 将UI的位置和受力物体位置关联在一起
     def sync_ui(self):
         # 将 UI 位置同步为 Pymunk 位置
-        self.ui_center = self.target.body.position
-        self.set_click_region()
+        self.ui_center = self.target.center
 
     def draw_draft(self, screen):
         if self.target:

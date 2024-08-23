@@ -115,8 +115,13 @@ class BaseUIRect(BaseUI):
     @ui_center.setter
     def ui_center(self, pos):
         self.position = pos[0] - self.size[0] / 2, pos[1] - self.size[1] / 2
+        self.set_click_region()
 
     def set_click_region(self):
+        # if self.position:
+        #     self.click_region = pygame.Rect(*self.position, *self.size)
+        # else:
+        #     print(f'{self.name} has no position to set click region')
         self.click_region = pygame.Rect(*self.position, *self.size)
 
     def draw_draft(self, screen):
@@ -145,6 +150,7 @@ class BaseUICircle(BaseUI):
     @ui_center.setter
     def ui_center(self, pos):
         self._center = pos
+        self.set_click_region()
 
     def set_click_region(self):
         self.click_region = Round(self._center, self.size)  # 这里的position是圆心, size是半径

@@ -37,8 +37,8 @@ class EntityManager:
         )
 
         # 用户操作限制
-        self.click_to_move = False
-        self.drag_to_move = False
+        self.click_to_move = True
+        self.drag_to_move = True
 
     def add_entity(self, obj):
         '''
@@ -69,38 +69,18 @@ class EntityManager:
         if time.time() - self.entity_property_panel.last_refresh_time > .01:
             self.entity_property_panel.update_graphs()
 
-    def refresh_panel_sliders(self):
+    def refresh_panel_property(self):
         '''
-        刷新属性面板中的属性滑动条。
+        刷新属性面板中的属性滑动条和对应的标签。
         '''
+        self.entity_property_panel.refresh_property_text()
         self.entity_property_panel.refresh_sliders()
 
     def process_event(self, event):
         '''
-        处理用户输入事件，包括按钮点击和滑动条移动事件。
+        让各UI面板自行处理用户输入事件。
         '''
-        self.manager.process_events(event)
-        if event.type == pygame_gui.UI_BUTTON_PRESSED:
-            btn = event.ui_element
-            if btn.text == 'show property':
-                self.entity_property_panel.show()
-                btn.set_text('hide property')
-            elif btn.text == 'hide property':
-                self.entity_property_panel.hide()
-                btn.set_text('show property')
-
-        if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
-            slider = event.ui_element
-            if self.entity_property_panel.entity.name != 'Blank':
-                if slider.object_ids[-1] == "#property_slider_Mass":
-                    self.entity_property_panel.entity.mass = slider.current_value
-                elif slider.object_ids[-1] == "#property_slider_Friction":
-                    self.entity_property_panel.entity.friction = slider.current_value
-                elif slider.object_ids[-1] == "#property_slider_Elasticity":
-                    self.entity_property_panel.entity.elasticity = slider.current_value
-            else:
-                print('请先选择物体')
-            return True
+        self.entity_property_panel.process_events(event)
 
     # 处理点击事件的函数
     # 遍历当前运行的对象，检查是否有对象被点击
@@ -148,25 +128,26 @@ class EntityManager:
         '''
         处理鼠标按下事件，允许拖动非静态物体。
         '''
-        for obj in self.running_objects.values():
-            # 按住鼠标可以拖动物体
-            if obj.on_press(self.m_pos):
-                if obj.type == 'static':  # 静态物体不能移动
-                    print('静态物体不能被移动')
-                    self.pressed_obj = None
-                    return None
-                else:
-                    self.pressed_obj = obj
-                    return obj
         # 只要存在被按住的物体
         if self.pressed_obj:
             # 如果启用了拖动移动功能，则更新被按下对象的中心位置和速度
             if self.drag_to_move:
                 self.pressed_obj.center = self.m_pos
                 self.pressed_obj.body.velocity = Vec2d(*self.m_d_pos) * 40
-
+                return
             else:
                 print('已禁用拖动移动功能')
+                return
+        for obj in self.running_objects.values():
+            # 按住鼠标可以拖动物体
+            if obj.on_press(self.m_pos):
+                if obj.type == 'static':  # 静态物体不能移动
+                    print('静态物体不能被移动')
+                    self.pressed_obj = None
+                    return
+                else:
+                    self.pressed_obj = obj
+                    return obj
 
     def on_release(self):
         '''

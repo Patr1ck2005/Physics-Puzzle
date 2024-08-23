@@ -4,14 +4,15 @@ from core.event.trigger_manager import TriggerManager, State
 from core.event.event_manager import EventManager
 from core.event.trigger.timer_trigger import TimerTrigger
 from core.event.trigger.query_trigger import PointQueryTrigger
-from core.event.events.events import show_console_message
+from core.event.events.events import *
 
 
 class EventLoader:
-    def __init__(self, events_json_file, entities, space):
+    def __init__(self, events_json_file, entities, space, ui_manager):
         self.events_json_file = events_json_file
         self.entities = entities  # 从 EntityLoader 加载的实体
         self.space = space  # Pymunk space
+        self.ui_manager = ui_manager
         self.event_manager = EventManager()
         self.trigger_manager = TriggerManager(self.event_manager)
 
@@ -26,14 +27,19 @@ class EventLoader:
         for event_name, event_handler in config['events'].items():
             handler_name = event_handler.get("handler")
             handler_params = event_handler.get("params", {})
-
+            # 这个地方涉及到lambda函数的闭包特性
             if handler_name == "show_console_message":
                 self.event_manager.register_event(
                     event_name,
-                    lambda *args, **kwargs: show_console_message(handler_params.get("message", "Default Message"))
+                    lambda params=handler_params, *args, **kwargs: show_console_message(**params)
                 )
-            elif handler_name == "transition_to_state_b":
-                self.event_manager.register_event(event_name, self.trans_to_state_b)
+            elif handler_name == "show_message":
+                self.event_manager.register_event(
+                    event_name,
+                    lambda params=handler_params, *args, **kwargs: show_message(
+                        manager=self.ui_manager,
+                        **params)
+                )
 
         # 加载状态和触发器
         for state_config in config['states']:

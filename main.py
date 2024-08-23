@@ -69,7 +69,9 @@ while is_running:
         if event.type == pygame.QUIT:
             is_running = False
 
-        # 处理当前屏幕的事件
+        # 处理当前屏幕内部运行的的事件
+        current_manager.process_events(event)
+        # 处理造成不同屏幕直接切换的事件
         screen_result = current_screen.handle_event(event)
 
         # 根据处理结果切换不同的屏幕
@@ -90,8 +92,6 @@ while is_running:
             load_main_menu()
         elif screen_result == "exit":
             is_running = False
-
-        current_manager.process_events(event)
 
     current_screen.update()  # 更新窗口, 涉及到物理引擎的更新
     current_manager.update(time_delta)  # 更新UIManager

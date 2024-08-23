@@ -5,6 +5,7 @@ from pymunk import Vec2d
 from gui.phy_obj_ui.entity_ui import BoxEntityUI, CircleEntityUI, BlankEntityUI, PolyEntityUI
 from gui.phy_obj_ui.force_ui import ForceUI  # 假设 ForceUI 类在这个模块中
 from gui.phy_obj_ui.constrain_ui import PinJointUI, SlideJointUI, SpringUI  # 假设这些 Joint 类在这个模块中
+from gui.phy_obj_ui.check_label_ui import CheckLabelUI
 from gui.phy_obj_ui.tool_ui import FrictionToolUI, ElasticityToolUI
 
 
@@ -15,7 +16,8 @@ class ObjsLoader:
             'entities': {},
             'forces': {},
             'constraints': {},
-            'tools': {}
+            'tools': {},
+            'labels': {}
         }
 
     def load_objs(self):
@@ -45,6 +47,12 @@ class ObjsLoader:
             obj = self.create_obj(obj_config)
             if obj:
                 self.objs['tools'][obj_config['name']] = obj
+
+        # 加载 labels
+        for obj_config in config.get('labels', []):
+            obj = self.create_obj(obj_config)
+            if obj:
+                self.objs['labels'][obj_config['name']] = obj
 
         return self.objs
 
@@ -106,19 +114,19 @@ class ObjsLoader:
         # 创建 tool 类型的对象
         elif obj_type == "FrictionToolUI":
             return FrictionToolUI(
-                name=obj_config['name'],
-                center=tuple(obj_config.get("center", (0, 0))),
-                ico_path=obj_config.get("ico_path", None),
-                friction=obj_config["friction"]
+                **obj_config
             )
         elif obj_type == "GravityToolUI":
             pass
         elif obj_type == "ElasticityToolUI":
             return ElasticityToolUI(
-                name=obj_config['name'],
-                center=tuple(obj_config.get("center", (0, 0))),
-                ico_path=obj_config.get("ico_path", None),
-                elasticity=obj_config["elasticity"]
+                **obj_config
+            )
+
+        # 创建 CheckLabel 类型的对象
+        elif obj_type == "CheckLabelUI":
+            return CheckLabelUI(
+                **obj_config
             )
 
         # 创建 Constraint 类型的对象

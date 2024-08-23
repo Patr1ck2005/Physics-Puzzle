@@ -141,19 +141,5 @@
       "name": "e_1",
       "elasticity": 1
     }
-  ],
-  "labels": [
-    {
-      "type": "CheckLabelUI",
-      "name": "label1",
-      "property_name": "center",
-      "expected_value": [200, 200]
-    },
-      {
-      "type": "CheckLabelUI",
-      "name": "label2",
-      "property_name": "velocity",
-      "expected_value": [0, 0]
-    }
   ]
 }

@@ -3,6 +3,7 @@ import time
 import pygame_gui
 from pygame import Rect
 import pygame
+from pygame_gui.elements import UIButton
 
 from gui.layout.box_layout import HBoxLayout, VBoxLayout
 from settings import *
@@ -33,17 +34,31 @@ class PropertyPanel:
         self.main_layout = VBoxLayout(self.panel_container, padding=10, spacing=5, mode='proportional', title=self.title,
                                       manager=self.manager)
 
+        # 添加侧边栏
+        self._add_side_btn()
+
     def show(self):
         """显示属性面板"""
         self.panel_container.show()
+        self.fold_btn.set_text('>')
+        self.fold_btn.set_position((self.container_rect.x-15, self.container_rect.h//2))
 
     def hide(self):
         """隐藏属性面板"""
         self.panel_container.hide()
+        self.fold_btn.set_text('<')
+        self.fold_btn.set_position((SCREEN_WIDTH-15, self.container_rect.h//2))
+
+    def _add_side_btn(self):
+        self.fold_btn = UIButton(
+            relative_rect=Rect(self.container_rect.x-15, self.container_rect.h//2, 20, 50),
+            text='>',
+            manager=self.manager
+        )
 
 
 class EntityPropertyPanel(PropertyPanel):
-    def __init__(self, manager, entity=None, title=None, container_rect=Rect(SCREEN_WIDTH-400, 0, 400, SCREEN_HEIGHT-100)):
+    def __init__(self, manager, entity=None, title=None, container_rect=Rect(SCREEN_WIDTH-400, 50, 400, SCREEN_HEIGHT-100)):
         """
         初始化实体属性面板。
 
@@ -61,21 +76,44 @@ class EntityPropertyPanel(PropertyPanel):
         self._create_layouts()
 
         # 添加物体属性部分
-        self.property_widgets = []
         self._add_entity_properties()
 
         # 添加物体位置信息部分
         self._add_position_properties()
 
+    def process_events(self, event):
+        '''
+        处理用户输入事件，包括按钮点击和滑动条移动事件。
+        '''
+        self.manager.process_events(event)
+        if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            btn = event.ui_element
+            if btn == self.fold_btn:
+                self.hide() if self.panel_container.visible else self.show()
+
+        if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
+            slider = event.ui_element
+            self.refresh_property_text()
+            if self.entity.name != 'Blank':
+                if slider.object_ids[-1] == "#property_slider_Mass":
+                    self.entity.mass = slider.current_value
+                elif slider.object_ids[-1] == "#property_slider_Friction":
+                    self.entity.friction = slider.current_value
+                elif slider.object_ids[-1] == "#property_slider_Elasticity":
+                    self.entity.elasticity = slider.current_value
+            else:
+                print('请先选择物体')
+            return True
+
     def update_entity(self, entity):
         """更新当前显示的实体"""
         self.entity = entity
-        self.refresh_sliders()   # 每次更新实体时，刷新面板内容
+        self.refresh_property()   # 每次更新实体时，刷新面板内容
 
     def remove_entity(self):
         """移除当前显示的实体"""
         self.entity = BlankEntityUI()
-        self.refresh_sliders()  # 每次移除实体时，刷新面板内容
+        self.refresh_property()  # 每次移除实体时，刷新面板内容
 
     def refresh(self):
         """更新面板内容以反映当前实体的状态"""
@@ -83,7 +121,7 @@ class EntityPropertyPanel(PropertyPanel):
         self.type_label.set_text(f'Type: {self.entity.type}')
         self.mass_label.set_text(f'Mass: {self.entity.mass:.2f} kg')
 
-        self.refresh_property()
+        self.refresh_property_text()
 
         self.graph_x_label.set_text(f'Position X: {self.entity.center[0]:.2f}')
         self.graph_y_label.set_text(f'Position Y: {self.entity.center[1]:.2f}')
@@ -93,6 +131,10 @@ class EntityPropertyPanel(PropertyPanel):
         self.update_graphs()
 
     def refresh_property(self):
+        self.refresh_property_text()
+        self.refresh_sliders()
+
+    def refresh_property_text(self):
         self.mass_value_label.set_text(f'{self.entity.mass:.2f}')
         self.fri_value_label.set_text(f'{self.entity.friction:.2f}')
         self.elast_value_label.set_text(f'{self.entity.elasticity:.2f}')
@@ -406,32 +448,4 @@ class EntityPropertyPanel(PropertyPanel):
     #     glDeleteTextures([texture])
     #
     #     return surface
-
-    # def _create_graph_surface(self, data):
-    #     """
-    #     创建显示曲线图的Surface。
-    #
-    #     :param data: 显示的历史数据数组
-    #     :return: pygame.Surface 包含绘制的曲线图
-    #     """
-    #     fig, ax = plt.subplots(figsize=(2, 1))
-    #     ax.plot(data, color='blue')
-    #     ax.set_xlim([0, len(data) - 1])
-    #     ax.set_ylim([min(data), max(data)])
-    #
-    #     # 移除轴线
-    #     ax.axis('off')
-    #
-    #     # 绘制到Surface
-    #     fig.canvas.draw()
-    #
-    #     # 使用 buffer_rgba 代替 tostring_rgb
-    #     graph_surface = pygame.Surface((200, 100))
-    #     graph_surface.blit(
-    #         pygame.image.frombuffer(fig.canvas.buffer_rgba(), fig.canvas.get_width_height(), "RGBA"),
-    #         (0, 0)
-    #     )
-    #
-    #     plt.close(fig)  # 关闭matplotlib绘图
-    #     return graph_surface
 
