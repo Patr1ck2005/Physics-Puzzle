@@ -52,7 +52,8 @@ class InventoryManager:
 
     def add_item_dict(self, item_dict: dict):
         '''
-        向库存中添加物品字典，并重新创建物品的背景用户界面。
+        通过物品字典向库存中添加多个物品，并重新创建物品的背景界面。
+        一般结合关卡配置文件使用
         '''
         self.placeable_inventory.add_item_dict(item_dict)
         self.tools_inventory.add_item_dict(item_dict)
@@ -73,7 +74,7 @@ class InventoryManager:
 
     def on_click(self):
         '''
-        处理鼠标点击事件，更新选中的物品或工具。
+        处理鼠标点击事件，返回鼠标选中的物品或工具。
         '''
         for item_ui in self.placeable_inventory.items.values():
             if item_ui.on_click(self.m_pos) and self.selected_item is None:
@@ -95,14 +96,14 @@ class InventoryManager:
 
     def on_press(self, m_pos):
         '''
-        处理鼠标按下事件，更新物品的状态。
+        处理鼠标按下事件。
         '''
         for item_ui in self.placeable_inventory.items.values():
             item_ui.on_press(m_pos)
 
     def on_release(self, m_pos):
         '''
-        处理鼠标释放事件，更新物品的状态。
+        处理鼠标释放事件。
         '''
         for item_ui in self.placeable_inventory.items.values():
             item_ui.on_release(m_pos)
