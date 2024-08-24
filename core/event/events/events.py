@@ -1,11 +1,17 @@
 # 定义消息类型的事件处理函数
 import pygame
 from pygame_gui.windows import UIMessageWindow
+from pygame_gui import UIManager
 
 from settings import *
 
 
-def show_message(manager, title='message', message='contents', *args, **kwargs):
+def show_console_message(message: str, *args, **kwargs):
+    print(message.center(80, '='))
+    return
+
+
+def show_message(manager: UIManager, title='message', message='contents', *args, **kwargs):
     """
     触发后在屏幕上弹出一个消息框。
 
@@ -29,6 +35,9 @@ def show_message(manager, title='message', message='contents', *args, **kwargs):
     return message_window
 
 
-def show_console_message(message: str, *args, **kwargs):
-    print(message.center(80, '='))
-    return
+from gui.ui_manager.ui_manager import UIManager
+
+
+def set_ui_manager_setting(ui_manager: UIManager, event_name, *args, **kwargs):
+    ui_manager.process_events(event_name)
+

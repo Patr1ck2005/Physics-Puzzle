@@ -134,10 +134,8 @@ class EntityManager:
             if self.drag_to_move:
                 self.pressed_obj.center = self.m_pos
                 self.pressed_obj.body.velocity = Vec2d(*self.m_d_pos) * 40
-                return
             else:
                 print('已禁用拖动移动功能')
-                return
         for obj in self.running_objects.values():
             # 按住鼠标可以拖动物体
             if obj.on_press(self.m_pos):

@@ -23,6 +23,7 @@ class BaseUI:
         self.set_click_region()
 
         self.is_selected = False
+        self.is_hovered = False
 
     @staticmethod
     def highlight(color):
@@ -64,9 +65,11 @@ class BaseUI:
     def is_mouse_over(self, m_pos):
         if self.click_region.collidepoint(*m_pos):
             self._color = self.highlight(self.ico_color)
+            self.is_hovered = True
             return True
         else:
             self._color = self.ico_color
+            self.is_hovered = False
 
     def on_click(self, m_pos):
         if self.click_region.collidepoint(*m_pos):

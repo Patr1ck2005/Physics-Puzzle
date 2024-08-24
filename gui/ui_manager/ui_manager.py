@@ -83,6 +83,16 @@ class UIManager:
         elif event.type == pygame.MOUSEBUTTONUP:
             self._on_release()
 
+    def process_triggerd_events(self, event_name):
+        if event_name == 'disable_click_to_move':
+            self.entity_manager.click_to_move = False
+        elif event_name == 'enable_click_to_move':
+            self.entity_manager.click_to_move = True
+        elif event_name == 'disable_drag_to_move':
+            self.entity_manager.drag_to_move = False
+        elif event_name == 'enable_drag_to_move':
+            self.entity_manager.drag_to_move = True
+
     # 检测哪个UI被点击. 理论上仅可能有一个UI被点击
     def _on_click_left(self):
 
@@ -171,16 +181,17 @@ class UIManager:
         pre_placed_addition = self.addition_manager.pre_placed_item
         if isinstance(pre_placed_addition, CheckLabelUI):
             self.entity_manager.clear_selection()  # 此时清除实体选择
+            self.addition_manager.pre_placed_item = None
             # 放置标签
             if selected_entity and selected_entity.type == 'dynamic':
                 pre_placed_addition.set_target(selected_entity)  # 绑定实体
-                self.addition_manager.pre_placed_item = None
                 return
             else:
                 print('please select a dynamic entity to Re-apply LABEL')
                 return
         elif isinstance(pre_placed_addition, ForceUI):
             self.entity_manager.clear_selection()  # 此时清除实体选择
+            self.addition_manager.pre_placed_item = None
             # 放置力
             if selected_entity and selected_entity.type == 'dynamic':
                 pre_placed_addition.set_target(selected_entity)  # 绑定实体

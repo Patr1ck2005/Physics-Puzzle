@@ -2,13 +2,13 @@ from core.event.trigger.trigger import Trigger
 
 
 class PositionTrigger(Trigger):
-    def __init__(self, entity, target_position, event_name, event_manager, tolerance=1.0):
+    def __init__(self, entity, target_position, event_names, event_manager, tolerance=1.0):
         """
         :param entity: 要监控的物体
         :param target_position: 目标位置 (x, y)
         :param tolerance: 位置的容差
         """
-        super().__init__(self._position_condition, event_name, event_manager)
+        super().__init__(self._position_condition, event_names, event_manager)
         self.entity = entity
         self.target_position = target_position
         self.tolerance = tolerance
@@ -20,12 +20,12 @@ class PositionTrigger(Trigger):
 
 
 class SpeedTrigger(Trigger):
-    def __init__(self, entity, min_speed, event_name, event_manager):
+    def __init__(self, entity, min_speed, event_names, event_manager):
         """
         :param entity: 要监控的物体
         :param min_speed: 触发事件的最小速度
         """
-        super().__init__(self._speed_condition, event_name, event_manager)
+        super().__init__(self._speed_condition, event_names, event_manager)
         self.entity = entity
         self.min_speed = min_speed
 
@@ -34,12 +34,12 @@ class SpeedTrigger(Trigger):
 
 
 class AngularVelocityTrigger(Trigger):
-    def __init__(self, entity, min_angular_velocity, event_name, event_manager):
+    def __init__(self, entity, min_angular_velocity, event_names, event_manager):
         """
         :param entity: 要监控的物体
         :param min_angular_velocity: 触发事件的最小角速度
         """
-        super().__init__(self._angular_velocity_condition, event_name, event_manager)
+        super().__init__(self._angular_velocity_condition, event_names, event_manager)
         self.entity = entity
         self.min_angular_velocity = min_angular_velocity
 
@@ -48,13 +48,13 @@ class AngularVelocityTrigger(Trigger):
 
 
 class TrajectoryTrigger(Trigger):
-    def __init__(self, entity, expected_trajectory, event_name, event_manager, tolerance=1.0):
+    def __init__(self, entity, expected_trajectory, event_names, event_manager, tolerance=1.0):
         """
         :param entity: 要监控的物体
         :param expected_trajectory: 预期的轨迹，列表形式 [(x1, y1), (x2, y2), ...]
         :param tolerance: 位置的容差
         """
-        super().__init__(self._trajectory_condition, event_name, event_manager)
+        super().__init__(self._trajectory_condition, event_names, event_manager)
         self.entity = entity
         self.expected_trajectory = expected_trajectory
         self.tolerance = tolerance
@@ -71,12 +71,12 @@ class TrajectoryTrigger(Trigger):
 
 
 class ContactTrigger(Trigger):
-    def __init__(self, entity, other_entity, event_name, event_manager):
+    def __init__(self, entity, other_entity, event_names, event_manager):
         """
         :param entity: 物体 A
         :param other_entity: 物体 B
         """
-        super().__init__(self._contact_condition, event_name, event_manager)
+        super().__init__(self._contact_condition, event_names, event_manager)
         self.entity = entity
         self.other_entity = other_entity
 
@@ -89,17 +89,16 @@ class ContactTrigger(Trigger):
 
 
 class CollisionTrigger(Trigger):
-    def __init__(self, entity, other_entity, event_name, event_manager, space):
+    def __init__(self, entity, other_entity, event_names, event_manager, space):
         """
         初始化碰撞触发器。
 
         :param entity: 物体 A
         :param other_entity: 物体 B
-        :param event_name: 触发的事件名称
         :param event_manager: 用于触发事件的事件管理器实例
         :param space: Pymunk 空间
         """
-        super().__init__(self._collision_condition, event_name, event_manager)
+        super().__init__(self._collision_condition, event_names, event_manager)
         self.entity = entity
         self.other_entity = other_entity
 
@@ -114,5 +113,5 @@ class CollisionTrigger(Trigger):
 
     def _begin_collision(self, arbiter, space, data):
         # 在碰撞开始时触发事件
-        self.event_manager.trigger_event(self.event_name)
+        print("Collision detected!")
         return True

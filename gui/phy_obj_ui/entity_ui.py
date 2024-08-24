@@ -58,6 +58,8 @@ class EntityUIAddition(Entity, ObjUIAddition):
             rotated_image = pygame.transform.rotate(self.ico, -angle_degrees)
             rotated_rect = rotated_image.get_rect(center=self._center)
             screen.blit(rotated_image, rotated_rect.topleft)
+        if self.is_hovered:
+            pygame.draw.circle(screen, (200, 200, 200), self.center, 5)
 
 
 class BoxEntityUI(EntityUIAddition, BoxEntity, BaseUIBox):
