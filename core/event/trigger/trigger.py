@@ -34,6 +34,19 @@ class Trigger:
         pass
 
 
+class QueryTrigger(Trigger):
+    """
+    所有查询对象属性触发器的基类, 支持对多个对象的查询, 查询机制需要重写_query_condition函数
+    """
+    def __init__(self, targets, event_names, event_manager, once=False, debounce_time=0):
+        super().__init__(self._query_condition, event_names, event_manager, once, debounce_time)
+
+        self.targets = targets
+
+    def _query_condition(self):
+        pass
+
+
 class ComplexCondition:
     # # 使用方式
     # complex_condition = ComplexCondition([condition1, condition2])

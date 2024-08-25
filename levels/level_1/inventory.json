@@ -147,7 +147,7 @@
       "type": "CheckLabelUI",
       "name": "label1",
       "property_name": "center",
-      "expected_value": [200, 200]
+      "expected_value": [400, 400]
     },
       {
       "type": "CheckLabelUI",

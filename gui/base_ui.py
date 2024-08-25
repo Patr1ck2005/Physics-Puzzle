@@ -130,7 +130,7 @@ class BaseUIRect(BaseUI):
     def draw_draft(self, screen):
         pygame.draw.rect(screen, self._color, (*self.position, *self.size))
         text = pygame.font.SysFont(None, 24).render(self.text, True, (255, 255, 255))
-        screen.blit(text, (self.position[0] + 10, self.position[1] + 5))
+        screen.blit(text, (self.position[0], self.position[1]))
 
     def draw_mark(self, screen):
         if self.is_selected:

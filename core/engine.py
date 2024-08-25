@@ -1,5 +1,6 @@
 import math
 
+import pygame
 import pymunk
 import pymunk.pygame_util
 
@@ -123,6 +124,13 @@ class Engine:
 
     def render_world(self, screen):
         self.space.debug_draw(pymunk.pygame_util.DrawOptions(screen))
+        # 绘制垂直线
+        for x in range(0, SCREEN_WIDTH, 100):
+            pygame.draw.line(screen, GREY, (x, 0), (x, SCREEN_HEIGHT), 1)
+
+        # 绘制水平线
+        for y in range(0, SCREEN_HEIGHT, 100):
+            pygame.draw.line(screen, GREY, (0, y), (SCREEN_WIDTH, y), 1)
 
     def debug_add(self, selected_item, m_pos):
         # 创建一个球体

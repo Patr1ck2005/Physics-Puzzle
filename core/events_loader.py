@@ -1,5 +1,7 @@
 import json
 import pymunk
+
+from core.event.trigger.label_trigger import LabelTrigger
 from core.event.trigger_manager import TriggerManager, State
 from core.event.event_manager import EventManager
 from core.event.trigger.timer_trigger import TimerTrigger
@@ -8,9 +10,10 @@ from core.event.events.events import *
 
 
 class EventLoader:
-    def __init__(self, events_json_file, entities, space, ui_manager):
+    def __init__(self, events_json_file, all_objs, space, ui_manager):
         self.events_json_file = events_json_file
-        self.entities = entities  # 从 EntityLoader 加载的实体
+        self.entities = all_objs['entities']  # 从 ObjLoader 加载的实体
+        self.labels = all_objs['labels']  # 从 ObjLoader 加载的实体
         self.space = space  # Pymunk space
         self.ui_manager = ui_manager
         self.event_manager = EventManager()
@@ -66,6 +69,14 @@ class EventLoader:
                 event_manager=self.event_manager,
                 start_immediately=trigger_config.get("start_immediately", True),
                 once=trigger_config.get("once", True)
+            )
+        elif trigger_type == "LabelTrigger":
+            label_names = trigger_config['label_names']
+            labels = [self.labels.get(label_name) for label_name in label_names]
+            return LabelTrigger(
+                labels=labels,
+                event_names=trigger_config['events'],
+                event_manager=self.event_manager,
             )
         elif trigger_type == "PointQueryTrigger":
             entity_name = trigger_config['entity_name']

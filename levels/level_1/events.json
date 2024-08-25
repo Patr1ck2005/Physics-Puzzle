@@ -12,13 +12,19 @@
     "show_message": {
       "handler": "show_message",
       "params": {
-        "message": "Hello, this is a custom message!"
+        "message": "Hello!\nClick and Place the label on object which match the value"
       }
     },
     "message_running_out_of_time": {
       "handler": "show_console_message",
       "params": {
         "message": "You are running out of time!"
+      }
+    },
+    "message_all_label_is_right": {
+      "handler": "show_message",
+      "params": {
+        "message": "All labels is right"
       }
     }
 
@@ -40,6 +46,12 @@
           "duration": 1,
           "events": ["message_running_out_of_time", "show_message"],
           "start_immediately": true,
+          "once": true
+        },
+        {
+          "type": "LabelTrigger",
+          "label_names": ["label1", "label2"],
+          "events": ["message_all_label_is_right"],
           "once": true
         }
       ]

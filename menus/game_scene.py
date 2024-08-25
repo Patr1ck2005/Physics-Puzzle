@@ -61,7 +61,8 @@ class GameScene:
         self.ui_manager.addition_manager.add_force_dict(scene['forces'])
 
         # 设置关卡事件
-        all_objs = {**inventory['entities'], **scene['entities']}
+        all_objs = {'entities': {**inventory['entities'], **scene['entities']},
+                    'labels': {**inventory['labels'], **scene['labels']}}
         self.trigger_manager, self.event_manager\
             = EventLoader(events_file, all_objs, self.space, self.ui_manager.event_ui_manager).load_events()  # 加载所有事件和触发器
 
