@@ -32,21 +32,21 @@ class EventLoader:
         for event_name, event_handler in config['events'].items():
             handler_name = event_handler.get("handler")
             handler_params = event_handler.get("params", {})
-            # 这个地方涉及到lambda函数的闭包特性
+            # 定义自定义状态转换逻辑，并在事件触发时执行。
             if handler_name == "state_transition":
                 self.event_manager.register_event(
                     event_name,
                     lambda params=handler_params, *args, **kwargs: self.state_transition(**params)
                 )
-            elif handler_name == "show_console_message":
-                self.event_manager.register_event(
-                    event_name,
-                    lambda params=handler_params, *args, **kwargs: show_console_message(**params)
-                )
             elif handler_name == "show_message":
                 self.event_manager.register_event(
                     event_name,
                     lambda params=handler_params, *args, **kwargs: show_message(manager=self.ui_manager, **params)
+                )
+            elif handler_name == "show_console_message":
+                self.event_manager.register_event(
+                    event_name,
+                    lambda params=handler_params, *args, **kwargs: show_console_message(**params)
                 )
         # 加载触发器
         for trigger_name, trigger_config in config['triggers'].items():

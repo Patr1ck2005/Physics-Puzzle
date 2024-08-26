@@ -13,6 +13,12 @@
         "message": "All labels is right"
       }
     },
+    "state_transition_to_A": {
+      "handler": "state_transition",
+      "params" : {
+        "state_name": "StateA"
+      }
+    },
     "state_transition_to_B": {
       "handler": "state_transition",
       "params" : {
