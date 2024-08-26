@@ -1,24 +1,10 @@
 {
   "events": {
-    "state_transition_to_b": {
-      "handler": "transition_to_state_b"
-    },
-    "show_message_event": {
-      "handler": "show_console_message",
-      "params": {
-        "message": "Hello, this is a custom message!"
-      }
-    },
-    "show_message": {
+    "greeting_message": {
       "handler": "show_message",
       "params": {
-        "message": "Hello!\nClick and Place the label on object which match the value"
-      }
-    },
-    "message_running_out_of_time": {
-      "handler": "show_console_message",
-      "params": {
-        "message": "You are running out of time!"
+        "message": "Hello!\nClick and Place the label on object which match the value",
+        "size": [300, 500]
       }
     },
     "message_all_label_is_right": {
@@ -26,45 +12,70 @@
       "params": {
         "message": "All labels is right"
       }
+    },
+    "state_transition_to_B": {
+      "handler": "state_transition",
+      "params" : {
+        "state_name": "StateB"
+      }
+    },
+    "message_running_out_of_time": {
+      "handler": "show_message",
+      "params": {
+        "message": "You are running out of time!"
+      }
     }
-
+  },
+  "triggers": {
+    "point_query_trigger": {
+      "type": "PointQueryTrigger",
+      "entity_name": "ball_2",
+      "params": {
+        "target_point": [300, 300],
+        "event_names": ["show_message_event"],
+        "min_duration": 1
+      }
+    },
+    "label_trigger": {
+        "type": "LabelTrigger",
+        "label_names": ["label1", "label2"],
+        "params": {
+          "event_names": ["message_all_label_is_right", "state_transition_to_B"],
+          "once": true
+        }
+    },
+    "greeting_timer_trigger": {
+      "type": "TimerTrigger",
+      "params": {
+        "duration": 0,
+        "event_names": ["greeting_message"],
+        "start_immediately": true,
+        "once": true
+      }
+    },
+    "bg_timer_trigger": {
+      "type": "TimerTrigger",
+      "params": {
+        "duration": 10,
+        "event_names": ["message_running_out_of_time"],
+        "start_immediately": true,
+        "once": true
+      }
+    }
   },
   "states": [
     {
       "name": "StateA",
-      "triggers": [
-        {
-          "type": "PointQueryTrigger",
-          "entity_name": "ball_2",
-          "target_point": [300, 300],
-          "events": ["show_message_event"],
-          "space": "pymunk_space",
-          "min_duration": 1
-        },
-        {
-          "type": "TimerTrigger",
-          "duration": 1,
-          "events": ["message_running_out_of_time", "show_message"],
-          "start_immediately": true,
-          "once": true
-        },
-        {
-          "type": "LabelTrigger",
-          "label_names": ["label1", "label2"],
-          "events": ["message_all_label_is_right"],
-          "once": true
-        }
+      "trigger_names": [
+        "label_trigger",
+        "greeting_timer_trigger",
+        "bg_timer_trigger"
       ]
     },
     {
       "name": "StateB",
-      "triggers": [
-        {
-          "type": "TimerTrigger",
-          "duration": 2,
-          "events": ["show_message_event"],
-          "start_immediately": true
-        }
+      "trigger_names": [
+        "bg_timer_trigger"
       ]
     }
   ]

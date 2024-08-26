@@ -12,15 +12,17 @@ from core.event.events.events import *
 class EventLoader:
     def __init__(self, events_json_file, all_objs, space, ui_manager):
         self.events_json_file = events_json_file
-        self.entities = all_objs['entities']  # 从 ObjLoader 加载的实体
-        self.labels = all_objs['labels']  # 从 ObjLoader 加载的实体
         self.space = space  # Pymunk space
         self.ui_manager = ui_manager
         self.event_manager = EventManager()
         self.trigger_manager = TriggerManager(self.event_manager)
+        self.triggers = {}
 
-    def trans_to_state_b(self, *args, **kwargs):
-        self.trigger_manager.transition_to_state("StateB")
+        self.entities = all_objs['entities']  # 从 ObjLoader 加载的实体
+        self.labels = all_objs['labels']  # 从 ObjLoader 加载的实体
+
+    def state_transition(self, state_name, *args, **kwargs):
+        self.trigger_manager.transition_to_state(state_name)
 
     def load_events(self):
         with open(self.events_json_file, 'r') as f:
@@ -31,7 +33,12 @@ class EventLoader:
             handler_name = event_handler.get("handler")
             handler_params = event_handler.get("params", {})
             # 这个地方涉及到lambda函数的闭包特性
-            if handler_name == "show_console_message":
+            if handler_name == "state_transition":
+                self.event_manager.register_event(
+                    event_name,
+                    lambda params=handler_params, *args, **kwargs: self.state_transition(**params)
+                )
+            elif handler_name == "show_console_message":
                 self.event_manager.register_event(
                     event_name,
                     lambda params=handler_params, *args, **kwargs: show_console_message(**params)
@@ -39,16 +46,17 @@ class EventLoader:
             elif handler_name == "show_message":
                 self.event_manager.register_event(
                     event_name,
-                    lambda params=handler_params, *args, **kwargs: show_message(
-                        manager=self.ui_manager,
-                        **params)
+                    lambda params=handler_params, *args, **kwargs: show_message(manager=self.ui_manager, **params)
                 )
+        # 加载触发器
+        for trigger_name, trigger_config in config['triggers'].items():
+            self.triggers[trigger_name] = self.create_trigger(trigger_config)
 
         # 加载状态和触发器
         for state_config in config['states']:
             state = State(state_config['name'])
-            for trigger_config in state_config['triggers']:
-                trigger = self.create_trigger(trigger_config)
+            for trigger_name in state_config['trigger_names']:
+                trigger = self.triggers[trigger_name]
                 if trigger:
                     state.add_trigger(trigger)
             self.trigger_manager.add_state(state)
@@ -61,22 +69,20 @@ class EventLoader:
 
     def create_trigger(self, trigger_config):
         trigger_type = trigger_config.get("type", "Generic")
+        trigger_params = trigger_config.get("params", {})
 
         if trigger_type == "TimerTrigger":
             return TimerTrigger(
-                duration=trigger_config['duration'],
-                event_names=trigger_config['events'],
                 event_manager=self.event_manager,
-                start_immediately=trigger_config.get("start_immediately", True),
-                once=trigger_config.get("once", True)
+                **trigger_params
             )
         elif trigger_type == "LabelTrigger":
             label_names = trigger_config['label_names']
             labels = [self.labels.get(label_name) for label_name in label_names]
             return LabelTrigger(
                 labels=labels,
-                event_names=trigger_config['events'],
                 event_manager=self.event_manager,
+                **trigger_params
             )
         elif trigger_type == "PointQueryTrigger":
             entity_name = trigger_config['entity_name']
@@ -84,10 +90,8 @@ class EventLoader:
             if entity:
                 return PointQueryTrigger(
                     entity=entity,
-                    target_point=tuple(trigger_config['target_point']),
-                    event_names=trigger_config['events'],
                     event_manager=self.event_manager,
                     space=self.space,
-                    min_duration=trigger_config.get("min_duration", 0)
+                    **trigger_params
                 )
         return None

@@ -18,7 +18,7 @@ class Trigger:
 
     def check_and_trigger(self):
         current_time = time.time()
-        if self.condition() and (current_time - self.last_trigger_time >= self.debounce_time):
+        if cond_rsl := self.condition() and (current_time - self.last_trigger_time >= self.debounce_time):
             if not self.triggered or not self.once:
                 for event_name in self.event_names:
                     # 例如将条件结果作为参数传递
@@ -38,8 +38,8 @@ class QueryTrigger(Trigger):
     """
     所有查询对象属性触发器的基类, 支持对多个对象的查询, 查询机制需要重写_query_condition函数
     """
-    def __init__(self, targets, event_names, event_manager, once=False, debounce_time=0):
-        super().__init__(self._query_condition, event_names, event_manager, once, debounce_time)
+    def __init__(self, targets, *args, **kwargs):
+        super().__init__(self._query_condition, *args, **kwargs)
 
         self.targets = targets
 

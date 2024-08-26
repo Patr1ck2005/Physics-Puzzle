@@ -31,18 +31,6 @@
     }
   ],
   "forces": [
-    {
-      "type": "ForceUI",
-      "name": "f_1",
-      "target": "box1",
-      "force": [-100, 0]
-    },
-    {
-      "type": "ForceUI",
-      "name": "f_2",
-      "target": "box1",
-      "force": [100, 0]
-    }
   ],
   "constraints": [
     {

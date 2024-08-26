@@ -11,13 +11,15 @@ def show_console_message(message: str, *args, **kwargs):
     return
 
 
-def show_message(manager: UIManager, title='message', message='contents', *args, **kwargs):
+def show_message(manager: UIManager, title='message', message='contents', size=(300, 200), *args, **kwargs):
     """
     触发后在屏幕上弹出一个消息框。
 
     :param manager: pygame_gui 的 UIManager 实例
     :param title: 消息框的标题
     :param message: 消息框的内容
+    :param size: ���息��的����
+    :return: UIMessageWindow 实例
     """
     if pygame.display.get_surface() is not None:
         # 获取屏幕尺寸
@@ -27,7 +29,7 @@ def show_message(manager: UIManager, title='message', message='contents', *args,
 
     # 创建消息窗口
     message_window = UIMessageWindow(
-        rect=pygame.Rect((window_width // 2 - 150, window_height // 2 - 100), (300, 200)),
+        rect=pygame.Rect((window_width//2 - size[0]//2, window_height//2 - size[1]//2), size),
         manager=manager,
         window_title=title,
         html_message=message
