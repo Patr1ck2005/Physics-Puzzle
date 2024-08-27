@@ -94,6 +94,14 @@ class LevelMenu:
             # 将水平布局添加到主垂直布局
             self.main_layout.add_layout(level_layout, ratio=1)
 
+        # 添加沙盒模式
+        self.sand_box_btn = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((0, 0), (200, 50)),
+            text='Sand Box',
+            manager=manager,
+            container=self.scroll_panel
+        )
+
         # 更新滚动面板的大小以适应内容
         self.scroll_panel.set_scrollable_area_dimensions(
             (800, self.main_layout.height)
@@ -101,6 +109,9 @@ class LevelMenu:
 
     def handle_event(self, event):
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            btn = event.ui_element
+            if btn == self.sand_box_btn:
+                return 'sand_box'
             for i in range(10):  # 这里的范围应与关卡数量一致
                 level_button = getattr(self, f'level_button_{i}', None)
                 if event.ui_element == level_button:

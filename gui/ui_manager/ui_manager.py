@@ -2,7 +2,9 @@ import time
 
 import pygame
 import pygame_gui
+from pymunk import Vec2d
 
+from core.phy_object.bg_wall import BGWall
 from core.phy_object.constrain import Constrain
 from core.phy_object.tool import Tool
 from gui.hud import HUD
@@ -14,7 +16,6 @@ from gui.ui_manager.entity_manager import EntityManager
 from gui.ui_manager.addition_manager import AdditionManager
 
 from core.phy_object.entity import Entity
-from core.phy_object.force import AbstractForce
 from settings import *
 
 
@@ -98,6 +99,8 @@ class UIManager:
 
         # 简单储存物品栏左键选择结果
         selected = self.inventory_manager.on_click()
+        if selected:
+            return  # 只要选择到物品栏就直接跳过判断其他UI逻辑了(物品栏优先级最高)
         # 获取物品栏放置结果
         pre_placed_item = self.inventory_manager.pre_placed_item
 
@@ -118,7 +121,13 @@ class UIManager:
             # 放置物品
             self.inventory_manager.remove_item_by_name(pre_placed_item.name)
             self.entity_manager.add_entity(pre_placed_item)
-            self._clear_all_selection()  # 此时清除选择
+            self._clear_all_selection()  # 此时清除所有选择
+            return
+        elif isinstance(pre_placed_item, BGWall):
+            # 放置背景墙
+            self.inventory_manager.remove_item_by_name(pre_placed_item.name)
+            self.entity_manager.add_entity(pre_placed_item)
+            self._clear_all_selection()  # 此时清除所有选择
             return
         elif isinstance(pre_placed_item, ForceUI):
             # 放置力
@@ -154,8 +163,11 @@ class UIManager:
         elif isinstance(pre_placed_item, Constrain):
             # 想要放置约束
             self.pre_placed_constrain = pre_placed_item   # 储存约束对象
+            if isinstance(selected_entity, BGWall):  # 如果约束在墙体上, 设置锚点坐标
+                self.pre_placed_constrain.set_anchor_a(Vec2d(*self.m_pos))
             if selected_entity:
                 self.pre_constraint_entity = selected_entity   # 储存约束作用的第一个实体
+                self.pre_placed_constrain.set_target_a(self.pre_constraint_entity)
                 self.entity_manager.clear_selection()   # 此时清除实体选择
                 self._clear_hud_selection()
                 return
@@ -164,8 +176,9 @@ class UIManager:
         # 已经选择了约束并选择了第一个目标实体
         elif self.pre_constraint_entity:
             if selected_entity:  # 选择了第二个物体
-                self.pre_placed_constrain.set_target_a(self.pre_constraint_entity)
                 self.pre_placed_constrain.set_target_b(selected_entity)
+                if isinstance(selected_entity, BGWall):  # 如果约束在墙体上.
+                    self.pre_placed_constrain.set_anchor_b(self.m_pos)
                 self.pre_placed_constrain.add_to_space(self.engine.space)
 
                 self.inventory_manager.remove_item_by_name(self.pre_placed_constrain.name)
@@ -206,7 +219,9 @@ class UIManager:
         self.inventory_manager.clear_selection()
         self.addition_manager.clear_selection()
         self.pre_constraint_entity = None
-        self.pre_placed_constrain = None
+        if self.pre_placed_constrain:
+            self.pre_placed_constrain.reset()
+            self.pre_placed_constrain = None
         self.hud.current_selection = None
 
     def _clear_hud_selection(self):
@@ -234,8 +249,6 @@ class UIManager:
         self.btn_manager.render(screen)
         self.event_ui_manager.draw_ui(screen)
         self.hud.render(screen)
-        if self.pre_constraint_entity:
-            self.pre_constraint_entity.draw_center2mouse(screen, self.m_pos)
 
     # 若鼠标长按则撤回点击事件
     def _call_back_click(self):

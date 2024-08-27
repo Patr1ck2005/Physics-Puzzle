@@ -1,5 +1,8 @@
+import pygame
+
 from core.phy_object.constrain import *
 from gui.base_ui import BaseUILine, BaseUICircle
+from settings import *
 
 
 class ConstrainUI(Constrain, BaseUICircle):
@@ -14,12 +17,22 @@ class ConstrainUI(Constrain, BaseUICircle):
     def sync_ui(self):
         # 将 UI 位置同步为 Pymunk 位置
         if self.target_a is not None and self.target_b is not None:
-            self.ui_center = (self.target_a.center, self.target_b.center)
+            pass
+            # self.ui_center = (self.target_a.center+self.target_b.center)//2
         self.set_click_region()
 
-    def draw(self, m_pos):
+    def draw(self, screen):
         self.sync_ui()
-        super().draw(m_pos)
+        if self.target_a and self.target_b:  # 此时已经被添加到世界中
+            pass
+        else:  # 此时仍在物品栏中
+            super().draw(screen)
+
+    def draw_draft(self, screen):
+        if self.target_a is None and self.target_b is None:  # ��时��在物品��中, ��制����线条
+            super().draw_draft(screen)
+        elif self.target_a and not self.target_b:
+            pygame.draw.line(screen, WHITE, self.target_a.center+self.anchor_a, pygame.mouse.get_pos(), 3)
 
 
 class PinJointUI(ConstrainUI, PinJoint, BaseUICircle):

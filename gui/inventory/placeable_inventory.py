@@ -35,7 +35,7 @@ class PlaceableInventory:
         self._align_items()
 
     def add_item_dict(self, item_dict: dict):
-        self.items = {**self.items, **item_dict['entities'], **item_dict['forces'], **item_dict['constraints']}
+        self.items = {**self.items, **item_dict['entities'], **item_dict['bg_walls'], **item_dict['forces'], **item_dict['constraints']}
         self._align_items()
 
     def remove_item_by_name(self, name):

@@ -62,6 +62,7 @@ class GameScene:
 
         # 设置关卡事件
         all_objs = {'entities': {**inventory['entities'], **scene['entities']},
+                    'bg_walls': {**inventory['bg_walls'], **scene['bg_walls']},
                     'labels': {**inventory['labels'], **scene['labels']}}
         self.trigger_manager, self.event_manager\
             = EventLoader(events_file, all_objs, self.space, self.ui_manager.event_ui_manager).load_events()  # 加载所有事件和触发器

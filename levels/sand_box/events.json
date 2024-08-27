@@ -3,7 +3,7 @@
     "greeting_message": {
       "handler": "show_message",
       "params": {
-        "message": "Hello!\nClick and Place the label on object which match the value",
+        "message": "Hello!\nThis is Sand Box.\nDo everything You like",
         "size": [300, 500]
       }
     },
@@ -44,7 +44,7 @@
     },
     "label_trigger": {
         "type": "LabelTrigger",
-        "label_names": ["label1", "label2", "label3", "label4"],
+        "label_names": ["label1", "label2"],
         "params": {
           "event_names": ["message_all_label_is_right", "state_transition_to_B"],
           "once": true
@@ -62,7 +62,7 @@
     "bg_timer_trigger": {
       "type": "TimerTrigger",
       "params": {
-        "duration": 10,
+        "duration": 100,
         "event_names": ["message_running_out_of_time"],
         "start_immediately": true,
         "once": true

@@ -4,7 +4,7 @@
       "type": "BoxEntityUI",
       "name": "box1",
       "phy_type": "dynamic",
-      "center": [400, 400],
+      "center": [600, 300],
       "angle": 45,
       "size": [50, 50],
       "ico_path": null,
@@ -14,18 +14,28 @@
       "type": "CircleEntityUI",
       "name": "circle1",
       "phy_type": "dynamic",
-      "center": [600, 500],
+      "center": [300, 600],
       "angle": 0,
       "r": 25,
       "ico_path": null,
       "color": [0, 55, 155]
     },
     {
+      "type": "BoxEntityUI",
+      "name": "box2",
+      "phy_type": "dynamic",
+      "center": [400, 400],
+      "angle": 30,
+      "size": [60, 50],
+      "ico_path": null,
+      "color": [155, 0, 0]
+    },
+    {
       "type": "PolyEntityUI",
       "name": "poly1",
       "phy_type": "dynamic",
-      "world_points": [[200, 200], [250, 200], [225, 300]],
-      "angle": 30,
+      "world_points": [[900, 600], [650, 700], [825, 800]],
+      "angle": 0,
       "ico_path": null,
       "color": [200, 200, 200]
     }
@@ -33,32 +43,5 @@
   "forces": [
   ],
   "constraints": [
-    {
-      "type": "SpringUI",
-      "name": "c_3",
-      "position": [100, 100],
-      "target_a": "box1",
-      "target_b": "circle1",
-      "anchor_a": [0, 0],
-      "anchor_b": [0, 0]
-    },
-    {
-      "type": "PinJointUI",
-      "name": "c_1",
-      "position": [100, 100],
-      "target_a": "poly1",
-      "target_b": "box1",
-      "anchor_a": [0, 0],
-      "anchor_b": [0, 0]
-    },
-    {
-      "type": "SlideJointUI",
-      "name": "c_2",
-      "position": [100, 100],
-      "target_a": "circle1",
-      "target_b": "poly1",
-      "anchor_a": [0, 0],
-      "anchor_b": [0, 0]
-    }
   ]
 }

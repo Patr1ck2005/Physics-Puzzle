@@ -58,8 +58,12 @@ class BaseUI:
     def draw_icon(self, screen):
         pass
 
-    # 显示调用
+    # 显示UI中心和鼠标的连线
     def draw_center2mouse(self, screen, m_pos):
+        pygame.draw.line(screen, (255, 255, 255), self.ui_center, m_pos, 3)
+
+    # 显示UI锚点与鼠标的连线
+    def draw_anchor2mouse(self, screen, m_pos):
         pygame.draw.line(screen, (255, 255, 255), self.ui_center, m_pos, 3)
 
     def is_mouse_over(self, m_pos):
@@ -134,7 +138,7 @@ class BaseUIRect(BaseUI):
 
     def draw_mark(self, screen):
         if self.is_selected:
-            pygame.draw.rect(screen, (255, 255, 255), Rect(*self.position, *self.size).scale_by(1.1))
+            pygame.draw.rect(screen, (255, 255, 255), Rect(*self.position, *self.size).scale_by(1.1), 3)
 
 
 class BaseUICircle(BaseUI):

@@ -8,6 +8,8 @@ import pymunk
 class Constrain:
     target_a: None | EntityUIAddition
     target_b: None | EntityUIAddition
+    anchor_a: Vec2d
+    anchor_b: Vec2d
 
     def __init__(self, name, target_a=None, target_b=None, anchor_a=Vec2d(0, 0), anchor_b=Vec2d(0, 0)):
         self.name = name
@@ -24,9 +26,19 @@ class Constrain:
     def set_target_b(self, target_b):
         self.target_b = target_b
 
+    def set_anchor_a(self, anchor_a):
+        self.anchor_a = anchor_a
+
+    def set_anchor_b(self, anchor_b):
+        self.anchor_b = anchor_b
+
     def add_to_space(self, space):
         pass
         space.add(self.constraint)
+
+    def reset(self):
+        self.target_a = None
+        self.target_b = None
 
 
 # 轻杠

@@ -108,44 +108,47 @@ class EntityPropertyPanel(PropertyPanel):
     def update_entity(self, entity):
         """更新当前显示的实体"""
         self.entity = entity
-        self.refresh_property()   # 每次更新实体时，刷新面板内容
+        self.refresh()   # 每次更新实体时，刷新面板内容
 
     def remove_entity(self):
         """移除当前显示的实体"""
         self.entity = BlankEntityUI()
-        self.refresh_property()  # 每次移除实体时，刷新面板内容
+        self.refresh()  # 每次移除实体时，刷新面板内容
 
     def refresh(self):
-        """更新面板内容以反映当前实体的状态"""
+        """更新所有面板内容"""
+        self.refresh_head()
+        self.refresh_property()
+        self.update_graphs()
+
+    def refresh_head(self):
+        """更新属性抬头, 例如名称, 类型等"""
         self.name_label.set_text(f'Name: {self.entity.name}')
         self.type_label.set_text(f'Type: {self.entity.type}')
         self.mass_label.set_text(f'Mass: {self.entity.mass:.2f} kg')
-
-        self.refresh_property_text()
-
-        self.graph_x_label.set_text(f'Position X: {self.entity.center[0]:.2f}')
-        self.graph_y_label.set_text(f'Position Y: {self.entity.center[1]:.2f}')
-        self.graph_angle_label.set_text(f'Angle: {self.entity.angle:.2f}')
-
-        # 如果有其他需要更新的内容，例如图表
-        self.update_graphs()
 
     def refresh_property(self):
         self.refresh_property_text()
         self.refresh_sliders()
 
     def refresh_property_text(self):
+        """更新滑块显示值"""
         self.mass_value_label.set_text(f'{self.entity.mass:.2f}')
         self.fri_value_label.set_text(f'{self.entity.friction:.2f}')
         self.elast_value_label.set_text(f'{self.entity.elasticity:.2f}')
 
     def refresh_sliders(self):
+        """更新滑块"""
         self.mass_slider.set_current_value(self.entity.mass)
         self.fri_slider.set_current_value(self.entity.friction)
         self.elast_slider.set_current_value(self.entity.elasticity)
 
     def update_graphs(self):
         """更新图表显示"""
+        self.graph_x_label.set_text(f'Position X: {self.entity.center[0]:.2f}')
+        self.graph_y_label.set_text(f'Position Y: {self.entity.center[1]:.2f}')
+        self.graph_angle_label.set_text(f'Angle: {self.entity.angle:.2f}')
+
         self.last_refresh_time = time.time()
         head_surface = pygame.Surface((200, 200), pygame.SRCALPHA)
         self.entity.draw_icon(head_surface)

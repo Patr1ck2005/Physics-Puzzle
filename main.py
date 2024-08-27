@@ -80,7 +80,7 @@ while is_running:
         elif (screen_result and screen_result.startswith("chapter")) or screen_result == "level_menu":
             game_scene = None  # 如果返回关卡，销毁当前游戏场景实例
             load_level_selection_menu()
-        elif screen_result and screen_result.startswith("level_"):
+        elif screen_result and (screen_result.startswith("level_") or screen_result == "sand_box"):
             load_game_scene()
             current_screen.load_level(screen_result)  # 加载选定的关卡
         elif screen_result == "pause":

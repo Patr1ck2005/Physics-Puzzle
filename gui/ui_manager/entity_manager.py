@@ -52,8 +52,10 @@ class EntityManager:
         批量添加实体对象到管理器中，并将其添加到空间中。
         用于初始化关卡.
         '''
-        new_obj = {**entities_dict["entities"], **entities_dict["constraints"]}
-        self.running_objects = {**self.running_objects, **entities_dict["entities"]}
+        new_obj = {**entities_dict["bg_walls"], **entities_dict["entities"], **entities_dict["constraints"],}
+        # 在这里粗略的保证背景墙渲染在底层
+        self.running_objects = {**entities_dict["bg_walls"],
+                                **self.running_objects, **entities_dict["entities"], **entities_dict["constraints"]}
         for obj in new_obj.values():
             obj.add_to_space(self.space)
 
@@ -90,7 +92,7 @@ class EntityManager:
         '''
         处理左键点击事件，更新被点击对象的中心位置或提示静态物体不能移动。
         '''
-        for obj in self.running_objects.values():
+        for obj in list(self.running_objects.values())[::-1]:
             if obj.on_click(self.m_pos) and self.left_selection is None:
                 self.left_selection = obj
                 return self.left_selection
@@ -109,7 +111,7 @@ class EntityManager:
         '''
         处理右键点击事件，更新选中对象并刷新属性面板。
         '''
-        for obj in self.running_objects.values():
+        for obj in list(self.running_objects.values())[::-1]:
             if obj.on_click(self.m_pos):
                 if self.right_selection != obj:
                     if self.right_selection:

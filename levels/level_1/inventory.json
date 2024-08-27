@@ -1,146 +1,11 @@
 {
   "entities": [
-    {
-      "type": "CircleEntityUI",
-      "name": "ball_1",
-      "phy_type": "static",
-      "center": [100, 100],
-      "angle": 0,
-      "r": 20,
-      "ico_path": "assets/images/g2.png",
-      "color": [200, 0, 200]
-    },
-    {
-      "type": "CircleEntityUI",
-      "name": "ball_11",
-      "phy_type": "static",
-      "center": [100, 100],
-      "angle": 0,
-      "r": 20,
-      "ico_path": "assets/images/g2.png",
-      "color": [200, 0, 200]
-    },
-    {
-      "type": "CircleEntityUI",
-      "name": "ball_2",
-      "phy_type": "dynamic",
-      "center": [100, 100],
-      "angle": 0,
-      "r": 20,
-      "ico_path": "assets/images/g2.png",
-      "color": [200, 0, 200]
-    },
-    {
-      "type": "CircleEntityUI",
-      "name": "ball_21",
-      "phy_type": "dynamic",
-      "center": [100, 100],
-      "angle": 0,
-      "r": 20,
-      "ico_path": "assets/images/天生输家.png",
-      "color": [200, 0, 200]
-    },
-    {
-      "type": "CircleEntityUI",
-      "name": "ball_22",
-      "phy_type": "dynamic",
-      "center": [100, 100],
-      "angle": 0,
-      "r": 20,
-      "ico_path": "assets/images/py.png",
-      "color": [200, 0, 200]
-    },
-    {
-      "type": "CircleEntityUI",
-      "name": "ball_3",
-      "phy_type": "kinematic",
-      "center": [100, 100],
-      "angle": 0,
-      "r": 20,
-      "ico_path": "assets/images/py.png",
-      "color": [200, 0, 200]
-    },
-    {
-      "type": "BoxEntityUI",
-      "name": "rect_1",
-      "phy_type": "static",
-      "center": [100, 100],
-      "angle": 0,
-      "size": [20, 40],
-      "ico_path": null,
-      "color": [200, 200, 200]
-    },
-    {
-      "type": "BoxEntityUI",
-      "name": "rect_2",
-      "phy_type": "dynamic",
-      "center": [100, 100],
-      "angle": 0,
-      "size": [30, 20],
-      "ico_path": "assets/images/天生输家.png",
-      "color": [200, 200, 200]
-    },
-    {
-      "type": "BoxEntityUI",
-      "name": "rect_3",
-      "phy_type": "kinematic",
-      "center": [100, 100],
-      "angle": 0,
-      "size": [30, 20],
-      "ico_path": null,
-      "color": [200, 200, 200]
-    }
   ],
   "forces": [
-    {
-      "type": "ForceUI",
-      "name": "f_1",
-      "force": [0, 0]
-    },
-    {
-      "type": "ForceUI",
-      "name": "f_2",
-      "force": [100, 0]
-    },
-    {
-      "type": "ForceUI",
-      "name": "f_3",
-      "force": [0, 100]
-    },
-    {
-      "type": "ForceUI",
-      "name": "f_4",
-      "force": [100, 100]
-    }
   ],
   "constraints": [
-    {
-      "type": "PinJointUI",
-      "name": "c_1",
-      "position": [100, 100]
-    },
-    {
-      "type": "SlideJointUI",
-      "name": "c_2",
-      "position": [100, 100]
-    },
-    {
-      "type": "SpringUI",
-      "name": "c_3",
-      "position": [100, 100]
-    }
   ],
   "tools": [
-    {
-      "type": "FrictionToolUI",
-      "name": "f_1",
-      "friction": 0
-    },
-    {
-      "type": "ElasticityToolUI",
-      "name": "e_1",
-      "elasticity": 1
-    }
   ],
   "labels": [
     {
@@ -152,8 +17,20 @@
     {
       "type": "CheckLabelUI",
       "name": "label2",
-      "property_name": "velocity",
-      "expected_value": [0, 0]
+      "property_name": "center",
+      "expected_value": [600, 300]
+    },
+    {
+      "type": "CheckLabelUI",
+      "name": "label3",
+      "property_name": "center",
+      "expected_value": [300, 600]
+    },
+    {
+      "type": "CheckLabelUI",
+      "name": "label4",
+      "property_name": "center",
+      "expected_value": [600, 700]
     }
   ]
 }

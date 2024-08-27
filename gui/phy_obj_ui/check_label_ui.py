@@ -34,19 +34,19 @@ class CheckLabelUI(BaseUIRect):
                         return False
                 return True
         else:
-            print(f"Warning: No target set for {self.name}")
+            # print(f"Warning: No target set for {self.name}")
             return False
 
     def update(self, m_pos):
-        super().update(m_pos)  # 放在前面, 以免颜色被覆盖
         if self.target:
             # 此处逻辑稍有重复
             if self.check_correctness():
-                self._color = (0, 200, 0)  # 正确时为绿色
+                self.ico_color = (0, 200, 0)  # 正确时为绿色
             else:
-                self._color = (200, 0, 0)
+                self.ico_color = (200, 0, 0)
         else:
             pass
+        super().update(m_pos)  # 放在前面, 以免颜色被覆盖
 
     # 将UI的位置和受力物体位置关联在一起
     def sync_ui(self):

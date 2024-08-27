@@ -2,6 +2,7 @@ import json
 
 from pymunk import Vec2d
 
+from gui.phy_obj_ui.bg_wall_ui import CircleBGWallUI, RectBGWallUI
 from gui.phy_obj_ui.entity_ui import BoxEntityUI, CircleEntityUI, BlankEntityUI, PolyEntityUI
 from gui.phy_obj_ui.force_ui import ForceUI  # 假设 ForceUI 类在这个模块中
 from gui.phy_obj_ui.constrain_ui import PinJointUI, SlideJointUI, SpringUI  # 假设这些 Joint 类在这个模块中
@@ -14,6 +15,7 @@ class ObjsLoader:
         self.objs_json_file = objs_json_file
         self.objs = {
             'entities': {},
+            'bg_walls': {},
             'forces': {},
             'constraints': {},
             'tools': {},
@@ -29,6 +31,12 @@ class ObjsLoader:
             obj = self.create_obj(obj_config)
             if obj:
                 self.objs['entities'][obj_config['name']] = obj
+
+        # 加载 bg_walls
+        for obj_config in config.get('bg_walls', []):
+            obj = self.create_obj(obj_config)
+            if obj:
+                self.objs['bg_walls'][obj_config['name']] = obj
 
         # 加载 forces
         for obj_config in config.get('forces', []):
@@ -101,6 +109,11 @@ class ObjsLoader:
                 friction=obj_config.get("friction", 0),
                 charge=obj_config.get("charge", 0)
             )
+        # 创建 BackGroundWall 类型的对象
+        elif obj_type == "CircleBGWallUI":
+            return CircleBGWallUI(**obj_config)
+        elif obj_type == "RectBGWallUI":
+            return RectBGWallUI(**obj_config)
         # 创建 Force 类型的对象
         elif obj_type == "ForceUI":
             target = obj_config.get("target")
