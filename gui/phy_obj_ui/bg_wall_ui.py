@@ -1,4 +1,5 @@
 import pygame
+from pymunk import Vec2d
 
 from core.phy_object.bg_wall import BGWall
 from gui.base_ui import BaseUICircle, BaseUIRect, BaseUI
@@ -7,7 +8,7 @@ from gui.base_ui import BaseUICircle, BaseUIRect, BaseUI
 class BGWallUIAddition(BGWall, BaseUI):
     @property
     def center(self):
-        return self.ui_center
+        return Vec2d(0, 0)
 
     @center.setter
     def center(self, pos):

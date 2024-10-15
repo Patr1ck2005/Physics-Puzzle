@@ -62,7 +62,7 @@
     "bg_timer_trigger": {
       "type": "TimerTrigger",
       "params": {
-        "duration": 10,
+        "duration": 100,
         "event_names": ["message_running_out_of_time"],
         "start_immediately": true,
         "once": true
