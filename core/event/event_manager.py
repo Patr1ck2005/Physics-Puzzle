@@ -17,10 +17,15 @@ class EventManager:
 
     def unregister_event(self, event_name, callback):
         if event_name in self.events:
-            self.events[event_name].remove(callback)
+            # 列表中存储的是 (priority, callback) 元组，需要匹配 callback
+            self.events[event_name] = [
+                (p, cb) for p, cb in self.events[event_name] if cb != callback
+            ]
             if not self.events[event_name]:
                 del self.events[event_name]
             logging.info(f"Event '{event_name}' unregistered.")
+        else:
+            logging.warning(f"Event '{event_name}' not found, cannot unregister.")
 
     def trigger_event(self, event_name, *args, **kwargs):
         if event_name in self.events:
@@ -28,8 +33,7 @@ class EventManager:
             for _, callback in self.events[event_name]:
                 callback(*args, **kwargs)
         else:
-            logging.warning(f"Event '{event_name}' not found.")
-            raise Exception(f"Event '{event_name}' not found.")
+            logging.warning(f"Event '{event_name}' not found, skipping trigger.")
 
     def clear_all_events(self):
         self.events.clear()

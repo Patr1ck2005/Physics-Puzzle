@@ -28,7 +28,7 @@ class GameScene:
         # 加载背景音乐
         pygame.mixer.music.load('assets/music/Aerie.mp3')
         pygame.mixer.music.play(-1)  # 循环播放
-        pygame.mixer.music.set_volume(0.1)  # 设置音量为 50%
+        pygame.mixer.music.set_volume(0.1)  # 设置音量为 10%
 
         # 初始化加载器 (在这里还没有加载具体的关卡)
         self.game_loader = None
@@ -75,7 +75,7 @@ class GameScene:
                 self.running = False  # 按下ESC键退出关卡
             elif event.key == pygame.K_p:  # 按下P键暂停
                 return 'pause'
-            elif event.key == pygame.K_q:  # 按下P键暂停
+            elif event.key == pygame.K_q:  # 按下Q键返回关卡菜单
                 return 'level_menu'
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
             btn = event.ui_element
@@ -92,5 +92,6 @@ class GameScene:
 
     def draw(self, screen):
         self.engine.render_world(screen)  # 渲染底层物理世界
-        self.trigger_manager.draw_triggers(screen)  # 渲染触发器
+        if self.trigger_manager:
+            self.trigger_manager.draw_triggers(screen)  # 渲染触发器
         # self.ui_manager.draw_ui(screen)  # 渲染UI

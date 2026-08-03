@@ -116,16 +116,11 @@ class Entity:
         pass
 
     def record(self):
-        # if time.time() - self.last_record_time > self.record_delta:
-        #     self.history_x.append(self.body.position.x)
-        #     self.history_y.append(self.body.position.y)
-        #     self.history_angle.append(self.body.angle)
-        #     self.last_record_time = time.time()
-        # else:
-        #     return
-        self.history_x.append(self.body.position.x)
-        self.history_y.append(self.body.position.y)
-        self.history_angle.append(self.body.angle)
+        if time.time() - self.last_record_time > self.record_delta:
+            self.history_x.append(self.body.position.x)
+            self.history_y.append(self.body.position.y)
+            self.history_angle.append(self.body.angle)
+            self.last_record_time = time.time()
 
     def add_to_space(self, space, center_pos=None):
         if center_pos:
@@ -147,7 +142,7 @@ class BoxEntity(Entity):
             "static": pymunk.Body.STATIC,
             "kinematic": pymunk.Body.KINEMATIC
         }
-        moment = pymunk.moment_for_circle(self._mass, 0, 30)
+        moment = pymunk.moment_for_box(self._mass, self._size)
         body = pymunk.Body(self._mass, moment, body_type=switch_type.get(self.type, pymunk.Body.DYNAMIC))
         body.position = self._center
         body.angle = self._angle
@@ -168,7 +163,7 @@ class CircleEntity(Entity):
             "static": pymunk.Body.STATIC,
             "kinematic": pymunk.Body.KINEMATIC
         }
-        moment = pymunk.moment_for_circle(self._mass, 0, 30)
+        moment = pymunk.moment_for_circle(self._mass, 0, self._size)
         body = pymunk.Body(self._mass, moment, body_type=switch_type.get(self.type, pymunk.Body.DYNAMIC))
         body.position = self._center
         body.angle = self._angle

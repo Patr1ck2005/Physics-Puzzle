@@ -22,11 +22,13 @@ class Engine:
 
     @property
     def gravity(self):
-        return self._gravity/1e3
+        return self._gravity / 1e3
 
     @gravity.setter
     def gravity(self, value):
-        self.space.gravity = (0.0, value*1e3)
+        self._gravity = value * 1e3
+        if self._if_gravity:
+            self.space.gravity = (0.0, self._gravity)
 
     @property
     def if_gravity(self):
@@ -39,21 +41,24 @@ class Engine:
 
     @property
     def G(self):
-        return self._G/1e6
+        return self._G / 1e6
 
     @G.setter
     def G(self, value):
-        self._G = value*1e6
+        self._G = value * 1e6
 
     @property
     def universal_gravity(self):
-        return self._G/1e6
+        return self._G / 1e6
 
     @universal_gravity.setter
     def universal_gravity(self, value):
         if value > 0:
-            self._G = value*1e6
+            self._G = value * 1e6
             self._if_uni_gravity = True
+        else:
+            self._G = 0
+            self._if_uni_gravity = False
 
     def init_world(self):
         self.space.remove(*self.space.bodies, *self.space.shapes, *self.space.constraints)

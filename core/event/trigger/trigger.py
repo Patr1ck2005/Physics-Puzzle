@@ -24,6 +24,7 @@ class Trigger:
                     # 例如将条件结果作为参数传递
                     self.event_manager.trigger_event(event_name, condition_met=True)
                 self.triggered = True
+                self.last_trigger_time = current_time
         else:
             if not self.once:
                 self.triggered = False

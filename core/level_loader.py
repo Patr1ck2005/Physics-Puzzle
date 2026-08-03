@@ -8,21 +8,22 @@ from core.phy_obj_loader import ObjsLoader
 
 
 class LevelLoader:
-    def __init__(self, entities_json_file, events_json_file=None, space=None):
+    def __init__(self, entities_json_file, events_json_file=None, space=None, ui_manager=None):
         self.entities_json_file = entities_json_file
         self.events_json_file = events_json_file
         self.entities = {}
         self.space = space
+        self.ui_manager = ui_manager
 
     def load_entities(self):
         entity_loader = ObjsLoader(self.entities_json_file)
-        self.entities = entity_loader.load_entities()
+        self.entities = entity_loader.load_objs()
         return self.entities
 
     def load_events(self):
         if not self.entities:  # 确保实体已经加载
             self.load_entities()
-        event_loader = EventLoader(self.events_json_file, self.entities, self.space)
+        event_loader = EventLoader(self.events_json_file, self.entities, self.space, self.ui_manager)
         trigger_manager, event_manager = event_loader.load_events()
         return trigger_manager, event_manager
 

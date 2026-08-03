@@ -33,8 +33,11 @@ class Constrain:
         self.anchor_b = anchor_b
 
     def add_to_space(self, space):
-        pass
         space.add(self.constraint)
+
+    def remove_from_space(self, space):
+        if self.constraint is not None:
+            space.remove(self.constraint)
 
     def reset(self):
         self.target_a = None
@@ -50,9 +53,6 @@ class PinJoint(Constrain):
         self.constraint = pymunk.PinJoint(self.target_a.body, self.target_b.body,
                                           self.anchor_a, self.anchor_b)
         super().add_to_space(space)
-
-    def remove_from_space(self):
-        pass
 
 
 # 轻绳

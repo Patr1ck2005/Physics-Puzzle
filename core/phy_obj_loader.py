@@ -147,7 +147,7 @@ class ObjsLoader:
             target_a = obj_config.get("target_a")
             target_b = obj_config.get("target_b")
             target_a = self.objs['entities'][target_a] if target_a else None
-            target_b = self.objs['entities'][target_b] if target_a else None
+            target_b = self.objs['entities'][target_b] if target_b else None
             if obj_type == "PinJointUI":
                 return PinJointUI(
                     name=obj_config["name"],

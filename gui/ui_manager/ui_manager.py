@@ -58,7 +58,7 @@ class UIManager:
         # 检测鼠标是否长按
         mouse_buttons = pygame.mouse.get_pressed()
         if mouse_buttons[0]:  # 左键
-            if time.time() - self.pressing_start_time > 0.3:  # 按下超过0.3秒算长按
+            if self.pressing_start_time is not None and time.time() - self.pressing_start_time > 0.3:  # 按下超过0.3秒算长按
                 self._on_press()
                 self.entity_manager.on_press()
                 # 触发长按的时候需要撤回实体点击事件 (例如, 双次点击放置和长按放置取其一即可)

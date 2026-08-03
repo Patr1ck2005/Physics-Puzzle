@@ -9,6 +9,7 @@ class HUD:
 
         self.font = pygame.font.Font(None, 24)
         self.score = initial_score
+        self.lives = 3
         self.time_scale = 1
         self.current_selection = None
 
