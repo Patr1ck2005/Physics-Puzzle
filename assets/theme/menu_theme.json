@@ -97,6 +97,25 @@
                 "active_bg": "#555555"
             }
         }
+    },
+    "#help_text_box": {
+        "colours": {
+            "normal_bg": "#2A2A2A",
+            "normal_text": "#FFFFFF",
+            "selected_bg": "#5A5A5A",
+            "selected_text": "#FFFFFF"
+        },
+        "font": {
+            "name": "Arial",
+            "size": 18,
+            "bold": 0,
+            "italic": 0
+        },
+        "misc": {
+            "border_width": 1,
+            "shadow_width": 2,
+            "shape": "rectangle"
+        }
     }
 }
 

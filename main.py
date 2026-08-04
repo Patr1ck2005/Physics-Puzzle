@@ -6,6 +6,7 @@ from menus.main_menu import MainMenu
 from menus.level_menu import LevelMenu
 from menus.game_scene import GameScene
 from menus.pause_menu import PauseMenu
+from menus.help_menu import HelpMenu
 
 from settings import *
 
@@ -60,6 +61,12 @@ def load_pause_menu():
     current_screen = PauseMenu(current_manager)
 
 
+def load_help_menu():
+    global current_manager, current_screen
+    current_manager = pygame_gui.UIManager(WINDOW_SIZE, 'assets/theme/menu_theme.json')
+    current_screen = HelpMenu(current_manager)
+
+
 # 加载初始界面
 load_main_menu()
 
@@ -90,6 +97,8 @@ while is_running:
         elif screen_result == "back_to_menu":
             game_scene = None  # 如果返回主菜单，销毁当前游戏场景实例
             load_main_menu()
+        elif screen_result == "help":
+            load_help_menu()
         elif screen_result == "exit":
             is_running = False
 
