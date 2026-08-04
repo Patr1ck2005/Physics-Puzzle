@@ -82,17 +82,15 @@ class TestEntityRecord:
     """Entity.record 历史记录"""
 
     def test_record_stores_position(self):
-        import time
         box = BoxEntity("box1", "dynamic", Vec2d(100, 100), size=(30, 30))
         box.record()
         assert box.history_x[-1] == 100
         assert box.history_y[-1] == 100
 
-    def test_record_respects_time_delta(self):
-        """record 应该受 record_delta 控制，不会在间隔内重复记录"""
+    def test_record_appends_every_call(self):
+        """record() 每次调用都应追加（用于右侧面板平滑曲线图）"""
         box = BoxEntity("box1", "dynamic", Vec2d(100, 100), size=(30, 30))
-        box.record()  # 第一次记录
-        first_len = len(box.history_x)
-        # 立即再次调用，不应记录（因为时间间隔未到）
         box.record()
-        assert len(box.history_x) == first_len
+        first_len = len(box.history_x)
+        box.record()
+        assert len(box.history_x) == first_len + 1

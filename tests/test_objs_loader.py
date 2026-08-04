@@ -161,8 +161,8 @@ class TestLevelLoader:
         engine = Engine()
         loader = EngineLoader(engine)
         loader.load_from_json('levels/level_1/setting.json')
-        # level_1 的 setting.json 中 gravity=0
-        assert engine.gravity == 0
+        # level_1 的 setting.json 中 gravity=0，setter 直接设置 space.gravity
+        assert engine.space.gravity == (0.0, 0.0)
 
 
 class TestRealLevelIntegration:

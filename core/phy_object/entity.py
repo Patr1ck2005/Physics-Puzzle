@@ -116,11 +116,9 @@ class Entity:
         pass
 
     def record(self):
-        if time.time() - self.last_record_time > self.record_delta:
-            self.history_x.append(self.body.position.x)
-            self.history_y.append(self.body.position.y)
-            self.history_angle.append(self.body.angle)
-            self.last_record_time = time.time()
+        self.history_x.append(self.body.position.x)
+        self.history_y.append(self.body.position.y)
+        self.history_angle.append(self.body.angle)
 
     def add_to_space(self, space, center_pos=None):
         if center_pos:

@@ -26,9 +26,7 @@ class Engine:
 
     @gravity.setter
     def gravity(self, value):
-        self._gravity = value * 1e3
-        if self._if_gravity:
-            self.space.gravity = (0.0, self._gravity)
+        self.space.gravity = (0.0, value * 1e3)
 
     @property
     def if_gravity(self):
@@ -56,9 +54,6 @@ class Engine:
         if value > 0:
             self._G = value * 1e6
             self._if_uni_gravity = True
-        else:
-            self._G = 0
-            self._if_uni_gravity = False
 
     def init_world(self):
         self.space.remove(*self.space.bodies, *self.space.shapes, *self.space.constraints)

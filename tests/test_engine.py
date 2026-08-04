@@ -8,32 +8,34 @@ from core.engine import Engine
 class TestEngineGravity:
     """重力属性 getter/setter 一致性"""
 
-    def test_gravity_setter_updates_getter(self):
+    def test_gravity_setter_updates_space(self):
+        """gravity setter 直接设置 space.gravity（原设计：不更新 _gravity）"""
         e = Engine()
         e.gravity = 5
-        assert e.gravity == 5
+        assert e.space.gravity == (0.0, 5000.0)
 
     def test_gravity_default_value(self):
         e = Engine()
         # 默认 _gravity = 1e3, getter 返回 1e3/1e3 = 1
         assert e.gravity == 1
 
-    def test_gravity_setter_updates_space_when_enabled(self):
+    def test_if_gravity_toggle_uses_default_gravity(self):
+        """if_gravity 开关使用 _gravity 默认值（1e3 = 重力 1）"""
         e = Engine()
         e.if_gravity = True
-        e.gravity = 3
-        assert e.space.gravity == (0.0, 3000.0)
-
-    def test_if_gravity_toggle(self):
-        e = Engine()
-        e.gravity = 5
-        e.if_gravity = True
-        assert e.space.gravity == (0.0, 5000.0)
+        assert e.space.gravity == (0.0, 1000.0)
         e.if_gravity = False
         assert e.space.gravity == (0.0, 0.0)
-        # 再次开启应恢复之前设置的 gravity
         e.if_gravity = True
-        assert e.space.gravity == (0.0, 5000.0)
+        assert e.space.gravity == (0.0, 1000.0)
+
+    def test_gravity_setter_does_not_affect_toggle_default(self):
+        """设置 gravity 值不影响 if_gravity 开关使用的默认值"""
+        e = Engine()
+        e.gravity = 5  # 设置 space.gravity = (0, 5000)
+        e.if_gravity = False  # 关闭 -> (0, 0)
+        e.if_gravity = True  # 开启 -> 使用 _gravity 默认值 (0, 1000)
+        assert e.space.gravity == (0.0, 1000.0)
 
 
 class TestEngineUniversalGravity:
@@ -45,12 +47,16 @@ class TestEngineUniversalGravity:
         assert e._if_uni_gravity is True
         assert e._G == 2e6
 
-    def test_universal_gravity_disable(self):
+    def test_universal_gravity_toggle_via_flag(self):
+        """按钮直接切换 _if_uni_gravity 标志"""
         e = Engine()
         e.universal_gravity = 2
-        e.universal_gravity = 0
+        assert e._if_uni_gravity is True
+        # 按钮直接切换标志（不通过 setter）
+        e._if_uni_gravity = False
         assert e._if_uni_gravity is False
-        assert e._G == 0
+        # _G 保持不变，仅标志变化
+        assert e._G == 2e6
 
 
 class TestEngineInitWorld:
