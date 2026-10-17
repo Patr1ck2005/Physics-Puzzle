@@ -1,0 +1,41 @@
+{
+  "name": "Physics-Puzzle",
+  "mode": "headless actual-renderer frame",
+  "source_revision": "dec24a14bcfaca65aa32c9c7c0b4c3057d6989ad",
+  "level": "sand_box",
+  "frames": 60,
+  "ui_delta_seconds": 0.016666666666666666,
+  "surface_pixels": [
+    1600,
+    900
+  ],
+  "display_driver": "dummy",
+  "audio_driver": "dummy",
+  "pygame_runtime_version": "2.5.1",
+  "dependency_versions": {
+    "pygame": "2.6.0",
+    "pygame-ce": "2.5.1",
+    "pygame_gui": "0.6.12",
+    "pymunk": "6.8.1",
+    "numpy": "2.0.1",
+    "matplotlib": "3.9.2"
+  },
+  "body_count": 6,
+  "shape_count": 7,
+  "sha256": "afdbe1489861bd03ff24b7a9ad5bdb477e7488980ba6bb5127602d3f00ff0e79",
+  "operations": [
+    "Initialize the original GameScene",
+    "Load unchanged sand_box JSON",
+    "Run 60 source update/draw/UI frames",
+    "Save the entire actual display surface with pygame.image.save"
+  ],
+  "limits": "Not a native desktop screenshot or human gameplay acceptance; no source rendering/UI code was modified.",
+  "image": "headless-sandbox-public-baseline.png",
+  "capture_date": "2026-10-17",
+  "repository": "https://github.com/Patr1ck2005/Physics-Puzzle",
+  "source_archive_sha256": "e6f47712486781ae0e034ddb0837d222f213ddfea9b957aa1a93253b2e190707",
+  "warnings": [
+    "Original pygame_gui horizontal slider emitted \"value not in range\"; no source fix was applied.",
+    "Original sandbox debug text overlaps in the captured renderer output."
+  ]
+}
